@@ -19482,7 +19482,7 @@ class TronLinkAdapter extends Adapter {
 }
 const scriptRel = "modulepreload";
 const assetsURL = function(dep) {
-  return "/" + dep;
+  return "/tronwallet-adapter/" + dep;
 };
 const seen = {};
 const __vitePreload = function preload(baseModule, deps, importerUrl) {
@@ -20016,7 +20016,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-DJHNnFXZ.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-CYQQ7oig.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -116440,7 +116440,7 @@ function SwitchChain() {
     ] })
   ] });
 }
-const BgImg = "/assets/bg-BpHL_R_w.png";
+const BgImg = "/tronwallet-adapter/assets/bg-BpHL_R_w.png";
 const Container = styled("div")({
   height: "100vh",
   boxSizing: "border-box",

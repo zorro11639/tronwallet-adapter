@@ -22188,7 +22188,7 @@
         }(Adapter);
         var scriptRel = 'modulepreload';
         var assetsURL = function assetsURL(dep) {
-          return "/" + dep;
+          return "/tronwallet-adapter/" + dep;
         };
         var seen = {};
         var __vitePreload = function preload(baseModule, deps, importerUrl) {
@@ -23244,7 +23244,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-DOQfh2Mz.js');
+                        return module.import('./index-legacy-Cdgxay9j.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -156083,7 +156083,7 @@
             })]
           });
         }
-        var BgImg = "/assets/bg-BpHL_R_w.png";
+        var BgImg = "/tronwallet-adapter/assets/bg-BpHL_R_w.png";
         var Container = styled("div")({
           height: "100vh",
           boxSizing: "border-box",
