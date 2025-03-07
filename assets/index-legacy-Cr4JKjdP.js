@@ -23244,7 +23244,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-Cdgxay9j.js');
+                        return module.import('./index-legacy-_ESsnaTi.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -89559,7 +89559,7 @@
               children: [/* @__PURE__ */jsxRuntimeExports.jsx(StateLabel, {
                 children: "Current network you choose"
               }), /* @__PURE__ */jsxRuntimeExports.jsx(StateText, {
-                children: connectionState.chainId || "-"
+                children: connectionState.address ? connectionState.chainId || "-" : "-"
               })]
             })]
           });

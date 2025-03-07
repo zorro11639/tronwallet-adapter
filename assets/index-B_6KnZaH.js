@@ -20016,7 +20016,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-CYQQ7oig.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-B4T_VaB7.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -70076,7 +70076,7 @@ function ConnectionState() {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Stack, { direction: "row", justifyContent: "space-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(StateLabel, { children: "Current network you choose" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(StateText, { children: connectionState.chainId || "-" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StateText, { children: connectionState.address ? connectionState.chainId || "-" : "-" })
     ] })
   ] });
 }
