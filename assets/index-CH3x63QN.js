@@ -20016,7 +20016,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-B4T_VaB7.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-CojNro2a.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -68094,9 +68094,14 @@ class BitKeepAdapter extends Adapter {
 function supportOkxWallet() {
   return !!(window.okxwallet && window.okxwallet.tronLink);
 }
-const isOKApp = /OKApp/i.test(navigator.userAgent);
+function isInOKApp() {
+  if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+    return /OKApp/i.test(window.navigator.userAgent);
+  }
+  return false;
+}
 function openOkxWallet() {
-  if (!isOKApp && isInMobileBrowser()) {
+  if (!isInOKApp() && isInMobileBrowser()) {
     window.location.href = "okx://wallet/dapp/url?dappUrl=" + encodeURIComponent(window.location.href);
     return true;
   }
@@ -68450,9 +68455,15 @@ class OkxWalletAdapter extends Adapter {
 function supportGateWallet() {
   return !!(window.gatewallet && window.gatewallet.tronLink);
 }
-const isGateApp = /GateApp/i.test(navigator.userAgent);
+const isGateApp = typeof navigator !== "undefined" && /GateApp/i.test(navigator.userAgent);
+function isInGateApp() {
+  if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+    return /GateApp/i.test(window.navigator.userAgent);
+  }
+  return false;
+}
 function openGateWallet() {
-  if (!isGateApp && isInMobileBrowser()) {
+  if (!isInGateApp() && isInMobileBrowser()) {
     window.location.href = "https://gateio.onelink.me/DmA6/web3?dapp_url=" + encodeURIComponent(window.location.href);
     return true;
   }
@@ -69432,9 +69443,14 @@ class FoxWalletAdapter extends Adapter {
 function supportBybitWallet() {
   return !!(window.bybitWallet && window.bybitWallet.tronLink);
 }
-const isBybitApp = /bybit_app/i.test(navigator.userAgent);
+function isInBybitApp() {
+  if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+    return /bybit_app/i.test(window.navigator.userAgent);
+  }
+  return false;
+}
 function openBybitWallet() {
-  if (!isBybitApp && isInMobileBrowser()) {
+  if (!isInBybitApp() && isInMobileBrowser()) {
     window.location.href = "https://app.bybit.com/inapp?by_dp=".concat(encodeURIComponent("bybitapp://open/route?targetUrl=by%3A%2F%2Fweb3%2Ftab%2Findex%3Findex%3D0"), "&by_web_link=").concat(encodeURIComponent(window.location.href));
     return true;
   }
