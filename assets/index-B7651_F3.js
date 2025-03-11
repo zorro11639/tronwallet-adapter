@@ -20016,7 +20016,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-CojNro2a.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-CbVJxkPD.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -69886,12 +69886,13 @@ function WalletProvider({ children }) {
     }));
   }
   function onConnect() {
+    var _a4;
     setConnectionState((preState) => ({
       ...preState,
       connected: true,
       address: (adapter == null ? void 0 : adapter.address) || ""
     }));
-    adapter == null ? void 0 : adapter.network().then((network) => {
+    (_a4 = adapter == null ? void 0 : adapter.network) == null ? void 0 : _a4.call(adapter).then((network) => {
       setConnectionState((preState) => ({
         ...preState,
         chainId: network.chainId
@@ -69918,6 +69919,7 @@ function WalletProvider({ children }) {
     }));
   }
   reactExports.useEffect(() => {
+    var _a4;
     setConnectionState((preState) => ({
       ...preState,
       connected: (adapter == null ? void 0 : adapter.connected) || false,
@@ -69932,7 +69934,7 @@ function WalletProvider({ children }) {
       adapter.on("disconnect", onDisconnect);
       adapter.on("chainChanged", onChainChanged);
       if (adapter == null ? void 0 : adapter.connected) {
-        adapter == null ? void 0 : adapter.network().then((network) => {
+        (_a4 = adapter == null ? void 0 : adapter.network) == null ? void 0 : _a4.call(adapter).then((network) => {
           setConnectionState((preState) => ({
             ...preState,
             chainId: network.chainId
@@ -69950,13 +69952,20 @@ function WalletProvider({ children }) {
       connected: false,
       connecting: true
     }));
-    await (adapter == null ? void 0 : adapter.connect());
-    setConnectionState((preState) => ({
-      ...preState,
-      connected: (adapter == null ? void 0 : adapter.connected) || false,
-      connecting: false,
-      address: (adapter == null ? void 0 : adapter.address) || ""
-    }));
+    try {
+      await (adapter == null ? void 0 : adapter.connect());
+      setConnectionState((preState) => ({
+        ...preState,
+        connected: (adapter == null ? void 0 : adapter.connected) || false,
+        connecting: false,
+        address: (adapter == null ? void 0 : adapter.address) || ""
+      }));
+    } catch (e3) {
+      setConnectionState((preState) => ({
+        ...preState,
+        connecting: false
+      }));
+    }
   }
   async function disconnect() {
     await (adapter == null ? void 0 : adapter.disconnect());

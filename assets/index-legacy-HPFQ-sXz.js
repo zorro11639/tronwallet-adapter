@@ -23244,7 +23244,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-JGOxiboJ.js');
+                        return module.import('./index-legacy-moHyUQ9x.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -89239,13 +89239,14 @@
             });
           }
           function onConnect() {
+            var _adapter$network;
             setConnectionState(function (preState) {
               return _objectSpread2(_objectSpread2({}, preState), {}, {
                 connected: true,
                 address: (adapter === null || adapter === void 0 ? void 0 : adapter.address) || ""
               });
             });
-            adapter === null || adapter === void 0 || adapter.network().then(function (network) {
+            adapter === null || adapter === void 0 || (_adapter$network = adapter.network) === null || _adapter$network === void 0 || _adapter$network.call(adapter).then(function (network) {
               setConnectionState(function (preState) {
                 return _objectSpread2(_objectSpread2({}, preState), {}, {
                   chainId: network.chainId
@@ -89291,7 +89292,8 @@
               adapter.on("disconnect", onDisconnect);
               adapter.on("chainChanged", onChainChanged);
               if (adapter !== null && adapter !== void 0 && adapter.connected) {
-                adapter === null || adapter === void 0 || adapter.network().then(function (network) {
+                var _adapter$network2;
+                adapter === null || adapter === void 0 || (_adapter$network2 = adapter.network) === null || _adapter$network2 === void 0 || _adapter$network2.call(adapter).then(function (network) {
                   setConnectionState(function (preState) {
                     return _objectSpread2(_objectSpread2({}, preState), {}, {
                       chainId: network.chainId
@@ -89318,9 +89320,10 @@
                         connecting: true
                       });
                     });
-                    _context369.next = 3;
+                    _context369.prev = 1;
+                    _context369.next = 4;
                     return adapter === null || adapter === void 0 ? void 0 : adapter.connect();
-                  case 3:
+                  case 4:
                     setConnectionState(function (preState) {
                       return _objectSpread2(_objectSpread2({}, preState), {}, {
                         connected: (adapter === null || adapter === void 0 ? void 0 : adapter.connected) || false,
@@ -89328,11 +89331,21 @@
                         address: (adapter === null || adapter === void 0 ? void 0 : adapter.address) || ""
                       });
                     });
-                  case 4:
+                    _context369.next = 10;
+                    break;
+                  case 7:
+                    _context369.prev = 7;
+                    _context369.t0 = _context369["catch"](1);
+                    setConnectionState(function (preState) {
+                      return _objectSpread2(_objectSpread2({}, preState), {}, {
+                        connecting: false
+                      });
+                    });
+                  case 10:
                   case "end":
                     return _context369.stop();
                 }
-              }, _callee368);
+              }, _callee368, null, [[1, 7]]);
             }));
             return _connect3.apply(this, arguments);
           }
