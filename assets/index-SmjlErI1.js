@@ -20016,7 +20016,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-CbVJxkPD.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-hB5VIMVD.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -67821,15 +67821,27 @@ class BitKeepAdapter extends Adapter {
     this.checkReadyInterval = null;
     this._checkPromise = null;
     this._updateWallet = () => __awaiter$5(this, void 0, void 0, function* () {
-      var _a5, _b3;
+      var _a5, _b3, _c3, _d3, _e2;
       let state2 = this.state;
       let address2 = this.address;
       if (supportBitgetWallet()) {
-        const adapter = new P();
-        this._wallet = (yield adapter === null || adapter === void 0 ? void 0 : adapter.getProvider().tronLink) || ((_a5 = window.bitkeep) === null || _a5 === void 0 ? void 0 : _a5.tronLink);
-        address2 = ((_b3 = this._wallet.tronWeb.defaultAddress) === null || _b3 === void 0 ? void 0 : _b3.base58) || null;
-        state2 = this._wallet.ready ? AdapterState.Connected : AdapterState.Disconnect;
-        if (!this._wallet.ready) {
+        if (isInMobileBrowser()) {
+          const adapter = new P();
+          const tron = (yield adapter === null || adapter === void 0 ? void 0 : adapter.getProvider().tronLink) || ((_a5 = window.bitkeep) === null || _a5 === void 0 ? void 0 : _a5.tronLink);
+          this._wallet = {
+            tron,
+            tronWeb: tron === null || tron === void 0 ? void 0 : tron.tronWeb
+          };
+        } else {
+          const tronWeb2 = (_b3 = window.bitkeep) === null || _b3 === void 0 ? void 0 : _b3.tronWeb;
+          this._wallet = {
+            tron: window.bitkeep.tronLink,
+            tronWeb: tronWeb2
+          };
+        }
+        address2 = ((_c3 = this._wallet.tronWeb.defaultAddress) === null || _c3 === void 0 ? void 0 : _c3.base58) || null;
+        state2 = ((_d3 = this._wallet.tron) === null || _d3 === void 0 ? void 0 : _d3.ready) ? AdapterState.Connected : AdapterState.Disconnect;
+        if (!((_e2 = this._wallet.tron) === null || _e2 === void 0 ? void 0 : _e2.ready)) {
           this.checkForWalletReady();
         }
       } else {
@@ -67924,12 +67936,12 @@ class BitKeepAdapter extends Adapter {
             return;
           this._connecting = true;
           try {
-            yield wallet.request({ method: "tron_requestAccounts" });
+            yield wallet.tron.request({ method: "tron_requestAccounts" });
           } catch (e3) {
             throw new WalletConnectionError(e3.message);
           }
         }
-        const address2 = ((_a4 = wallet.tronWeb.defaultAddress) === null || _a4 === void 0 ? void 0 : _a4.base58) || ((_d3 = (_c3 = (_b3 = window.bitkeep) === null || _b3 === void 0 ? void 0 : _b3.tronWeb) === null || _c3 === void 0 ? void 0 : _c3.defaultAddress) === null || _d3 === void 0 ? void 0 : _d3.base58) || "";
+        const address2 = ((_a4 = wallet === null || wallet === void 0 ? void 0 : wallet.tronWeb.defaultAddress) === null || _a4 === void 0 ? void 0 : _a4.base58) || ((_d3 = (_c3 = (_b3 = window.bitkeep) === null || _b3 === void 0 ? void 0 : _b3.tronWeb) === null || _c3 === void 0 ? void 0 : _c3.defaultAddress) === null || _d3 === void 0 ? void 0 : _d3.base58) || "";
         this.setAddress(address2);
         this.setState(AdapterState.Connected);
         this.emit("connect", this.address || "");
@@ -68027,7 +68039,8 @@ class BitKeepAdapter extends Adapter {
     let times = 0;
     const maxTimes = Math.floor(this.config.checkTimeout / 200);
     const check = () => __awaiter$5(this, void 0, void 0, function* () {
-      if (this._wallet && this._wallet.ready) {
+      var _a4;
+      if (this._wallet && ((_a4 = this._wallet) === null || _a4 === void 0 ? void 0 : _a4.tron.ready)) {
         this.checkReadyInterval && clearInterval(this.checkReadyInterval);
         this.checkReadyInterval = null;
         yield this._updateWallet();
@@ -90305,10 +90318,10 @@ const address = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   toChecksumAddress,
   toHex: toHex$1
 }, Symbol.toStringTag, { value: "Module" }));
-const ALPHABET$1 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 const ALPHABET_MAP = {};
-for (let i3 = 0; i3 < ALPHABET$1.length; i3++)
-  ALPHABET_MAP[ALPHABET$1.charAt(i3)] = i3;
+for (let i3 = 0; i3 < ALPHABET.length; i3++)
+  ALPHABET_MAP[ALPHABET.charAt(i3)] = i3;
 const BASE = 58;
 function encode58(buffer2) {
   if (buffer2.length === 0)
@@ -90333,7 +90346,7 @@ function encode58(buffer2) {
   }
   for (i3 = 0; buffer2[i3] === 0 && i3 < buffer2.length - 1; i3++)
     digits.push(0);
-  return digits.reverse().map((digit) => ALPHABET$1[digit]).join("");
+  return digits.reverse().map((digit) => ALPHABET[digit]).join("");
 }
 function decode58(string2) {
   if (string2.length === 0)
@@ -90628,21 +90641,6 @@ const noop = () => {
 const toFiniteNumber = (value, defaultValue) => {
   return value != null && Number.isFinite(value = +value) ? value : defaultValue;
 };
-const ALPHA = "abcdefghijklmnopqrstuvwxyz";
-const DIGIT = "0123456789";
-const ALPHABET = {
-  DIGIT,
-  ALPHA,
-  ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
-};
-const generateString = (size = 16, alphabet2 = ALPHABET.ALPHA_DIGIT) => {
-  let str = "";
-  const { length: length2 } = alphabet2;
-  while (size--) {
-    str += alphabet2[Math.random() * length2 | 0];
-  }
-  return str;
-};
 function isSpecCompliantForm(thing) {
   return !!(thing && isFunction(thing.append) && thing[Symbol.toStringTag] === "FormData" && thing[Symbol.iterator]);
 }
@@ -90741,8 +90739,6 @@ const utils$2 = {
   findKey,
   global: _global,
   isContextDefined,
-  ALPHABET,
-  generateString,
   isSpecCompliantForm,
   toJSONObject,
   isAsyncFn,
@@ -90970,6 +90966,11 @@ function buildURL(url, params, options) {
     return url;
   }
   const _encode2 = options && options.encode || encode;
+  if (utils$2.isFunction(options)) {
+    options = {
+      serialize: options
+    };
+  }
   const serializeFn = options && options.serialize;
   let serializedParams;
   if (serializeFn) {
@@ -91649,45 +91650,13 @@ const progressEventDecorator = (total, throttled) => {
   }), throttled[1]];
 };
 const asyncDecorator = (fn) => (...args) => utils$2.asap(() => fn(...args));
-const isURLSameOrigin = platform.hasStandardBrowserEnv ? (
-  // Standard browser envs have full support of the APIs needed to test
-  // whether the request URL is of the same origin as current location.
-  function standardBrowserEnv() {
-    const msie = platform.navigator && /(msie|trident)/i.test(platform.navigator.userAgent);
-    const urlParsingNode = document.createElement("a");
-    let originURL;
-    function resolveURL(url) {
-      let href = url;
-      if (msie) {
-        urlParsingNode.setAttribute("href", href);
-        href = urlParsingNode.href;
-      }
-      urlParsingNode.setAttribute("href", href);
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, "") : "",
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, "") : "",
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, "") : "",
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: urlParsingNode.pathname.charAt(0) === "/" ? urlParsingNode.pathname : "/" + urlParsingNode.pathname
-      };
-    }
-    originURL = resolveURL(window.location.href);
-    return function isURLSameOrigin2(requestURL) {
-      const parsed = utils$2.isString(requestURL) ? resolveURL(requestURL) : requestURL;
-      return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
-    };
-  }()
-) : (
-  // Non standard browser envs (web workers, react-native) lack needed support.
-  /* @__PURE__ */ function nonStandardBrowserEnv() {
-    return function isURLSameOrigin2() {
-      return true;
-    };
-  }()
-);
+const isURLSameOrigin = platform.hasStandardBrowserEnv ? /* @__PURE__ */ ((origin2, isMSIE) => (url) => {
+  url = new URL(url, platform.origin);
+  return origin2.protocol === url.protocol && origin2.host === url.host && (isMSIE || origin2.port === url.port);
+})(
+  new URL(platform.origin),
+  platform.navigator && /(msie|trident)/i.test(platform.navigator.userAgent)
+) : () => true;
 const cookies = platform.hasStandardBrowserEnv ? (
   // Standard browser envs support document.cookie
   {
@@ -91725,8 +91694,9 @@ function isAbsoluteURL(url) {
 function combineURLs(baseURL, relativeURL) {
   return relativeURL ? baseURL.replace(/\/?\/$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 }
-function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
+function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
+  let isRelativeUrl = !isAbsoluteURL(requestedURL);
+  if (baseURL && isRelativeUrl || allowAbsoluteUrls == false) {
     return combineURLs(baseURL, requestedURL);
   }
   return requestedURL;
@@ -91735,7 +91705,7 @@ const headersToObject = (thing) => thing instanceof AxiosHeaders$1 ? { ...thing 
 function mergeConfig$1(config1, config2) {
   config2 = config2 || {};
   const config3 = {};
-  function getMergedValue(target, source, caseless) {
+  function getMergedValue(target, source, prop, caseless) {
     if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source)) {
       return utils$2.merge.call({ caseless }, target, source);
     } else if (utils$2.isPlainObject(source)) {
@@ -91745,11 +91715,11 @@ function mergeConfig$1(config1, config2) {
     }
     return source;
   }
-  function mergeDeepProperties(a3, b3, caseless) {
+  function mergeDeepProperties(a3, b3, prop, caseless) {
     if (!utils$2.isUndefined(b3)) {
-      return getMergedValue(a3, b3, caseless);
+      return getMergedValue(a3, b3, prop, caseless);
     } else if (!utils$2.isUndefined(a3)) {
-      return getMergedValue(void 0, a3, caseless);
+      return getMergedValue(void 0, a3, prop, caseless);
     }
   }
   function valueFromConfig2(a3, b3) {
@@ -91800,7 +91770,7 @@ function mergeConfig$1(config1, config2) {
     socketPath: defaultToConfig2,
     responseEncoding: defaultToConfig2,
     validateStatus: mergeDirectKeys,
-    headers: (a3, b3) => mergeDeepProperties(headersToObject(a3), headersToObject(b3), true)
+    headers: (a3, b3, prop) => mergeDeepProperties(headersToObject(a3), headersToObject(b3), prop, true)
   };
   utils$2.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
     const merge2 = mergeMap[prop] || mergeDeepProperties;
@@ -91966,36 +91936,37 @@ const xhrAdapter = isXHRAdapterSupported && function(config2) {
   });
 };
 const composeSignals = (signals, timeout) => {
-  let controller = new AbortController();
-  let aborted;
-  const onabort = function(cancel) {
-    if (!aborted) {
-      aborted = true;
-      unsubscribe();
-      const err = cancel instanceof Error ? cancel : this.reason;
-      controller.abort(err instanceof AxiosError$1 ? err : new CanceledError$1(err instanceof Error ? err.message : err));
-    }
-  };
-  let timer = timeout && setTimeout(() => {
-    onabort(new AxiosError$1("timeout ".concat(timeout, " of ms exceeded"), AxiosError$1.ETIMEDOUT));
-  }, timeout);
-  const unsubscribe = () => {
-    if (signals) {
-      timer && clearTimeout(timer);
+  const { length: length2 } = signals = signals ? signals.filter(Boolean) : [];
+  if (timeout || length2) {
+    let controller = new AbortController();
+    let aborted;
+    const onabort = function(reason) {
+      if (!aborted) {
+        aborted = true;
+        unsubscribe();
+        const err = reason instanceof Error ? reason : this.reason;
+        controller.abort(err instanceof AxiosError$1 ? err : new CanceledError$1(err instanceof Error ? err.message : err));
+      }
+    };
+    let timer = timeout && setTimeout(() => {
       timer = null;
-      signals.forEach((signal2) => {
-        signal2 && (signal2.removeEventListener ? signal2.removeEventListener("abort", onabort) : signal2.unsubscribe(onabort));
-      });
-      signals = null;
-    }
-  };
-  signals.forEach((signal2) => signal2 && signal2.addEventListener && signal2.addEventListener("abort", onabort));
-  const { signal } = controller;
-  signal.unsubscribe = unsubscribe;
-  return [signal, () => {
-    timer && clearTimeout(timer);
-    timer = null;
-  }];
+      onabort(new AxiosError$1("timeout ".concat(timeout, " of ms exceeded"), AxiosError$1.ETIMEDOUT));
+    }, timeout);
+    const unsubscribe = () => {
+      if (signals) {
+        timer && clearTimeout(timer);
+        timer = null;
+        signals.forEach((signal2) => {
+          signal2.unsubscribe ? signal2.unsubscribe(onabort) : signal2.removeEventListener("abort", onabort);
+        });
+        signals = null;
+      }
+    };
+    signals.forEach((signal2) => signal2.addEventListener("abort", onabort));
+    const { signal } = controller;
+    signal.unsubscribe = () => utils$2.asap(unsubscribe);
+    return signal;
+  }
 };
 const streamChunk = function* (chunk, chunkSize) {
   let len = chunk.byteLength;
@@ -92011,13 +91982,31 @@ const streamChunk = function* (chunk, chunkSize) {
     pos = end;
   }
 };
-const readBytes = async function* (iterable, chunkSize, encode2) {
-  for await (const chunk of iterable) {
-    yield* streamChunk(ArrayBuffer.isView(chunk) ? chunk : await encode2(String(chunk)), chunkSize);
+const readBytes = async function* (iterable, chunkSize) {
+  for await (const chunk of readStream(iterable)) {
+    yield* streamChunk(chunk, chunkSize);
   }
 };
-const trackStream = (stream, chunkSize, onProgress, onFinish, encode2) => {
-  const iterator = readBytes(stream, chunkSize, encode2);
+const readStream = async function* (stream) {
+  if (stream[Symbol.asyncIterator]) {
+    yield* stream;
+    return;
+  }
+  const reader = stream.getReader();
+  try {
+    for (; ; ) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      yield value;
+    }
+  } finally {
+    await reader.cancel();
+  }
+};
+const trackStream = (stream, chunkSize, onProgress, onFinish) => {
+  const iterator = readBytes(stream, chunkSize);
   let bytes2 = 0;
   let done;
   let _onFinish = (e3) => {
@@ -92096,7 +92085,11 @@ const getBodyLength = async (body) => {
     return body.size;
   }
   if (utils$2.isSpecCompliantForm(body)) {
-    return (await new Request(body).arrayBuffer()).byteLength;
+    const _request = new Request(platform.origin, {
+      method: "POST",
+      body
+    });
+    return (await _request.arrayBuffer()).byteLength;
   }
   if (utils$2.isArrayBufferView(body) || utils$2.isArrayBuffer(body)) {
     return body.byteLength;
@@ -92128,14 +92121,11 @@ const fetchAdapter = isFetchSupported && (async (config2) => {
     fetchOptions
   } = resolveConfig(config2);
   responseType = responseType ? (responseType + "").toLowerCase() : "text";
-  let [composedSignal, stopTimeout] = signal || cancelToken || timeout ? composeSignals([signal, cancelToken], timeout) : [];
-  let finished, request;
-  const onFinish = () => {
-    !finished && setTimeout(() => {
-      composedSignal && composedSignal.unsubscribe();
-    });
-    finished = true;
-  };
+  let composedSignal = composeSignals([signal, cancelToken && cancelToken.toAbortSignal()], timeout);
+  let request;
+  const unsubscribe = composedSignal && composedSignal.unsubscribe && (() => {
+    composedSignal.unsubscribe();
+  });
   let requestContentLength;
   try {
     if (onUploadProgress && supportsRequestStream && method !== "get" && method !== "head" && (requestContentLength = await resolveBodyLength(headers, data)) !== 0) {
@@ -92153,7 +92143,7 @@ const fetchAdapter = isFetchSupported && (async (config2) => {
           requestContentLength,
           progressEventReducer(asyncDecorator(onUploadProgress))
         );
-        data = trackStream(_request.body, DEFAULT_CHUNK_SIZE, onProgress, flush, encodeText);
+        data = trackStream(_request.body, DEFAULT_CHUNK_SIZE, onProgress, flush);
       }
     }
     if (!utils$2.isString(withCredentials)) {
@@ -92171,7 +92161,7 @@ const fetchAdapter = isFetchSupported && (async (config2) => {
     });
     let response = await fetch(request);
     const isStreamResponse = supportsResponseStream && (responseType === "stream" || responseType === "response");
-    if (supportsResponseStream && (onDownloadProgress || isStreamResponse)) {
+    if (supportsResponseStream && (onDownloadProgress || isStreamResponse && unsubscribe)) {
       const options = {};
       ["status", "statusText", "headers"].forEach((prop) => {
         options[prop] = response[prop];
@@ -92184,15 +92174,14 @@ const fetchAdapter = isFetchSupported && (async (config2) => {
       response = new Response(
         trackStream(response.body, DEFAULT_CHUNK_SIZE, onProgress, () => {
           flush && flush();
-          isStreamResponse && onFinish();
-        }, encodeText),
+          unsubscribe && unsubscribe();
+        }),
         options
       );
     }
     responseType = responseType || "text";
     let responseData = await resolvers[utils$2.findKey(resolvers, responseType) || "text"](response, config2);
-    !isStreamResponse && onFinish();
-    stopTimeout && stopTimeout();
+    !isStreamResponse && unsubscribe && unsubscribe();
     return await new Promise((resolve, reject) => {
       settle(resolve, reject, {
         data: responseData,
@@ -92204,7 +92193,7 @@ const fetchAdapter = isFetchSupported && (async (config2) => {
       });
     });
   } catch (err) {
-    onFinish();
+    unsubscribe && unsubscribe();
     if (err && err.name === "TypeError" && /fetch/i.test(err.message)) {
       throw Object.assign(
         new AxiosError$1("Network Error", AxiosError$1.ERR_NETWORK, config2, request),
@@ -92311,7 +92300,7 @@ function dispatchRequest(config2) {
     return Promise.reject(reason);
   });
 }
-const VERSION$1 = "1.7.5";
+const VERSION$1 = "1.8.2";
 const validators$1 = {};
 ["object", "boolean", "number", "function", "string", "symbol"].forEach((type2, i3) => {
   validators$1[type2] = function validator2(thing) {
@@ -92340,6 +92329,12 @@ validators$1.transitional = function transitional(validator2, version2, message2
       );
     }
     return validator2 ? validator2(value, opt, opts) : true;
+  };
+};
+validators$1.spelling = function spelling(correctSpelling) {
+  return (value, opt) => {
+    console.warn("".concat(opt, " is likely a misspelling of ").concat(correctSpelling));
+    return true;
   };
 };
 function assertOptions(options, schema, allowUnknown) {
@@ -92390,8 +92385,8 @@ let Axios$1 = class Axios2 {
       return await this._request(configOrUrl, config2);
     } catch (err) {
       if (err instanceof Error) {
-        let dummy;
-        Error.captureStackTrace ? Error.captureStackTrace(dummy = {}) : dummy = new Error();
+        let dummy = {};
+        Error.captureStackTrace ? Error.captureStackTrace(dummy) : dummy = new Error();
         const stack = dummy.stack ? dummy.stack.replace(/^.+\n/, "") : "";
         try {
           if (!err.stack) {
@@ -92433,6 +92428,16 @@ let Axios$1 = class Axios2 {
         }, true);
       }
     }
+    if (config2.allowAbsoluteUrls !== void 0) ;
+    else if (this.defaults.allowAbsoluteUrls !== void 0) {
+      config2.allowAbsoluteUrls = this.defaults.allowAbsoluteUrls;
+    } else {
+      config2.allowAbsoluteUrls = true;
+    }
+    validator.assertOptions(config2, {
+      baseUrl: validators.spelling("baseURL"),
+      withXsrfToken: validators.spelling("withXSRFToken")
+    }, true);
     config2.method = (config2.method || this.defaults.method || "get").toLowerCase();
     let contextHeaders = headers && utils$2.merge(
       headers.common,
@@ -92499,7 +92504,7 @@ let Axios$1 = class Axios2 {
   }
   getUri(config2) {
     config2 = mergeConfig$1(this.defaults, config2);
-    const fullPath = buildFullPath(config2.baseURL, config2.url);
+    const fullPath = buildFullPath(config2.baseURL, config2.url, config2.allowAbsoluteUrls);
     return buildURL(fullPath, config2.params, config2.paramsSerializer);
   }
 };
@@ -92598,6 +92603,15 @@ let CancelToken$1 = class CancelToken2 {
     if (index !== -1) {
       this._listeners.splice(index, 1);
     }
+  }
+  toAbortSignal() {
+    const controller = new AbortController();
+    const abort = (err) => {
+      controller.abort(err);
+    };
+    this.subscribe(abort);
+    controller.signal.unsubscribe = () => this.unsubscribe(abort);
+    return controller.signal;
   }
   /**
    * Returns an object that contains a new `CancelToken` and a function that, when called,

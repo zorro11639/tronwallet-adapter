@@ -10453,10 +10453,10 @@
           }
           return base;
         }
-        function resolveBreakpointValues(_ref5) {
-          var breakpointValues = _ref5.values,
-            themeBreakpoints = _ref5.breakpoints,
-            customBase = _ref5.base;
+        function resolveBreakpointValues(_ref6) {
+          var breakpointValues = _ref6.values,
+            themeBreakpoints = _ref6.breakpoints,
+            customBase = _ref6.base;
           var base = customBase || computeBreakpointsBase(breakpointValues, themeBreakpoints);
           var keys = Object.keys(base);
           if (keys.length === 0) {
@@ -11258,10 +11258,10 @@
           }
           function styleFunctionSx(props) {
             var _theme$unstable_sxCon;
-            var _ref10 = props || {},
-              sx = _ref10.sx,
-              _ref10$theme = _ref10.theme,
-              theme = _ref10$theme === void 0 ? {} : _ref10$theme;
+            var _ref11 = props || {},
+              sx = _ref11.sx,
+              _ref11$theme = _ref11.theme,
+              theme = _ref11$theme === void 0 ? {} : _ref11$theme;
             if (!sx) {
               return null; // Emotion & styled-components will neglect null
             }
@@ -11454,11 +11454,11 @@
           var defaultTheme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : systemDefaultTheme$1;
           return useTheme$3(defaultTheme);
         }
-        function GlobalStyles$1(_ref13) {
-          var styles = _ref13.styles,
-            themeId = _ref13.themeId,
-            _ref13$defaultTheme = _ref13.defaultTheme,
-            defaultTheme = _ref13$defaultTheme === void 0 ? {} : _ref13$defaultTheme;
+        function GlobalStyles$1(_ref14) {
+          var styles = _ref14.styles,
+            themeId = _ref14.themeId,
+            _ref14$defaultTheme = _ref14.defaultTheme,
+            defaultTheme = _ref14$defaultTheme === void 0 ? {} : _ref14$defaultTheme;
           var upperTheme = useTheme$2(defaultTheme);
           var globalStyles = typeof styles === "function" ? styles(themeId ? upperTheme[themeId] || upperTheme : upperTheme) : styles;
           return /* @__PURE__ */jsxRuntimeExports.jsx(GlobalStyles$2, {
@@ -11815,10 +11815,10 @@
           }
           return string.charAt(0).toLowerCase() + string.slice(1);
         };
-        function resolveTheme(_ref14) {
-          var defaultTheme = _ref14.defaultTheme,
-            theme = _ref14.theme,
-            themeId = _ref14.themeId;
+        function resolveTheme(_ref15) {
+          var defaultTheme = _ref15.defaultTheme,
+            theme = _ref15.theme,
+            themeId = _ref15.themeId;
           return isEmpty$3(theme) ? defaultTheme : theme[themeId] || theme;
         }
         function defaultOverridesResolver(slot) {
@@ -11954,10 +11954,10 @@
                   }
                   var styleOverrides = theme.components[componentName].styleOverrides;
                   var resolvedStyleOverrides = {};
-                  Object.entries(styleOverrides).forEach(function (_ref15) {
-                    var _ref16 = _slicedToArray2(_ref15, 2),
-                      slotKey = _ref16[0],
-                      slotStyle = _ref16[1];
+                  Object.entries(styleOverrides).forEach(function (_ref16) {
+                    var _ref17 = _slicedToArray2(_ref16, 2),
+                      slotKey = _ref17[0],
+                      slotStyle = _ref17[1];
                     resolvedStyleOverrides[slotKey] = processStyleArg(slotStyle, _extends$1({}, props, {
                       theme: theme
                     }));
@@ -12045,11 +12045,11 @@
           }
           return resolveProps(theme.components[name].defaultProps, props);
         }
-        function useThemeProps(_ref17) {
-          var props = _ref17.props,
-            name = _ref17.name,
-            defaultTheme = _ref17.defaultTheme,
-            themeId = _ref17.themeId;
+        function useThemeProps(_ref18) {
+          var props = _ref18.props,
+            name = _ref18.name,
+            defaultTheme = _ref18.defaultTheme,
+            themeId = _ref18.themeId;
           var theme = useTheme$2(defaultTheme);
           if (themeId) {
             theme = theme[themeId] || theme;
@@ -12192,12 +12192,12 @@
           // eslint-disable-next-line react-hooks/rules-of-hooks -- `React.useId` is invariant at runtime.
           return useGlobalId(idOverride);
         }
-        function useControlled(_ref18) {
-          var controlled = _ref18.controlled,
-            defaultProp = _ref18.default,
-            name = _ref18.name,
-            _ref18$state = _ref18.state,
-            state = _ref18$state === void 0 ? "value" : _ref18$state;
+        function useControlled(_ref19) {
+          var controlled = _ref19.controlled,
+            defaultProp = _ref19.default,
+            name = _ref19.name,
+            _ref19$state = _ref19.state,
+            state = _ref19$state === void 0 ? "value" : _ref19$state;
           var _reactExports$useRef = reactExports.useRef(controlled !== void 0),
             isControlled = _reactExports$useRef.current;
           var _reactExports$useStat3 = reactExports.useState(defaultProp),
@@ -12715,9 +12715,9 @@
           return value != null ? value : false;
         };
         var PropsContext = /* @__PURE__ */reactExports.createContext(void 0);
-        function DefaultPropsProvider(_ref19) {
-          var value = _ref19.value,
-            children = _ref19.children;
+        function DefaultPropsProvider(_ref20) {
+          var value = _ref20.value,
+            children = _ref20.children;
           return /* @__PURE__ */jsxRuntimeExports.jsx(PropsContext.Provider, {
             value: value,
             children: children
@@ -12739,9 +12739,9 @@
           }
           return props;
         }
-        function useDefaultProps$1(_ref20) {
-          var props = _ref20.props,
-            name = _ref20.name;
+        function useDefaultProps$1(_ref21) {
+          var props = _ref21.props,
+            name = _ref21.name;
           var ctx = reactExports.useContext(PropsContext);
           return getThemeProps({
             props: props,
@@ -12828,9 +12828,9 @@
             "column-reverse": "Bottom"
           }[direction];
         };
-        var style = function style(_ref21) {
-          var ownerState = _ref21.ownerState,
-            theme = _ref21.theme;
+        var style = function style(_ref22) {
+          var ownerState = _ref22.ownerState,
+            theme = _ref22.theme;
           var styles = _extends$1({
             display: "flex",
             flexDirection: "column"
@@ -13417,15 +13417,15 @@
             var contrastText = colorManipulatorExports.getContrastRatio(background, dark.text.primary) >= contrastThreshold ? dark.text.primary : light.text.primary;
             return contrastText;
           }
-          var augmentColor = function augmentColor(_ref22) {
-            var color = _ref22.color,
-              name = _ref22.name,
-              _ref22$mainShade = _ref22.mainShade,
-              mainShade = _ref22$mainShade === void 0 ? 500 : _ref22$mainShade,
-              _ref22$lightShade = _ref22.lightShade,
-              lightShade = _ref22$lightShade === void 0 ? 300 : _ref22$lightShade,
-              _ref22$darkShade = _ref22.darkShade,
-              darkShade = _ref22$darkShade === void 0 ? 700 : _ref22$darkShade;
+          var augmentColor = function augmentColor(_ref23) {
+            var color = _ref23.color,
+              name = _ref23.name,
+              _ref23$mainShade = _ref23.mainShade,
+              mainShade = _ref23$mainShade === void 0 ? 500 : _ref23$mainShade,
+              _ref23$lightShade = _ref23.lightShade,
+              lightShade = _ref23$lightShade === void 0 ? 300 : _ref23$lightShade,
+              _ref23$darkShade = _ref23.darkShade,
+              darkShade = _ref23$darkShade === void 0 ? 700 : _ref23$darkShade;
             color = _extends$2({}, color);
             if (!color.main && color[mainShade]) {
               color.main = color[mainShade];
@@ -13826,10 +13826,10 @@
             }
             return string.charAt(0).toLowerCase() + string.slice(1);
           };
-          function resolveTheme(_ref23) {
-            var defaultTheme = _ref23.defaultTheme,
-              theme = _ref23.theme,
-              themeId = _ref23.themeId;
+          function resolveTheme(_ref24) {
+            var defaultTheme = _ref24.defaultTheme,
+              theme = _ref24.theme,
+              themeId = _ref24.themeId;
             return isEmpty(theme) ? defaultTheme : theme[themeId] || theme;
           }
           function defaultOverridesResolver(slot) {
@@ -13965,10 +13965,10 @@
                     }
                     var styleOverrides = theme.components[componentName].styleOverrides;
                     var resolvedStyleOverrides = {};
-                    Object.entries(styleOverrides).forEach(function (_ref24) {
-                      var _ref25 = _slicedToArray2(_ref24, 2),
-                        slotKey = _ref25[0],
-                        slotStyle = _ref25[1];
+                    Object.entries(styleOverrides).forEach(function (_ref25) {
+                      var _ref26 = _slicedToArray2(_ref25, 2),
+                        slotKey = _ref26[0],
+                        slotStyle = _ref26[1];
                       resolvedStyleOverrides[slotKey] = processStyleArg(slotStyle, (0, _extends2.default)({}, props, {
                         theme: theme
                       }));
@@ -14074,9 +14074,9 @@
             var ownerState = props.ownerState;
             return [styles.root, ownerState.color !== "inherit" && styles["color".concat(capitalize$1(ownerState.color))], styles["fontSize".concat(capitalize$1(ownerState.fontSize))]];
           }
-        })(function (_ref26) {
-          var theme = _ref26.theme,
-            ownerState = _ref26.ownerState;
+        })(function (_ref27) {
+          var theme = _ref27.theme,
+            ownerState = _ref27.ownerState;
           var _theme$transitions, _theme$transitions$cr, _theme$transitions2, _theme$typography, _theme$typography$pxT, _theme$typography2, _theme$typography2$px, _theme$typography3, _theme$typography3$px, _palette$ownerState$c, _palette, _palette2, _palette3;
           return {
             userSelect: "none",
@@ -14698,9 +14698,9 @@
             var ownerState = props.ownerState;
             return [styles.root, styles[ownerState.variant], !ownerState.square && styles.rounded, ownerState.variant === "elevation" && styles["elevation".concat(ownerState.elevation)]];
           }
-        })(function (_ref27) {
-          var theme = _ref27.theme,
-            ownerState = _ref27.ownerState;
+        })(function (_ref28) {
+          var theme = _ref28.theme,
+            ownerState = _ref28.ownerState;
           var _theme$vars$overlays;
           return _extends$2({
             backgroundColor: (theme.vars || theme).palette.background.paper,
@@ -14821,17 +14821,17 @@
         var TouchRippleRipple = styled(Ripple, {
           name: "MuiTouchRipple",
           slot: "Ripple"
-        })(_t4 || (_t4 = _$6(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n  opacity: 0;\n  position: absolute;\n\n  &.", " {\n    opacity: 0.3;\n    transform: scale(1);\n    animation-name: ", ";\n    animation-duration: ", "ms;\n    animation-timing-function: ", ";\n  }\n\n  &.", " {\n    animation-duration: ", "ms;\n  }\n\n  & .", " {\n    opacity: 1;\n    display: block;\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    background-color: currentColor;\n  }\n\n  & .", " {\n    opacity: 0;\n    animation-name: ", ";\n    animation-duration: ", "ms;\n    animation-timing-function: ", ";\n  }\n\n  & .", " {\n    position: absolute;\n    /* @noflip */\n    left: 0px;\n    top: 0;\n    animation-name: ", ";\n    animation-duration: 2500ms;\n    animation-timing-function: ", ";\n    animation-iteration-count: infinite;\n    animation-delay: 200ms;\n  }\n"])), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), touchRippleClasses.rippleVisible, enterKeyframe, DURATION, function (_ref28) {
-          var theme = _ref28.theme;
-          return theme.transitions.easing.easeInOut;
-        }, touchRippleClasses.ripplePulsate, function (_ref29) {
+        })(_t4 || (_t4 = _$6(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n  opacity: 0;\n  position: absolute;\n\n  &.", " {\n    opacity: 0.3;\n    transform: scale(1);\n    animation-name: ", ";\n    animation-duration: ", "ms;\n    animation-timing-function: ", ";\n  }\n\n  &.", " {\n    animation-duration: ", "ms;\n  }\n\n  & .", " {\n    opacity: 1;\n    display: block;\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    background-color: currentColor;\n  }\n\n  & .", " {\n    opacity: 0;\n    animation-name: ", ";\n    animation-duration: ", "ms;\n    animation-timing-function: ", ";\n  }\n\n  & .", " {\n    position: absolute;\n    /* @noflip */\n    left: 0px;\n    top: 0;\n    animation-name: ", ";\n    animation-duration: 2500ms;\n    animation-timing-function: ", ";\n    animation-iteration-count: infinite;\n    animation-delay: 200ms;\n  }\n"])), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), touchRippleClasses.rippleVisible, enterKeyframe, DURATION, function (_ref29) {
           var theme = _ref29.theme;
-          return theme.transitions.duration.shorter;
-        }, touchRippleClasses.child, touchRippleClasses.childLeaving, exitKeyframe, DURATION, function (_ref30) {
-          var theme = _ref30.theme;
           return theme.transitions.easing.easeInOut;
-        }, touchRippleClasses.childPulsate, pulsateKeyframe, function (_ref31) {
+        }, touchRippleClasses.ripplePulsate, function (_ref30) {
+          var theme = _ref30.theme;
+          return theme.transitions.duration.shorter;
+        }, touchRippleClasses.child, touchRippleClasses.childLeaving, exitKeyframe, DURATION, function (_ref31) {
           var theme = _ref31.theme;
+          return theme.transitions.easing.easeInOut;
+        }, touchRippleClasses.childPulsate, pulsateKeyframe, function (_ref32) {
+          var theme = _ref32.theme;
           return theme.transitions.easing.easeInOut;
         });
         var TouchRipple = /* @__PURE__ */reactExports.forwardRef(function TouchRipple2(inProps, ref) {
@@ -14918,9 +14918,9 @@
               rippleX = Math.round(rect.width / 2);
               rippleY = Math.round(rect.height / 2);
             } else {
-              var _ref32 = event.touches && event.touches.length > 0 ? event.touches[0] : event,
-                clientX = _ref32.clientX,
-                clientY = _ref32.clientY;
+              var _ref33 = event.touches && event.touches.length > 0 ? event.touches[0] : event,
+                clientX = _ref33.clientX,
+                clientY = _ref33.clientY;
               rippleX = Math.round(clientX - rect.left);
               rippleY = Math.round(clientY - rect.top);
             }
@@ -15316,9 +15316,9 @@
             var ownerState = props.ownerState;
             return [styles.root, ownerState.variant && styles[ownerState.variant], ownerState.align !== "inherit" && styles["align".concat(capitalize$1(ownerState.align))], ownerState.noWrap && styles.noWrap, ownerState.gutterBottom && styles.gutterBottom, ownerState.paragraph && styles.paragraph];
           }
-        })(function (_ref33) {
-          var theme = _ref33.theme,
-            ownerState = _ref33.ownerState;
+        })(function (_ref34) {
+          var theme = _ref34.theme,
+            ownerState = _ref34.ownerState;
           return _extends$2({
             margin: 0
           }, ownerState.variant === "inherit" && {
@@ -15585,10 +15585,10 @@
             })]
           });
         });
-        function formControlState(_ref34) {
-          var props = _ref34.props,
-            states = _ref34.states,
-            muiFormControl = _ref34.muiFormControl;
+        function formControlState(_ref35) {
+          var props = _ref35.props,
+            states = _ref35.states,
+            muiFormControl = _ref35.muiFormControl;
           return states.reduce(function (acc, state) {
             acc[state] = props[state];
             if (muiFormControl) {
@@ -15669,9 +15669,9 @@
           name: "MuiInputBase",
           slot: "Root",
           overridesResolver: rootOverridesResolver
-        })(function (_ref35) {
-          var theme = _ref35.theme,
-            ownerState = _ref35.ownerState;
+        })(function (_ref36) {
+          var theme = _ref36.theme,
+            ownerState = _ref36.ownerState;
           return _extends$2({}, theme.typography.body1, _defineProperty2({
             color: (theme.vars || theme).palette.text.primary,
             lineHeight: "1.4375em",
@@ -15697,9 +15697,9 @@
           name: "MuiInputBase",
           slot: "Input",
           overridesResolver: inputOverridesResolver
-        })(function (_ref36) {
-          var theme = _ref36.theme,
-            ownerState = _ref36.ownerState;
+        })(function (_ref37) {
+          var theme = _ref37.theme,
+            ownerState = _ref37.ownerState;
           var light = theme.palette.mode === "light";
           var placeholder = _extends$2({
             color: "currentColor"
@@ -16197,8 +16197,8 @@
             var ownerState = props.ownerState;
             return [styles.root, ownerState.invisible && styles.invisible];
           }
-        })(function (_ref37) {
-          var ownerState = _ref37.ownerState;
+        })(function (_ref38) {
+          var ownerState = _ref38.ownerState;
           return _extends$2({
             position: "fixed",
             display: "flex",
@@ -16317,9 +16317,9 @@
             var ownerState = props.ownerState;
             return [styles.root, styles[ownerState.variant], styles["".concat(ownerState.variant).concat(capitalize$1(ownerState.color))], styles["size".concat(capitalize$1(ownerState.size))], styles["".concat(ownerState.variant, "Size").concat(capitalize$1(ownerState.size))], ownerState.color === "inherit" && styles.colorInherit, ownerState.disableElevation && styles.disableElevation, ownerState.fullWidth && styles.fullWidth];
           }
-        })(function (_ref38) {
-          var theme = _ref38.theme,
-            ownerState = _ref38.ownerState;
+        })(function (_ref39) {
+          var theme = _ref39.theme,
+            ownerState = _ref39.ownerState;
           var _theme$palette$getCon, _theme$palette;
           var inheritContainedBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[800];
           var inheritContainedHoverBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey.A100 : theme.palette.grey[700];
@@ -16421,8 +16421,8 @@
           }, ownerState.fullWidth && {
             width: "100%"
           });
-        }, function (_ref39) {
-          var ownerState = _ref39.ownerState;
+        }, function (_ref40) {
+          var ownerState = _ref40.ownerState;
           return ownerState.disableElevation && _defineProperty2(_defineProperty2(_defineProperty2({
             boxShadow: "none",
             "&:hover": {
@@ -16443,8 +16443,8 @@
             var ownerState = props.ownerState;
             return [styles.startIcon, styles["iconSize".concat(capitalize$1(ownerState.size))]];
           }
-        })(function (_ref41) {
-          var ownerState = _ref41.ownerState;
+        })(function (_ref42) {
+          var ownerState = _ref42.ownerState;
           return _extends$2({
             display: "inherit",
             marginRight: 8,
@@ -16460,8 +16460,8 @@
             var ownerState = props.ownerState;
             return [styles.endIcon, styles["iconSize".concat(capitalize$1(ownerState.size))]];
           }
-        })(function (_ref42) {
-          var ownerState = _ref42.ownerState;
+        })(function (_ref43) {
+          var ownerState = _ref43.ownerState;
           return _extends$2({
             display: "inherit",
             marginRight: -4,
@@ -16746,10 +16746,10 @@
             scrollContainer.style.overflow = 'hidden';
           }
           var restore = function restore() {
-            restoreStyle.forEach(function (_ref43) {
-              var value = _ref43.value,
-                el = _ref43.el,
-                property = _ref43.property;
+            restoreStyle.forEach(function (_ref44) {
+              var value = _ref44.value,
+                el = _ref44.el,
+                property = _ref44.property;
               if (value) {
                 el.style.setProperty(property, value);
               } else {
@@ -17312,9 +17312,9 @@
             var ownerState = props.ownerState;
             return [styles.root, !ownerState.open && ownerState.exited && styles.hidden];
           }
-        })(function (_ref44) {
-          var theme = _ref44.theme,
-            ownerState = _ref44.ownerState;
+        })(function (_ref45) {
+          var theme = _ref45.theme,
+            ownerState = _ref45.ownerState;
           return _extends$2({
             position: "fixed",
             zIndex: (theme.vars || theme).zIndex.modal,
@@ -17492,9 +17492,9 @@
             var ownerState = props.ownerState;
             return [styles.root, ownerState.absolute && styles.absolute, styles[ownerState.variant], ownerState.light && styles.light, ownerState.orientation === "vertical" && styles.vertical, ownerState.flexItem && styles.flexItem, ownerState.children && styles.withChildren, ownerState.children && ownerState.orientation === "vertical" && styles.withChildrenVertical, ownerState.textAlign === "right" && ownerState.orientation !== "vertical" && styles.textAlignRight, ownerState.textAlign === "left" && ownerState.orientation !== "vertical" && styles.textAlignLeft];
           }
-        })(function (_ref45) {
-          var theme = _ref45.theme,
-            ownerState = _ref45.ownerState;
+        })(function (_ref46) {
+          var theme = _ref46.theme,
+            ownerState = _ref46.ownerState;
           return _extends$2({
             margin: 0,
             // Reset browser default style.
@@ -17526,8 +17526,8 @@
             alignSelf: "stretch",
             height: "auto"
           });
-        }, function (_ref46) {
-          var ownerState = _ref46.ownerState;
+        }, function (_ref47) {
+          var ownerState = _ref47.ownerState;
           return _extends$2({}, ownerState.children && {
             display: "flex",
             whiteSpace: "nowrap",
@@ -17538,18 +17538,18 @@
               alignSelf: "center"
             }
           });
-        }, function (_ref47) {
-          var theme = _ref47.theme,
-            ownerState = _ref47.ownerState;
+        }, function (_ref48) {
+          var theme = _ref48.theme,
+            ownerState = _ref48.ownerState;
           return _extends$2({}, ownerState.children && ownerState.orientation !== "vertical" && {
             "&::before, &::after": {
               width: "100%",
               borderTop: "thin solid ".concat((theme.vars || theme).palette.divider)
             }
           });
-        }, function (_ref48) {
-          var theme = _ref48.theme,
-            ownerState = _ref48.ownerState;
+        }, function (_ref49) {
+          var theme = _ref49.theme,
+            ownerState = _ref49.ownerState;
           return _extends$2({}, ownerState.children && ownerState.orientation === "vertical" && {
             flexDirection: "column",
             "&::before, &::after": {
@@ -17557,8 +17557,8 @@
               borderLeft: "thin solid ".concat((theme.vars || theme).palette.divider)
             }
           });
-        }, function (_ref49) {
-          var ownerState = _ref49.ownerState;
+        }, function (_ref50) {
+          var ownerState = _ref50.ownerState;
           return _extends$2({}, ownerState.textAlign === "right" && ownerState.orientation !== "vertical" && {
             "&::before": {
               width: "90%"
@@ -17582,9 +17582,9 @@
             var ownerState = props.ownerState;
             return [styles.wrapper, ownerState.orientation === "vertical" && styles.wrapperVertical];
           }
-        })(function (_ref50) {
-          var theme = _ref50.theme,
-            ownerState = _ref50.ownerState;
+        })(function (_ref51) {
+          var theme = _ref51.theme,
+            ownerState = _ref51.ownerState;
           return _extends$2({
             display: "inline-block",
             paddingLeft: "calc(".concat(theme.spacing(1), " * 1.2)"),
@@ -17665,9 +17665,9 @@
             var ownerState = props.ownerState;
             return [].concat(_toConsumableArray2(rootOverridesResolver(props, styles)), [!ownerState.disableUnderline && styles.underline]);
           }
-        })(function (_ref51) {
-          var theme = _ref51.theme,
-            ownerState = _ref51.ownerState;
+        })(function (_ref52) {
+          var theme = _ref52.theme,
+            ownerState = _ref52.ownerState;
           var _palette;
           var light = theme.palette.mode === "light";
           var bottomLineColor = light ? "rgba(0, 0, 0, 0.42)" : "rgba(255, 255, 255, 0.7)";
@@ -17757,9 +17757,9 @@
           name: "MuiFilledInput",
           slot: "Input",
           overridesResolver: inputOverridesResolver
-        })(function (_ref53) {
-          var theme = _ref53.theme,
-            ownerState = _ref53.ownerState;
+        })(function (_ref54) {
+          var theme = _ref54.theme,
+            ownerState = _ref54.ownerState;
           return _extends$2({
             paddingTop: 25,
             paddingRight: 12,
@@ -18047,9 +18047,9 @@
             var ownerState = props.ownerState;
             return [].concat(_toConsumableArray2(rootOverridesResolver(props, styles)), [!ownerState.disableUnderline && styles.underline]);
           }
-        })(function (_ref55) {
-          var theme = _ref55.theme,
-            ownerState = _ref55.ownerState;
+        })(function (_ref56) {
+          var theme = _ref56.theme,
+            ownerState = _ref56.ownerState;
           var light = theme.palette.mode === "light";
           var bottomLineColor = light ? "rgba(0, 0, 0, 0.42)" : "rgba(255, 255, 255, 0.7)";
           if (theme.vars) {
@@ -18178,9 +18178,9 @@
         var transformDeprecatedColors = function transformDeprecatedColors(color) {
           return colorTransformations[color] || color;
         };
-        var getTextDecoration = function getTextDecoration(_ref57) {
-          var theme = _ref57.theme,
-            ownerState = _ref57.ownerState;
+        var getTextDecoration = function getTextDecoration(_ref58) {
+          var theme = _ref58.theme,
+            ownerState = _ref58.ownerState;
           var transformedColor = transformDeprecatedColors(ownerState.color);
           var color = getPath(theme, "palette.".concat(transformedColor), false) || ownerState.color;
           var channelColor = getPath(theme, "palette.".concat(transformedColor, "Channel"));
@@ -18207,9 +18207,9 @@
             var ownerState = props.ownerState;
             return [styles.root, styles["underline".concat(capitalize$1(ownerState.underline))], ownerState.component === "button" && styles.button];
           }
-        })(function (_ref58) {
-          var theme = _ref58.theme,
-            ownerState = _ref58.ownerState;
+        })(function (_ref59) {
+          var theme = _ref59.theme,
+            ownerState = _ref59.ownerState;
           return _extends$2({}, ownerState.underline === "none" && {
             textDecoration: "none"
           }, ownerState.underline === "hover" && {
@@ -18349,8 +18349,8 @@
             var ownerState = props.ownerState;
             return [styles.root, !ownerState.disablePadding && styles.padding, ownerState.dense && styles.dense, ownerState.subheader && styles.subheader];
           }
-        })(function (_ref60) {
-          var ownerState = _ref60.ownerState;
+        })(function (_ref61) {
+          var ownerState = _ref61.ownerState;
           return _extends$2({
             listStyle: "none",
             margin: 0,
@@ -18489,8 +18489,8 @@
           }, [autoFocus]);
           reactExports.useImperativeHandle(actions, function () {
             return {
-              adjustStyleForScrollbar: function adjustStyleForScrollbar(containerElement, _ref61) {
-                var direction = _ref61.direction;
+              adjustStyleForScrollbar: function adjustStyleForScrollbar(containerElement, _ref62) {
+                var direction = _ref62.direction;
                 var noExplicitWidth = !listRef.current.style.width;
                 if (containerElement.clientHeight < listRef.current.clientHeight && noExplicitWidth) {
                   var scrollbarSize = "".concat(getScrollbarSize(ownerDocument(containerElement)), "px");
@@ -19117,9 +19117,9 @@
           name: "MuiMenuItem",
           slot: "Root",
           overridesResolver: overridesResolver
-        })(function (_ref62) {
-          var theme = _ref62.theme,
-            ownerState = _ref62.ownerState;
+        })(function (_ref63) {
+          var theme = _ref63.theme,
+            ownerState = _ref63.ownerState;
           return _extends$2({}, theme.typography.body1, {
             display: "flex",
             justifyContent: "flex-start",
@@ -19263,9 +19263,9 @@
           };
           return composeClasses(slots, getNativeSelectUtilityClasses, classes);
         };
-        var nativeSelectSelectStyles = function nativeSelectSelectStyles(_ref64) {
-          var ownerState = _ref64.ownerState,
-            theme = _ref64.theme;
+        var nativeSelectSelectStyles = function nativeSelectSelectStyles(_ref65) {
+          var ownerState = _ref65.ownerState,
+            theme = _ref65.theme;
           return _extends$2(_defineProperty2(_defineProperty2(_defineProperty2(_defineProperty2({
             MozAppearance: "none",
             // Reset
@@ -19323,9 +19323,9 @@
             return [styles.select, styles[ownerState.variant], ownerState.error && styles.error, _defineProperty2({}, "&.".concat(nativeSelectClasses.multiple), styles.multiple)];
           }
         })(nativeSelectSelectStyles);
-        var nativeSelectIconStyles = function nativeSelectIconStyles(_ref66) {
-          var ownerState = _ref66.ownerState,
-            theme = _ref66.theme;
+        var nativeSelectIconStyles = function nativeSelectIconStyles(_ref67) {
+          var ownerState = _ref67.ownerState,
+            theme = _ref67.theme;
           return _extends$2(_defineProperty2({
             // We use a position absolute over a flexbox in order to forward the pointer events
             // to the input and to support wrapping tags..
@@ -19404,9 +19404,9 @@
         });
         var NotchedOutlineLegend = styled("legend", {
           shouldForwardProp: rootShouldForwardProp
-        })(function (_ref67) {
-          var ownerState = _ref67.ownerState,
-            theme = _ref67.theme;
+        })(function (_ref68) {
+          var ownerState = _ref68.ownerState,
+            theme = _ref68.theme;
           return _extends$2({
             float: "unset",
             // Fix conflict with bootstrap
@@ -19497,9 +19497,9 @@
           name: "MuiOutlinedInput",
           slot: "Root",
           overridesResolver: rootOverridesResolver
-        })(function (_ref68) {
-          var theme = _ref68.theme,
-            ownerState = _ref68.ownerState;
+        })(function (_ref69) {
+          var theme = _ref69.theme,
+            ownerState = _ref69.ownerState;
           var borderColor = theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.23)" : "rgba(255, 255, 255, 0.23)";
           return _extends$2(_defineProperty2(_defineProperty2(_defineProperty2(_defineProperty2(_defineProperty2({
             position: "relative",
@@ -19531,8 +19531,8 @@
           overridesResolver: function overridesResolver(props, styles) {
             return styles.notchedOutline;
           }
-        })(function (_ref69) {
-          var theme = _ref69.theme;
+        })(function (_ref70) {
+          var theme = _ref70.theme;
           var borderColor = theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.23)" : "rgba(255, 255, 255, 0.23)";
           return {
             borderColor: theme.vars ? "rgba(".concat(theme.vars.palette.common.onBackgroundChannel, " / 0.23)") : borderColor
@@ -19542,9 +19542,9 @@
           name: "MuiOutlinedInput",
           slot: "Input",
           overridesResolver: inputOverridesResolver
-        })(function (_ref70) {
-          var theme = _ref70.theme,
-            ownerState = _ref70.ownerState;
+        })(function (_ref71) {
+          var theme = _ref71.theme,
+            ownerState = _ref71.ownerState;
           return _extends$2({
             padding: "16.5px 14px"
           }, !theme.vars && {
@@ -20370,8 +20370,8 @@
           overridesResolver: function overridesResolver(props, styles) {
             return styles.root;
           }
-        })(function (_ref76) {
-          var theme = _ref76.theme;
+        })(function (_ref77) {
+          var theme = _ref77.theme;
           var emphasis = theme.palette.mode === "light" ? 0.8 : 0.98;
           var backgroundColor = colorManipulatorExports.emphasize(theme.palette.background.default, emphasis);
           return _extends$2({}, theme.typography.body2, _defineProperty2({
@@ -20463,9 +20463,9 @@
             var ownerState = props.ownerState;
             return [styles.root, styles["anchorOrigin".concat(capitalize$1(ownerState.anchorOrigin.vertical)).concat(capitalize$1(ownerState.anchorOrigin.horizontal))]];
           }
-        })(function (_ref77) {
-          var theme = _ref77.theme,
-            ownerState = _ref77.ownerState;
+        })(function (_ref78) {
+          var theme = _ref78.theme,
+            ownerState = _ref78.ownerState;
           var center = {
             left: "50%",
             right: "auto",
@@ -21283,12 +21283,12 @@
           return isInBrowser() && typeof window.iTron !== 'undefined';
         }
         function openTronLink() {
-          var _ref78 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+          var _ref79 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
               dappIcon: '',
               dappName: ''
             },
-            dappIcon = _ref78.dappIcon,
-            dappName = _ref78.dappName;
+            dappIcon = _ref79.dappIcon,
+            dappName = _ref79.dappName;
           if (!supportTronLink() && isInMobileBrowser() && !isInTronLinkApp()) {
             var defaultDappName = '',
               defaultDappIcon = '';
@@ -22359,9 +22359,9 @@
               var nextCheckVersion = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ++versionHolder[1];
               if (checkVersion !== nextCheckVersion && !listeners.size) {
                 checkVersion = nextCheckVersion;
-                propProxyStates.forEach(function (_ref79) {
-                  var _ref80 = _slicedToArray2(_ref79, 1),
-                    propProxyState = _ref80[0];
+                propProxyStates.forEach(function (_ref80) {
+                  var _ref81 = _slicedToArray2(_ref80, 1),
+                    propProxyState = _ref81[0];
                   var propVersion = propProxyState[1](nextCheckVersion);
                   if (propVersion > version) {
                     version = propVersion;
@@ -22400,10 +22400,10 @@
             var addListener = function addListener(listener) {
               listeners.add(listener);
               if (listeners.size === 1) {
-                propProxyStates.forEach(function (_ref81, prop) {
-                  var _ref82 = _slicedToArray2(_ref81, 2),
-                    propProxyState = _ref82[0],
-                    prevRemove = _ref82[1];
+                propProxyStates.forEach(function (_ref82, prop) {
+                  var _ref83 = _slicedToArray2(_ref82, 2),
+                    propProxyState = _ref83[0],
+                    prevRemove = _ref83[1];
                   if ((__vite_import_meta_env__ ? "production" : void 0) !== "production" && prevRemove) {
                     throw new Error("remove already exists");
                   }
@@ -22414,10 +22414,10 @@
               var removeListener = function removeListener() {
                 listeners.delete(listener);
                 if (listeners.size === 0) {
-                  propProxyStates.forEach(function (_ref83, prop) {
-                    var _ref84 = _slicedToArray2(_ref83, 2),
-                      propProxyState = _ref84[0],
-                      remove = _ref84[1];
+                  propProxyStates.forEach(function (_ref84, prop) {
+                    var _ref85 = _slicedToArray2(_ref84, 2),
+                      propProxyState = _ref85[0],
+                      remove = _ref85[1];
                     if (remove) {
                       remove();
                       propProxyStates.set(prop, [propProxyState]);
@@ -22835,31 +22835,31 @@
           return _w$.apply(this, arguments);
         }
         function _w$() {
-          _w$ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee525(e, t) {
+          _w$ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee526(e, t) {
             var s, n;
-            return _regeneratorRuntime().wrap(function _callee525$(_context528) {
-              while (1) switch (_context528.prev = _context528.next) {
+            return _regeneratorRuntime().wrap(function _callee526$(_context529) {
+              while (1) switch (_context529.prev = _context529.next) {
                 case 0:
                   s = K$5({
                     sdkType: E$6,
                     sdkVersion: O$5
                   }, t), n = new URL(e, L$6);
                   n.searchParams.append("projectId", y$6.state.projectId);
-                  Object.entries(s).forEach(function (_ref340) {
-                    var _ref341 = _slicedToArray2(_ref340, 2),
-                      i = _ref341[0],
-                      l = _ref341[1];
+                  Object.entries(s).forEach(function (_ref339) {
+                    var _ref340 = _slicedToArray2(_ref339, 2),
+                      i = _ref340[0],
+                      l = _ref340[1];
                     l && n.searchParams.append(i, String(l));
                   });
-                  _context528.next = 5;
+                  _context529.next = 5;
                   return fetch(n);
                 case 5:
-                  return _context528.abrupt("return", _context528.sent.json());
+                  return _context529.abrupt("return", _context529.sent.json());
                 case 6:
                 case "end":
-                  return _context528.stop();
+                  return _context529.stop();
               }
-            }, _callee525);
+            }, _callee526);
           }));
           return _w$.apply(this, arguments);
         }
@@ -22971,7 +22971,7 @@
             state: d$5,
             getRecomendedWallets: function getRecomendedWallets() {
               return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
-                var _y$6$state, e, t, _s2, _yield$m$4$getAllList, _n2, _i15, _p$4$state, _s3, _n3, _i16, _l2, _v2, _ref85, _b2;
+                var _y$6$state, e, t, _s2, _yield$m$4$getAllList, _n2, _i15, _p$4$state, _s3, _n3, _i16, _l2, _v2, _ref86, _b2;
                 return _regeneratorRuntime().wrap(function _callee16$(_context16) {
                   while (1) switch (_context16.prev = _context16.next) {
                     case 0:
@@ -23032,8 +23032,8 @@
                     case 27:
                       _context16.t0 = _context16.sent;
                     case 28:
-                      _ref85 = _context16.t0;
-                      _b2 = _ref85.listings;
+                      _ref86 = _context16.t0;
+                      _b2 = _ref86.listings;
                       d$5.recomendedWallets = Object.values(_b2);
                     case 31:
                       return _context16.abrupt("return", d$5.recomendedWallets);
@@ -23046,7 +23046,7 @@
             },
             getWallets: function getWallets(e) {
               return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
-                var t, _y$6$state2, s, n, i, l, v, _ref86, b, f, A, U;
+                var t, _y$6$state2, s, n, i, l, v, _ref87, b, f, A, U;
                 return _regeneratorRuntime().wrap(function _callee17$(_context17) {
                   while (1) switch (_context17.prev = _context17.next) {
                     case 0:
@@ -23078,9 +23078,9 @@
                     case 14:
                       _context17.t0 = _context17.sent;
                     case 15:
-                      _ref86 = _context17.t0;
-                      b = _ref86.listings;
-                      f = _ref86.total;
+                      _ref87 = _context17.t0;
+                      b = _ref87.listings;
+                      f = _ref87.total;
                       A = Object.values(b);
                       U = v ? "search" : "wallets";
                       return _context17.abrupt("return", (d$5[U] = {
@@ -23244,7 +23244,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-moHyUQ9x.js');
+                        return module.import('./index-legacy-BBuW3kUV.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -26046,7 +26046,7 @@
             }
           };
           var startWatch = /*#__PURE__*/function () {
-            var _ref87 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20() {
+            var _ref88 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20() {
               var mountpoint;
               return _regeneratorRuntime().wrap(function _callee20$(_context20) {
                 while (1) switch (_context20.prev = _context20.next) {
@@ -26078,11 +26078,11 @@
               }, _callee20);
             }));
             return function startWatch() {
-              return _ref87.apply(this, arguments);
+              return _ref88.apply(this, arguments);
             };
           }();
           var stopWatch = /*#__PURE__*/function () {
-            var _ref88 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
+            var _ref89 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
               var mountpoint;
               return _regeneratorRuntime().wrap(function _callee21$(_context21) {
                 while (1) switch (_context21.prev = _context21.next) {
@@ -26115,7 +26115,7 @@
               }, _callee21);
             }));
             return function stopWatch() {
-              return _ref88.apply(this, arguments);
+              return _ref89.apply(this, arguments);
             };
           }();
           var runBatch = function runBatch(items, commonOptions, cb) {
@@ -26262,7 +26262,7 @@
                     case 0:
                       _context24.next = 2;
                       return runBatch(items, commonOptions, /*#__PURE__*/function () {
-                        var _ref89 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(batch) {
+                        var _ref90 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(batch) {
                           return _regeneratorRuntime().wrap(function _callee23$(_context23) {
                             while (1) switch (_context23.prev = _context23.next) {
                               case 0:
@@ -26295,7 +26295,7 @@
                           }, _callee23);
                         }));
                         return function (_x6) {
-                          return _ref89.apply(this, arguments);
+                          return _ref90.apply(this, arguments);
                         };
                       }());
                     case 2:
@@ -26547,7 +26547,7 @@
                       base = normalizeBaseKey(base);
                       _context31.next = 4;
                       return Promise.all(_getMounts(base, false).map( /*#__PURE__*/function () {
-                        var _ref90 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee29(m) {
+                        var _ref91 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee29(m) {
                           var _keys;
                           return _regeneratorRuntime().wrap(function _callee29$(_context30) {
                             while (1) switch (_context30.prev = _context30.next) {
@@ -26576,7 +26576,7 @@
                           }, _callee29);
                         }));
                         return function (_x7) {
-                          return _ref90.apply(this, arguments);
+                          return _ref91.apply(this, arguments);
                         };
                       }()));
                     case 4:
@@ -26742,21 +26742,21 @@
           return _dispose3.apply(this, arguments);
         }
         function _dispose3() {
-          _dispose3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee526(driver) {
-            return _regeneratorRuntime().wrap(function _callee526$(_context529) {
-              while (1) switch (_context529.prev = _context529.next) {
+          _dispose3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee527(driver) {
+            return _regeneratorRuntime().wrap(function _callee527$(_context530) {
+              while (1) switch (_context530.prev = _context530.next) {
                 case 0:
                   if (!(typeof driver.dispose === "function")) {
-                    _context529.next = 3;
+                    _context530.next = 3;
                     break;
                   }
-                  _context529.next = 3;
+                  _context530.next = 3;
                   return asyncCall(driver.dispose);
                 case 3:
                 case "end":
-                  return _context529.stop();
+                  return _context530.stop();
               }
-            }, _callee526);
+            }, _callee527);
           }));
           return _dispose3.apply(this, arguments);
         }
@@ -27245,7 +27245,7 @@
         var N$3 = "wc_storage_version",
           y$5 = 1,
           O$4 = /*#__PURE__*/function () {
-            var _ref92 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee48(i, t, e) {
+            var _ref93 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee48(i, t, e) {
               var n, s, a, m, _r2, _o2, _f2;
               return _regeneratorRuntime().wrap(function _callee48$(_context49) {
                 while (1) switch (_context49.prev = _context49.next) {
@@ -27315,16 +27315,16 @@
               }, _callee48);
             }));
             return function O$4(_x17, _x18, _x19) {
-              return _ref92.apply(this, arguments);
+              return _ref93.apply(this, arguments);
             };
           }(),
           j$5 = /*#__PURE__*/function () {
-            var _ref93 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee50(i, t) {
+            var _ref94 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee50(i, t) {
               return _regeneratorRuntime().wrap(function _callee50$(_context51) {
                 while (1) switch (_context51.prev = _context51.next) {
                   case 0:
                     t.length && t.forEach( /*#__PURE__*/function () {
-                      var _ref94 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee49(e) {
+                      var _ref95 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee49(e) {
                         return _regeneratorRuntime().wrap(function _callee49$(_context50) {
                           while (1) switch (_context50.prev = _context50.next) {
                             case 0:
@@ -27337,7 +27337,7 @@
                         }, _callee49);
                       }));
                       return function (_x22) {
-                        return _ref94.apply(this, arguments);
+                        return _ref95.apply(this, arguments);
                       };
                     }());
                   case 1:
@@ -27347,7 +27347,7 @@
               }, _callee50);
             }));
             return function j$5(_x20, _x21) {
-              return _ref93.apply(this, arguments);
+              return _ref94.apply(this, arguments);
             };
           }();
         var h$5 = /*#__PURE__*/function () {
@@ -55535,17 +55535,17 @@
             }
           }]);
         }();
-        var from = function from(_ref97) {
-          var name = _ref97.name,
-            prefix = _ref97.prefix,
-            encode = _ref97.encode,
-            decode = _ref97.decode;
+        var from = function from(_ref98) {
+          var name = _ref98.name,
+            prefix = _ref98.prefix,
+            encode = _ref98.encode,
+            decode = _ref98.decode;
           return new Codec(name, prefix, encode, decode);
         };
-        var baseX = function baseX(_ref98) {
-          var prefix = _ref98.prefix,
-            name = _ref98.name,
-            alphabet = _ref98.alphabet;
+        var baseX = function baseX(_ref99) {
+          var prefix = _ref99.prefix,
+            name = _ref99.name,
+            alphabet = _ref99.alphabet;
           var _brrp__multiformats_s = _brrp__multiformats_scope_baseX(alphabet, name),
             encode = _brrp__multiformats_s.encode,
             _decode2 = _brrp__multiformats_s.decode;
@@ -55612,11 +55612,11 @@
           }
           return out;
         };
-        var rfc4648 = function rfc4648(_ref99) {
-          var name = _ref99.name,
-            prefix = _ref99.prefix,
-            bitsPerChar = _ref99.bitsPerChar,
-            alphabet = _ref99.alphabet;
+        var rfc4648 = function rfc4648(_ref100) {
+          var name = _ref100.name,
+            prefix = _ref100.prefix,
+            bitsPerChar = _ref100.bitsPerChar,
+            alphabet = _ref100.alphabet;
           return from({
             prefix: prefix,
             name: name,
@@ -55973,7 +55973,7 @@
           return _signJWT.apply(this, arguments);
         }
         function _signJWT() {
-          _signJWT = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee527(sub, aud, ttl, keyPair) {
+          _signJWT = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee528(sub, aud, ttl, keyPair) {
             var iat,
               header,
               iss,
@@ -55981,11 +55981,11 @@
               payload,
               data,
               signature,
-              _args530 = arguments;
-            return _regeneratorRuntime().wrap(function _callee527$(_context530) {
-              while (1) switch (_context530.prev = _context530.next) {
+              _args531 = arguments;
+            return _regeneratorRuntime().wrap(function _callee528$(_context531) {
+              while (1) switch (_context531.prev = _context531.next) {
                 case 0:
-                  iat = _args530.length > 4 && _args530[4] !== undefined ? _args530[4] : cjsExports$3.fromMiliseconds(Date.now());
+                  iat = _args531.length > 4 && _args531[4] !== undefined ? _args531[4] : cjsExports$3.fromMiliseconds(Date.now());
                   header = {
                     alg: JWT_IRIDIUM_ALG,
                     typ: JWT_IRIDIUM_TYP
@@ -56004,16 +56004,16 @@
                     payload: payload
                   });
                   signature = ed25519Exports.sign(keyPair.secretKey, data);
-                  return _context530.abrupt("return", encodeJWT({
+                  return _context531.abrupt("return", encodeJWT({
                     header: header,
                     payload: payload,
                     signature: signature
                   }));
                 case 8:
                 case "end":
-                  return _context530.stop();
+                  return _context531.stop();
               }
-            }, _callee527);
+            }, _callee528);
           }));
           return _signJWT.apply(this, arguments);
         }
@@ -59329,15 +59329,15 @@
             n = In();
           return [[e, t].join("-"), [En, r].join("-"), i, n].join("/");
         }
-        function $o(_ref100) {
-          var e = _ref100.protocol,
-            t = _ref100.version,
-            r = _ref100.relayUrl,
-            i = _ref100.sdkVersion,
-            n = _ref100.auth,
-            o = _ref100.projectId,
-            h = _ref100.useOnCloseEvent,
-            p = _ref100.bundleId;
+        function $o(_ref101) {
+          var e = _ref101.protocol,
+            t = _ref101.version,
+            r = _ref101.relayUrl,
+            i = _ref101.sdkVersion,
+            n = _ref101.auth,
+            o = _ref101.projectId,
+            h = _ref101.useOnCloseEvent,
+            p = _ref101.bundleId;
           var b = r.split("?"),
             m = _n(e, t, i),
             w = {
@@ -59384,7 +59384,7 @@
         }
         function u0(e, t, r) {
           return new Promise( /*#__PURE__*/function () {
-            var _ref101 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee60(i, n) {
+            var _ref102 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee60(i, n) {
               var o, _h2;
               return _regeneratorRuntime().wrap(function _callee60$(_context61) {
                 while (1) switch (_context61.prev = _context61.next) {
@@ -59413,7 +59413,7 @@
               }, _callee60, null, [[1, 8]]);
             }));
             return function (_x32, _x33) {
-              return _ref101.apply(this, arguments);
+              return _ref102.apply(this, arguments);
             };
           }());
         }
@@ -59464,56 +59464,56 @@
           return _m.apply(this, arguments);
         }
         function _m() {
-          _m = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee528(_ref102) {
+          _m = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee529(_ref103) {
             var e, t, r, _i261, _n22, _o47, _h13;
-            return _regeneratorRuntime().wrap(function _callee528$(_context531) {
-              while (1) switch (_context531.prev = _context531.next) {
+            return _regeneratorRuntime().wrap(function _callee529$(_context532) {
+              while (1) switch (_context532.prev = _context532.next) {
                 case 0:
-                  e = _ref102.id, t = _ref102.topic, r = _ref102.wcDeepLink;
-                  _context531.prev = 1;
+                  e = _ref103.id, t = _ref103.topic, r = _ref103.wcDeepLink;
+                  _context532.prev = 1;
                   if (r) {
-                    _context531.next = 4;
+                    _context532.next = 4;
                     break;
                   }
-                  return _context531.abrupt("return");
+                  return _context532.abrupt("return");
                 case 4:
                   _i261 = typeof r == "string" ? JSON.parse(r) : r;
                   _n22 = _i261 === null || _i261 === void 0 ? void 0 : _i261.href;
                   if (!(typeof _n22 != "string")) {
-                    _context531.next = 8;
+                    _context532.next = 8;
                     break;
                   }
-                  return _context531.abrupt("return");
+                  return _context532.abrupt("return");
                 case 8:
                   _n22.endsWith("/") && (_n22 = _n22.slice(0, -1));
                   _o47 = "".concat(_n22, "/wc?requestId=").concat(e, "&sessionTopic=").concat(t), _h13 = We$2();
                   if (!(_h13 === qt$1.browser)) {
-                    _context531.next = 14;
+                    _context532.next = 14;
                     break;
                   }
                   _o47.startsWith("https://") || _o47.startsWith("http://") ? window.open(_o47, "_blank", "noreferrer noopener") : window.open(_o47, "_self", "noreferrer noopener");
-                  _context531.next = 18;
+                  _context532.next = 18;
                   break;
                 case 14:
-                  _context531.t0 = _h13 === qt$1.reactNative && _typeof2(distExports.global == null ? void 0 : distExports.global.Linking) < "u";
-                  if (!_context531.t0) {
-                    _context531.next = 18;
+                  _context532.t0 = _h13 === qt$1.reactNative && _typeof2(distExports.global == null ? void 0 : distExports.global.Linking) < "u";
+                  if (!_context532.t0) {
+                    _context532.next = 18;
                     break;
                   }
-                  _context531.next = 18;
+                  _context532.next = 18;
                   return distExports.global.Linking.openURL(_o47);
                 case 18:
-                  _context531.next = 23;
+                  _context532.next = 23;
                   break;
                 case 20:
-                  _context531.prev = 20;
-                  _context531.t1 = _context531["catch"](1);
-                  console.error(_context531.t1);
+                  _context532.prev = 20;
+                  _context532.t1 = _context532["catch"](1);
+                  console.error(_context532.t1);
                 case 23:
                 case "end":
-                  return _context531.stop();
+                  return _context532.stop();
               }
-            }, _callee528, null, [[1, 20]]);
+            }, _callee529, null, [[1, 20]]);
           }));
           return _m.apply(this, arguments);
         }
@@ -59521,31 +59521,31 @@
           return _g2.apply(this, arguments);
         }
         function _g2() {
-          _g2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee529(e, t) {
-            return _regeneratorRuntime().wrap(function _callee529$(_context532) {
-              while (1) switch (_context532.prev = _context532.next) {
+          _g2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee530(e, t) {
+            return _regeneratorRuntime().wrap(function _callee530$(_context533) {
+              while (1) switch (_context533.prev = _context533.next) {
                 case 0:
-                  _context532.prev = 0;
-                  _context532.next = 3;
+                  _context533.prev = 0;
+                  _context533.next = 3;
                   return e.getItem(t);
                 case 3:
-                  _context532.t0 = _context532.sent;
-                  if (_context532.t0) {
-                    _context532.next = 6;
+                  _context533.t0 = _context533.sent;
+                  if (_context533.t0) {
+                    _context533.next = 6;
                     break;
                   }
-                  _context532.t0 = pr$1() ? localStorage.getItem(t) : void 0;
+                  _context533.t0 = pr$1() ? localStorage.getItem(t) : void 0;
                 case 6:
-                  return _context532.abrupt("return", _context532.t0);
+                  return _context533.abrupt("return", _context533.t0);
                 case 9:
-                  _context532.prev = 9;
-                  _context532.t1 = _context532["catch"](0);
-                  console.error(_context532.t1);
+                  _context533.prev = 9;
+                  _context533.t1 = _context533["catch"](0);
+                  console.error(_context533.t1);
                 case 12:
                 case "end":
-                  return _context532.stop();
+                  return _context533.stop();
               }
-            }, _callee529, null, [[0, 9]]);
+            }, _callee530, null, [[0, 9]]);
           }));
           return _g2.apply(this, arguments);
         }
@@ -63670,27 +63670,27 @@
           return _Tf.apply(this, arguments);
         }
         function _Tf() {
-          _Tf = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee530(e, t, r, i, n, o) {
-            return _regeneratorRuntime().wrap(function _callee530$(_context533) {
-              while (1) switch (_context533.prev = _context533.next) {
+          _Tf = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee531(e, t, r, i, n, o) {
+            return _regeneratorRuntime().wrap(function _callee531$(_context534) {
+              while (1) switch (_context534.prev = _context534.next) {
                 case 0:
-                  _context533.t0 = r.t;
-                  _context533.next = _context533.t0 === "eip191" ? 3 : _context533.t0 === "eip1271" ? 4 : 7;
+                  _context534.t0 = r.t;
+                  _context534.next = _context534.t0 === "eip191" ? 3 : _context534.t0 === "eip1271" ? 4 : 7;
                   break;
                 case 3:
-                  return _context533.abrupt("return", Uf(e, t, r.s));
+                  return _context534.abrupt("return", Uf(e, t, r.s));
                 case 4:
-                  _context533.next = 6;
+                  _context534.next = 6;
                   return kf(e, t, r.s, i, n, o);
                 case 6:
-                  return _context533.abrupt("return", _context533.sent);
+                  return _context534.abrupt("return", _context534.sent);
                 case 7:
                   throw new Error("verifySignature failed: Attempted to verify CacaoSignature with unknown type: ".concat(r.t));
                 case 8:
                 case "end":
-                  return _context533.stop();
+                  return _context534.stop();
               }
-            }, _callee530);
+            }, _callee531);
           }));
           return _Tf.apply(this, arguments);
         }
@@ -63701,19 +63701,19 @@
           return _kf.apply(this, arguments);
         }
         function _kf() {
-          _kf = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee531(e, t, r, i, n, o) {
+          _kf = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee532(e, t, r, i, n, o) {
             var _h14, _p13, _b11, _m16, _w3, _y13, _S2, _yield$S$json, _I2;
-            return _regeneratorRuntime().wrap(function _callee531$(_context534) {
-              while (1) switch (_context534.prev = _context534.next) {
+            return _regeneratorRuntime().wrap(function _callee532$(_context535) {
+              while (1) switch (_context535.prev = _context535.next) {
                 case 0:
-                  _context534.prev = 0;
+                  _context535.prev = 0;
                   _h14 = "0x1626ba7e";
                   _p13 = "0000000000000000000000000000000000000000000000000000000000000040";
                   _b11 = "0000000000000000000000000000000000000000000000000000000000000041";
                   _m16 = r.substring(2);
                   _w3 = ff(t).substring(2);
                   _y13 = _h14 + _w3 + _p13 + _b11 + _m16;
-                  _context534.next = 9;
+                  _context535.next = 9;
                   return fetch("".concat(o || Xa, "/?chainId=").concat(i, "&projectId=").concat(n), {
                     method: "POST",
                     body: JSON.stringify({
@@ -63727,22 +63727,22 @@
                     })
                   });
                 case 9:
-                  _S2 = _context534.sent;
-                  _context534.next = 12;
+                  _S2 = _context535.sent;
+                  _context535.next = 12;
                   return _S2.json();
                 case 12:
-                  _yield$S$json = _context534.sent;
+                  _yield$S$json = _context535.sent;
                   _I2 = _yield$S$json.result;
-                  return _context534.abrupt("return", _I2 ? _I2.slice(0, _h14.length).toLowerCase() === _h14.toLowerCase() : !1);
+                  return _context535.abrupt("return", _I2 ? _I2.slice(0, _h14.length).toLowerCase() === _h14.toLowerCase() : !1);
                 case 17:
-                  _context534.prev = 17;
-                  _context534.t0 = _context534["catch"](0);
-                  return _context534.abrupt("return", (console.error("isValidEip1271Signature: ", _context534.t0), false));
+                  _context535.prev = 17;
+                  _context535.t0 = _context535["catch"](0);
+                  return _context535.abrupt("return", (console.error("isValidEip1271Signature: ", _context535.t0), false));
                 case 20:
                 case "end":
-                  return _context534.stop();
+                  return _context535.stop();
               }
-            }, _callee531, null, [[0, 17]]);
+            }, _callee532, null, [[0, 17]]);
           }));
           return _kf.apply(this, arguments);
         }
@@ -63804,21 +63804,21 @@
           return _ou.apply(this, arguments);
         }
         function _ou() {
-          _ou = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee532(e) {
+          _ou = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee533(e) {
             var t, r, i, n, o, h;
-            return _regeneratorRuntime().wrap(function _callee532$(_context535) {
-              while (1) switch (_context535.prev = _context535.next) {
+            return _regeneratorRuntime().wrap(function _callee533$(_context536) {
+              while (1) switch (_context536.prev = _context536.next) {
                 case 0:
                   t = e.cacao, r = e.projectId, i = t.s, n = t.p, o = zf(n, n.iss), h = Li(n.iss);
-                  _context535.next = 3;
+                  _context536.next = 3;
                   return Tf(h, o, i, zi(n.iss), r);
                 case 3:
-                  return _context535.abrupt("return", _context535.sent);
+                  return _context536.abrupt("return", _context536.sent);
                 case 4:
                 case "end":
-                  return _context535.stop();
+                  return _context536.stop();
               }
-            }, _callee532);
+            }, _callee533);
           }));
           return _ou.apply(this, arguments);
         }
@@ -64475,10 +64475,10 @@
         }
         function wo(e, t, r) {
           var i = null;
-          return Object.entries(e).forEach(function (_ref104) {
-            var _ref105 = _slicedToArray2(_ref104, 2),
-              n = _ref105[0],
-              o = _ref105[1];
+          return Object.entries(e).forEach(function (_ref105) {
+            var _ref106 = _slicedToArray2(_ref105, 2),
+              n = _ref106[0],
+              o = _ref106[1];
             if (i) return;
             var h = yo(n, _r$1(n, o), "".concat(t, " ").concat(r));
             h && (i = h);
@@ -64648,27 +64648,27 @@
           return _Co.apply(this, arguments);
         }
         function _Co() {
-          _Co = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee533() {
+          _Co = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee534() {
             var _e27;
-            return _regeneratorRuntime().wrap(function _callee533$(_context536) {
-              while (1) switch (_context536.prev = _context536.next) {
+            return _regeneratorRuntime().wrap(function _callee534$(_context537) {
+              while (1) switch (_context537.prev = _context537.next) {
                 case 0:
                   if (!(er$1() && _typeof2(distExports.global) < "u" && distExports.global != null && distExports.global.NetInfo)) {
-                    _context536.next = 5;
+                    _context537.next = 5;
                     break;
                   }
-                  _context536.next = 3;
+                  _context537.next = 3;
                   return distExports.global == null ? void 0 : distExports.global.NetInfo.fetch();
                 case 3:
-                  _e27 = _context536.sent;
-                  return _context536.abrupt("return", _e27 === null || _e27 === void 0 ? void 0 : _e27.isConnected);
+                  _e27 = _context537.sent;
+                  return _context537.abrupt("return", _e27 === null || _e27 === void 0 ? void 0 : _e27.isConnected);
                 case 5:
-                  return _context536.abrupt("return", true);
+                  return _context537.abrupt("return", true);
                 case 6:
                 case "end":
-                  return _context536.stop();
+                  return _context537.stop();
               }
-            }, _callee533);
+            }, _callee534);
           }));
           return _Co.apply(this, arguments);
         }
@@ -65027,7 +65027,7 @@
                   while (1) switch (_context66.prev = _context66.next) {
                     case 0:
                       return _context66.abrupt("return", new Promise( /*#__PURE__*/function () {
-                        var _ref106 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee64(i, s) {
+                        var _ref107 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee64(i, s) {
                           return _regeneratorRuntime().wrap(function _callee64$(_context65) {
                             while (1) switch (_context65.prev = _context65.next) {
                               case 0:
@@ -65066,7 +65066,7 @@
                           }, _callee64, null, [[1, 6], [10, 15]]);
                         }));
                         return function (_x54, _x55) {
-                          return _ref106.apply(this, arguments);
+                          return _ref107.apply(this, arguments);
                         };
                       }()));
                     case 1:
@@ -67383,17 +67383,17 @@
             }
           }]);
         }();
-        var W$1 = function W$1(_ref109) {
-            var n = _ref109.name,
-              e = _ref109.prefix,
-              t = _ref109.encode,
-              i = _ref109.decode;
+        var W$1 = function W$1(_ref110) {
+            var n = _ref110.name,
+              e = _ref110.prefix,
+              t = _ref110.encode,
+              i = _ref110.decode;
             return new ts$1(n, e, t, i);
           },
-          K$2 = function K$2(_ref110) {
-            var n = _ref110.prefix,
-              e = _ref110.name,
-              t = _ref110.alphabet;
+          K$2 = function K$2(_ref111) {
+            var n = _ref111.prefix,
+              e = _ref111.name,
+              t = _ref111.alphabet;
             var _Ji = Ji(t, e),
               i = _Ji.encode,
               s = _Ji.decode;
@@ -67433,11 +67433,11 @@
             if (o && (r += e[s & a << t - o]), i) for (; r.length * t & 7;) r += "=";
             return r;
           },
-          y$2 = function y$2(_ref111) {
-            var n = _ref111.name,
-              e = _ref111.prefix,
-              t = _ref111.bitsPerChar,
-              i = _ref111.alphabet;
+          y$2 = function y$2(_ref112) {
+            var n = _ref112.name,
+              e = _ref112.prefix,
+              t = _ref112.bitsPerChar,
+              i = _ref112.alphabet;
             return W$1({
               prefix: e,
               name: n,
@@ -67738,10 +67738,10 @@
           _classCallCheck2(this, nr);
           this.code = e, this.size = t, this.digest = i, this.bytes = s;
         });
-        var qe = function qe(_ref112) {
-          var n = _ref112.name,
-            e = _ref112.code,
-            t = _ref112.encode;
+        var qe = function qe(_ref113) {
+          var n = _ref113.name,
+            e = _ref113.code,
+            t = _ref113.encode;
           return new or(n, e, t);
         };
         var or = /*#__PURE__*/function () {
@@ -67764,7 +67764,7 @@
         }();
         var Ve = function Ve(n) {
             return /*#__PURE__*/function () {
-              var _ref113 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee71(e) {
+              var _ref114 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee71(e) {
                 return _regeneratorRuntime().wrap(function _callee71$(_context72) {
                   while (1) switch (_context72.prev = _context72.next) {
                     case 0:
@@ -67781,7 +67781,7 @@
                 }, _callee71);
               }));
               return function (_x57) {
-                return _ref113.apply(this, arguments);
+                return _ref114.apply(this, arguments);
               };
             }();
           },
@@ -68015,7 +68015,7 @@
             })), this.has = function (i) {
               return _this38.isInitialized(), _this38.keychain.has(i);
             }, this.set = /*#__PURE__*/function () {
-              var _ref115 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee73(i, s) {
+              var _ref116 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee73(i, s) {
                 return _regeneratorRuntime().wrap(function _callee73$(_context74) {
                   while (1) switch (_context74.prev = _context74.next) {
                     case 0:
@@ -68030,7 +68030,7 @@
                 }, _callee73);
               }));
               return function (_x58, _x59) {
-                return _ref115.apply(this, arguments);
+                return _ref116.apply(this, arguments);
               };
             }(), this.get = function (i) {
               _this38.isInitialized();
@@ -68042,7 +68042,7 @@
               }
               return s;
             }, this.del = /*#__PURE__*/function () {
-              var _ref116 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee74(i) {
+              var _ref117 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee74(i) {
                 return _regeneratorRuntime().wrap(function _callee74$(_context75) {
                   while (1) switch (_context75.prev = _context75.next) {
                     case 0:
@@ -68057,7 +68057,7 @@
                 }, _callee74);
               }));
               return function (_x60) {
-                return _ref116.apply(this, arguments);
+                return _ref117.apply(this, arguments);
               };
             }(), this.core = e, this.logger = E$4(t, this.name);
           }
@@ -68192,7 +68192,7 @@
               var s = mu();
               return _this39.setPrivateKey(s.publicKey, s.privateKey);
             }, this.signJWT = /*#__PURE__*/function () {
-              var _ref119 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee80(s) {
+              var _ref120 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee80(s) {
                 var r, o, a, h;
                 return _regeneratorRuntime().wrap(function _callee80$(_context81) {
                   while (1) switch (_context81.prev = _context81.next) {
@@ -68216,7 +68216,7 @@
                 }, _callee80);
               }));
               return function (_x62) {
-                return _ref119.apply(this, arguments);
+                return _ref120.apply(this, arguments);
               };
             }(), this.generateSharedKey = function (s, r, o) {
               _this39.isInitialized();
@@ -68224,7 +68224,7 @@
                 h = Au(a, r);
               return _this39.setSymKey(h, o);
             }, this.setSymKey = /*#__PURE__*/function () {
-              var _ref120 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee81(s, r) {
+              var _ref121 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee81(s, r) {
                 var o;
                 return _regeneratorRuntime().wrap(function _callee81$(_context82) {
                   while (1) switch (_context82.prev = _context82.next) {
@@ -68242,10 +68242,10 @@
                 }, _callee81);
               }));
               return function (_x63, _x64) {
-                return _ref120.apply(this, arguments);
+                return _ref121.apply(this, arguments);
               };
             }(), this.deleteKeyPair = /*#__PURE__*/function () {
-              var _ref121 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee82(s) {
+              var _ref122 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee82(s) {
                 return _regeneratorRuntime().wrap(function _callee82$(_context83) {
                   while (1) switch (_context83.prev = _context83.next) {
                     case 0:
@@ -68259,10 +68259,10 @@
                 }, _callee82);
               }));
               return function (_x65) {
-                return _ref121.apply(this, arguments);
+                return _ref122.apply(this, arguments);
               };
             }(), this.deleteSymKey = /*#__PURE__*/function () {
-              var _ref122 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee83(s) {
+              var _ref123 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee83(s) {
                 return _regeneratorRuntime().wrap(function _callee83$(_context84) {
                   while (1) switch (_context84.prev = _context84.next) {
                     case 0:
@@ -68276,10 +68276,10 @@
                 }, _callee83);
               }));
               return function (_x66) {
-                return _ref122.apply(this, arguments);
+                return _ref123.apply(this, arguments);
               };
             }(), this.encode = /*#__PURE__*/function () {
-              var _ref123 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee84(s, r, o) {
+              var _ref124 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee84(s, r, o) {
                 var a, h, _m4, _L, l, d, g;
                 return _regeneratorRuntime().wrap(function _callee84$(_context85) {
                   while (1) switch (_context85.prev = _context85.next) {
@@ -68310,10 +68310,10 @@
                 }, _callee84);
               }));
               return function (_x67, _x68, _x69) {
-                return _ref123.apply(this, arguments);
+                return _ref124.apply(this, arguments);
               };
             }(), this.decode = /*#__PURE__*/function () {
-              var _ref124 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee85(s, r, o) {
+              var _ref125 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee85(s, r, o) {
                 var a, _h8, _l3, _h9, _l4;
                 return _regeneratorRuntime().wrap(function _callee85$(_context86) {
                   while (1) switch (_context86.prev = _context86.next) {
@@ -68355,7 +68355,7 @@
                 }, _callee85, null, [[7, 12]]);
               }));
               return function (_x70, _x71, _x72) {
-                return _ref124.apply(this, arguments);
+                return _ref125.apply(this, arguments);
               };
             }(), this.getPayloadType = function (s) {
               var r = Xi$1(s);
@@ -68485,7 +68485,7 @@
                 }
               }, _callee88, null, [[2, 9, 12, 15]]);
             })), _this40.set = /*#__PURE__*/function () {
-              var _ref126 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee89(i, s) {
+              var _ref127 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee89(i, s) {
                 var r, o;
                 return _regeneratorRuntime().wrap(function _callee89$(_context90) {
                   while (1) switch (_context90.prev = _context90.next) {
@@ -68512,7 +68512,7 @@
                 }, _callee89);
               }));
               return function (_x75, _x76) {
-                return _ref126.apply(this, arguments);
+                return _ref127.apply(this, arguments);
               };
             }(), _this40.get = function (i) {
               _this40.isInitialized();
@@ -68524,7 +68524,7 @@
                 o = yu(s);
               return _typeof2(r[o]) < "u";
             }, _this40.del = /*#__PURE__*/function () {
-              var _ref127 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee90(i) {
+              var _ref128 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee90(i) {
                 return _regeneratorRuntime().wrap(function _callee90$(_context91) {
                   while (1) switch (_context91.prev = _context91.next) {
                     case 0:
@@ -68539,7 +68539,7 @@
                 }, _callee90);
               }));
               return function (_x77) {
-                return _ref127.apply(this, arguments);
+                return _ref128.apply(this, arguments);
               };
             }(), _this40.logger = E$4(e, _this40.name), _this40.core = t;
             return _this40;
@@ -68635,7 +68635,7 @@
             var _this41;
             _classCallCheck2(this, vr);
             _this41 = _callSuper(this, vr, [e, t]), _this41.relayer = e, _this41.logger = t, _this41.events = new eventsExports.EventEmitter(), _this41.name = ot, _this41.queue = /* @__PURE__ */new Map(), _this41.publishTimeout = cjsExports$3.toMiliseconds(cjsExports$3.ONE_MINUTE), _this41.failedPublishTimeout = cjsExports$3.toMiliseconds(cjsExports$3.ONE_SECOND), _this41.needsTransportRestart = false, _this41.publish = /*#__PURE__*/function () {
-              var _ref128 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee94(i, s, r) {
+              var _ref129 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee94(i, s, r) {
                 var o, a, h, l, d, g, m, L, u, p, T;
                 return _regeneratorRuntime().wrap(function _callee94$(_context95) {
                   while (1) switch (_context95.prev = _context95.next) {
@@ -68729,7 +68729,7 @@
                 }, _callee94, null, [[3, 23]]);
               }));
               return function (_x79, _x80, _x81) {
-                return _ref128.apply(this, arguments);
+                return _ref129.apply(this, arguments);
               };
             }(), _this41.on = function (i, s) {
               _this41.events.on(i, s);
@@ -68779,7 +68779,7 @@
             value: function checkQueue() {
               var _this42 = this;
               this.queue.forEach( /*#__PURE__*/function () {
-                var _ref129 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee95(e) {
+                var _ref130 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee95(e) {
                   var t, i, s;
                   return _regeneratorRuntime().wrap(function _callee95$(_context96) {
                     while (1) switch (_context96.prev = _context96.next) {
@@ -68794,7 +68794,7 @@
                   }, _callee95);
                 }));
                 return function (_x82) {
-                  return _ref129.apply(this, arguments);
+                  return _ref130.apply(this, arguments);
                 };
               }());
             }
@@ -68912,7 +68912,7 @@
                 }
               }, _callee96);
             })), _this45.subscribe = /*#__PURE__*/function () {
-              var _ref131 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee97(i, s) {
+              var _ref132 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee97(i, s) {
                 var _r20, o, _a2;
                 return _regeneratorRuntime().wrap(function _callee97$(_context98) {
                   while (1) switch (_context98.prev = _context98.next) {
@@ -68959,10 +68959,10 @@
                 }, _callee97, null, [[5, 14]]);
               }));
               return function (_x83, _x84) {
-                return _ref131.apply(this, arguments);
+                return _ref132.apply(this, arguments);
               };
             }(), _this45.unsubscribe = /*#__PURE__*/function () {
-              var _ref132 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee98(i, s) {
+              var _ref133 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee98(i, s) {
                 return _regeneratorRuntime().wrap(function _callee98$(_context99) {
                   while (1) switch (_context99.prev = _context99.next) {
                     case 0:
@@ -68989,10 +68989,10 @@
                 }, _callee98);
               }));
               return function (_x85, _x86) {
-                return _ref132.apply(this, arguments);
+                return _ref133.apply(this, arguments);
               };
             }(), _this45.isSubscribed = /*#__PURE__*/function () {
-              var _ref133 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee99(i) {
+              var _ref134 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee99(i) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee99$(_context100) {
                   while (1) switch (_context100.prev = _context100.next) {
@@ -69023,7 +69023,7 @@
                 }, _callee99);
               }));
               return function (_x87) {
-                return _ref133.apply(this, arguments);
+                return _ref134.apply(this, arguments);
               };
             }(), _this45.on = function (i, s) {
               _this45.events.on(i, s);
@@ -69137,7 +69137,7 @@
                       i = this.topicMap.get(e);
                       _context105.next = 3;
                       return Promise.all(i.map( /*#__PURE__*/function () {
-                        var _ref137 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee103(s) {
+                        var _ref138 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee103(s) {
                           return _regeneratorRuntime().wrap(function _callee103$(_context104) {
                             while (1) switch (_context104.prev = _context104.next) {
                               case 0:
@@ -69152,7 +69152,7 @@
                           }, _callee103);
                         }));
                         return function (_x90) {
-                          return _ref137.apply(this, arguments);
+                          return _ref138.apply(this, arguments);
                         };
                       }()));
                     case 3:
@@ -69787,7 +69787,7 @@
                   }
                 }, _callee119);
               }))), this.events.on(S$3.created, /*#__PURE__*/function () {
-                var _ref139 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee120(e) {
+                var _ref140 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee120(e) {
                   var t;
                   return _regeneratorRuntime().wrap(function _callee120$(_context121) {
                     while (1) switch (_context121.prev = _context121.next) {
@@ -69808,10 +69808,10 @@
                   }, _callee120);
                 }));
                 return function (_x104) {
-                  return _ref139.apply(this, arguments);
+                  return _ref140.apply(this, arguments);
                 };
               }()), this.events.on(S$3.deleted, /*#__PURE__*/function () {
-                var _ref140 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee121(e) {
+                var _ref141 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee121(e) {
                   var t;
                   return _regeneratorRuntime().wrap(function _callee121$(_context122) {
                     while (1) switch (_context122.prev = _context122.next) {
@@ -69832,7 +69832,7 @@
                   }, _callee121);
                 }));
                 return function (_x105) {
-                  return _ref140.apply(this, arguments);
+                  return _ref141.apply(this, arguments);
                 };
               }());
             }
@@ -69912,7 +69912,7 @@
             var _this53;
             _classCallCheck2(this, Ft);
             _this53 = _callSuper(this, Ft, [e]), _this53.protocol = "wc", _this53.version = 2, _this53.events = new eventsExports.EventEmitter(), _this53.name = ct, _this53.transportExplicitlyClosed = false, _this53.initialized = false, _this53.connectionAttemptInProgress = false, _this53.connectionStatusPollingInterval = 20, _this53.staleConnectionErrors = ["socket hang up", "stalled", "interrupted"], _this53.hasExperiencedNetworkDisruption = false, _this53.requestsInFlight = /* @__PURE__ */new Map(), _this53.heartBeatTimeout = cjsExports$3.toMiliseconds(cjsExports$3.THIRTY_SECONDS + cjsExports$3.ONE_SECOND), _this53.request = /*#__PURE__*/function () {
-              var _ref141 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee124(t) {
+              var _ref142 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee124(t) {
                 var i, s, r, o, _a3;
                 return _regeneratorRuntime().wrap(function _callee124$(_context125) {
                   while (1) switch (_context125.prev = _context125.next) {
@@ -69934,7 +69934,7 @@
                       }, "relayer.request - attempt to publish...");
                       _context125.next = 9;
                       return new Promise( /*#__PURE__*/function () {
-                        var _ref142 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee123(h, l) {
+                        var _ref143 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee123(h, l) {
                           var d, g;
                           return _regeneratorRuntime().wrap(function _callee123$(_context124) {
                             while (1) switch (_context124.prev = _context124.next) {
@@ -69955,7 +69955,7 @@
                           }, _callee123);
                         }));
                         return function (_x107, _x108) {
-                          return _ref142.apply(this, arguments);
+                          return _ref143.apply(this, arguments);
                         };
                       }());
                     case 9:
@@ -69980,7 +69980,7 @@
                 }, _callee124, null, [[4, 13, 16, 19]]);
               }));
               return function (_x106) {
-                return _ref141.apply(this, arguments);
+                return _ref142.apply(this, arguments);
               };
             }(), _this53.resetPingTimeout = function () {
               if (pi()) try {
@@ -70118,7 +70118,7 @@
                       return Promise.all([new Promise(function (a) {
                         r = a, _this55.subscriber.on(S$3.created, o);
                       }), new Promise( /*#__PURE__*/function () {
-                        var _ref144 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee128(a) {
+                        var _ref145 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee128(a) {
                           return _regeneratorRuntime().wrap(function _callee128$(_context129) {
                             while (1) switch (_context129.prev = _context129.next) {
                               case 0:
@@ -70141,7 +70141,7 @@
                           }, _callee128);
                         }));
                         return function (_x114) {
-                          return _ref144.apply(this, arguments);
+                          return _ref145.apply(this, arguments);
                         };
                       }())]);
                     case 5:
@@ -70297,7 +70297,7 @@
                       _context135.prev = 11;
                       _context135.next = 14;
                       return new Promise( /*#__PURE__*/function () {
-                        var _ref145 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee133(t, i) {
+                        var _ref146 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee133(t, i) {
                           var s;
                           return _regeneratorRuntime().wrap(function _callee133$(_context134) {
                             while (1) switch (_context134.prev = _context134.next) {
@@ -70323,7 +70323,7 @@
                           }, _callee133);
                         }));
                         return function (_x118, _x119) {
-                          return _ref145.apply(this, arguments);
+                          return _ref146.apply(this, arguments);
                         };
                       }());
                     case 14:
@@ -70714,7 +70714,7 @@
                     case 2:
                       e = _context146.sent;
                       ch( /*#__PURE__*/function () {
-                        var _ref146 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee144(t) {
+                        var _ref147 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee144(t) {
                           return _regeneratorRuntime().wrap(function _callee144$(_context145) {
                             while (1) switch (_context145.prev = _context145.next) {
                               case 0:
@@ -70748,7 +70748,7 @@
                           }, _callee144);
                         }));
                         return function (_x127) {
-                          return _ref146.apply(this, arguments);
+                          return _ref147.apply(this, arguments);
                         };
                       }());
                     case 4:
@@ -70914,7 +70914,7 @@
                 }
               }, _callee149);
             })), _this62.set = /*#__PURE__*/function () {
-              var _ref149 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee150(o, a) {
+              var _ref150 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee150(o, a) {
                 return _regeneratorRuntime().wrap(function _callee150$(_context151) {
                   while (1) switch (_context151.prev = _context151.next) {
                     case 0:
@@ -70946,7 +70946,7 @@
                 }, _callee150);
               }));
               return function (_x128, _x129) {
-                return _ref149.apply(this, arguments);
+                return _ref150.apply(this, arguments);
               };
             }(), _this62.get = function (o) {
               return _this62.isInitialized(), _this62.logger.debug("Getting value"), _this62.logger.trace({
@@ -70961,7 +70961,7 @@
                 });
               }) : _this62.values;
             }, _this62.update = /*#__PURE__*/function () {
-              var _ref150 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee151(o, a) {
+              var _ref151 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee151(o, a) {
                 var h;
                 return _regeneratorRuntime().wrap(function _callee151$(_context152) {
                   while (1) switch (_context152.prev = _context152.next) {
@@ -70983,10 +70983,10 @@
                 }, _callee151);
               }));
               return function (_x130, _x131) {
-                return _ref150.apply(this, arguments);
+                return _ref151.apply(this, arguments);
               };
             }(), _this62.delete = /*#__PURE__*/function () {
-              var _ref151 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee152(o, a) {
+              var _ref152 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee152(o, a) {
                 return _regeneratorRuntime().wrap(function _callee152$(_context153) {
                   while (1) switch (_context153.prev = _context153.next) {
                     case 0:
@@ -71014,7 +71014,7 @@
                 }, _callee152);
               }));
               return function (_x132, _x133) {
-                return _ref151.apply(this, arguments);
+                return _ref152.apply(this, arguments);
               };
             }(), _this62.logger = E$4(t, _this62.name), _this62.storagePrefix = s, _this62.getKey = r;
             return _this62;
@@ -71215,11 +71215,11 @@
                     return _context158.stop();
                 }
               }, _callee157);
-            })), this.register = function (_ref153) {
-              var i = _ref153.methods;
+            })), this.register = function (_ref154) {
+              var i = _ref154.methods;
               _this63.isInitialized(), _this63.registeredMethods = _toConsumableArray2( /* @__PURE__ */new Set([].concat(_toConsumableArray2(_this63.registeredMethods), _toConsumableArray2(i))));
             }, this.create = /*#__PURE__*/function () {
-              var _ref154 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee158(i) {
+              var _ref155 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee158(i) {
                 var s, r, o, a, h, l;
                 return _regeneratorRuntime().wrap(function _callee158$(_context159) {
                   while (1) switch (_context159.prev = _context159.next) {
@@ -71267,10 +71267,10 @@
                 }, _callee158);
               }));
               return function (_x135) {
-                return _ref154.apply(this, arguments);
+                return _ref155.apply(this, arguments);
               };
             }(), this.pair = /*#__PURE__*/function () {
-              var _ref155 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee159(i) {
+              var _ref156 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee159(i) {
                 var _Pu, s, r, o, a, h, l, d, g;
                 return _regeneratorRuntime().wrap(function _callee159$(_context160) {
                   while (1) switch (_context160.prev = _context160.next) {
@@ -71326,15 +71326,15 @@
                 }, _callee159);
               }));
               return function (_x136) {
-                return _ref155.apply(this, arguments);
+                return _ref156.apply(this, arguments);
               };
             }(), this.activate = /*#__PURE__*/function () {
-              var _ref157 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee160(_ref156) {
+              var _ref158 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee160(_ref157) {
                 var i, s;
                 return _regeneratorRuntime().wrap(function _callee160$(_context161) {
                   while (1) switch (_context161.prev = _context161.next) {
                     case 0:
-                      i = _ref156.topic;
+                      i = _ref157.topic;
                       _this63.isInitialized();
                       s = d0(cjsExports$3.THIRTY_DAYS);
                       _this63.core.expirer.set(i, s);
@@ -71350,10 +71350,10 @@
                 }, _callee160);
               }));
               return function (_x137) {
-                return _ref157.apply(this, arguments);
+                return _ref158.apply(this, arguments);
               };
             }(), this.ping = /*#__PURE__*/function () {
-              var _ref158 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee161(i) {
+              var _ref159 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee161(i) {
                 var s, _r23, _a4, _o10, _a5, _h10;
                 return _regeneratorRuntime().wrap(function _callee161$(_context162) {
                   while (1) switch (_context162.prev = _context162.next) {
@@ -71375,8 +71375,8 @@
                       _o10 = _a4.done;
                       _a5 = _a4.resolve;
                       _h10 = _a4.reject;
-                      _this63.events.once(v0("pairing_ping", _r23), function (_ref159) {
-                        var l = _ref159.error;
+                      _this63.events.once(v0("pairing_ping", _r23), function (_ref160) {
+                        var l = _ref160.error;
                         l ? _h10(l) : _a5();
                       });
                       _context162.next = 15;
@@ -71388,15 +71388,15 @@
                 }, _callee161);
               }));
               return function (_x138) {
-                return _ref158.apply(this, arguments);
+                return _ref159.apply(this, arguments);
               };
             }(), this.updateExpiry = /*#__PURE__*/function () {
-              var _ref161 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee162(_ref160) {
+              var _ref162 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee162(_ref161) {
                 var i, s;
                 return _regeneratorRuntime().wrap(function _callee162$(_context163) {
                   while (1) switch (_context163.prev = _context163.next) {
                     case 0:
-                      i = _ref160.topic, s = _ref160.expiry;
+                      i = _ref161.topic, s = _ref161.expiry;
                       _this63.isInitialized();
                       _context163.next = 4;
                       return _this63.pairings.update(i, {
@@ -71409,15 +71409,15 @@
                 }, _callee162);
               }));
               return function (_x139) {
-                return _ref161.apply(this, arguments);
+                return _ref162.apply(this, arguments);
               };
             }(), this.updateMetadata = /*#__PURE__*/function () {
-              var _ref163 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee163(_ref162) {
+              var _ref164 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee163(_ref163) {
                 var i, s;
                 return _regeneratorRuntime().wrap(function _callee163$(_context164) {
                   while (1) switch (_context164.prev = _context164.next) {
                     case 0:
-                      i = _ref162.topic, s = _ref162.metadata;
+                      i = _ref163.topic, s = _ref163.metadata;
                       _this63.isInitialized();
                       _context164.next = 4;
                       return _this63.pairings.update(i, {
@@ -71430,12 +71430,12 @@
                 }, _callee163);
               }));
               return function (_x140) {
-                return _ref163.apply(this, arguments);
+                return _ref164.apply(this, arguments);
               };
             }(), this.getPairings = function () {
               return _this63.isInitialized(), _this63.pairings.values;
             }, this.disconnect = /*#__PURE__*/function () {
-              var _ref164 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee164(i) {
+              var _ref165 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee164(i) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee164$(_context165) {
                   while (1) switch (_context165.prev = _context165.next) {
@@ -71462,10 +71462,10 @@
                 }, _callee164);
               }));
               return function (_x141) {
-                return _ref164.apply(this, arguments);
+                return _ref165.apply(this, arguments);
               };
             }(), this.sendRequest = /*#__PURE__*/function () {
-              var _ref165 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee165(i, s, r) {
+              var _ref166 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee165(i, s, r) {
                 var o, a, h;
                 return _regeneratorRuntime().wrap(function _callee165$(_context166) {
                   while (1) switch (_context166.prev = _context166.next) {
@@ -71484,10 +71484,10 @@
                 }, _callee165);
               }));
               return function (_x142, _x143, _x144) {
-                return _ref165.apply(this, arguments);
+                return _ref166.apply(this, arguments);
               };
             }(), this.sendResult = /*#__PURE__*/function () {
-              var _ref166 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee166(i, s, r) {
+              var _ref167 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee166(i, s, r) {
                 var o, a, h, l;
                 return _regeneratorRuntime().wrap(function _callee166$(_context167) {
                   while (1) switch (_context167.prev = _context167.next) {
@@ -71514,10 +71514,10 @@
                 }, _callee166);
               }));
               return function (_x145, _x146, _x147) {
-                return _ref166.apply(this, arguments);
+                return _ref167.apply(this, arguments);
               };
             }(), this.sendError = /*#__PURE__*/function () {
-              var _ref167 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee167(i, s, r) {
+              var _ref168 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee167(i, s, r) {
                 var o, a, h, l;
                 return _regeneratorRuntime().wrap(function _callee167$(_context168) {
                   while (1) switch (_context168.prev = _context168.next) {
@@ -71544,10 +71544,10 @@
                 }, _callee167);
               }));
               return function (_x148, _x149, _x150) {
-                return _ref167.apply(this, arguments);
+                return _ref168.apply(this, arguments);
               };
             }(), this.deletePairing = /*#__PURE__*/function () {
-              var _ref168 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee168(i, s) {
+              var _ref169 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee168(i, s) {
                 return _regeneratorRuntime().wrap(function _callee168$(_context169) {
                   while (1) switch (_context169.prev = _context169.next) {
                     case 0:
@@ -71563,7 +71563,7 @@
                 }, _callee168);
               }));
               return function (_x151, _x152) {
-                return _ref168.apply(this, arguments);
+                return _ref169.apply(this, arguments);
               };
             }(), this.cleanup = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee169() {
               var i;
@@ -71594,7 +71594,7 @@
                   return _this63.onUnknownRpcMethodRequest(s, r);
               }
             }, this.onRelayEventResponse = /*#__PURE__*/function () {
-              var _ref170 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee170(i) {
+              var _ref171 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee170(i) {
                 var s, r, o;
                 return _regeneratorRuntime().wrap(function _callee170$(_context171) {
                   while (1) switch (_context171.prev = _context171.next) {
@@ -71619,10 +71619,10 @@
                 }, _callee170);
               }));
               return function (_x153) {
-                return _ref170.apply(this, arguments);
+                return _ref171.apply(this, arguments);
               };
             }(), this.onPairingPingRequest = /*#__PURE__*/function () {
-              var _ref171 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee171(i, s) {
+              var _ref172 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee171(i, s) {
                 var r;
                 return _regeneratorRuntime().wrap(function _callee171$(_context172) {
                   while (1) switch (_context172.prev = _context172.next) {
@@ -71655,7 +71655,7 @@
                 }, _callee171, null, [[1, 8]]);
               }));
               return function (_x154, _x155) {
-                return _ref171.apply(this, arguments);
+                return _ref172.apply(this, arguments);
               };
             }(), this.onPairingPingResponse = function (i, s) {
               var r = s.id;
@@ -71665,7 +71665,7 @@
                 });
               }, 500);
             }, this.onPairingDeleteRequest = /*#__PURE__*/function () {
-              var _ref172 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee172(i, s) {
+              var _ref173 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee172(i, s) {
                 var r;
                 return _regeneratorRuntime().wrap(function _callee172$(_context173) {
                   while (1) switch (_context173.prev = _context173.next) {
@@ -71698,10 +71698,10 @@
                 }, _callee172, null, [[1, 8]]);
               }));
               return function (_x156, _x157) {
-                return _ref172.apply(this, arguments);
+                return _ref173.apply(this, arguments);
               };
             }(), this.onUnknownRpcMethodRequest = /*#__PURE__*/function () {
-              var _ref173 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee173(i, s) {
+              var _ref174 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee173(i, s) {
                 var r, o, _a6;
                 return _regeneratorRuntime().wrap(function _callee173$(_context174) {
                   while (1) switch (_context174.prev = _context174.next) {
@@ -71735,7 +71735,7 @@
                 }, _callee173, null, [[1, 10]]);
               }));
               return function (_x158, _x159) {
-                return _ref173.apply(this, arguments);
+                return _ref174.apply(this, arguments);
               };
             }(), this.onUnknownRpcMethodResponse = function (i) {
               _this63.registeredMethods.includes(i) || _this63.logger.error(tr$1("WC_METHOD_UNSUPPORTED", i));
@@ -71768,7 +71768,7 @@
                 throw new Error(_o15);
               }
             }, this.isValidPing = /*#__PURE__*/function () {
-              var _ref174 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee174(i) {
+              var _ref175 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee174(i) {
                 var _xe$18, _r24, s;
                 return _regeneratorRuntime().wrap(function _callee174$(_context175) {
                   while (1) switch (_context175.prev = _context175.next) {
@@ -71790,10 +71790,10 @@
                 }, _callee174);
               }));
               return function (_x160) {
-                return _ref174.apply(this, arguments);
+                return _ref175.apply(this, arguments);
               };
             }(), this.isValidDisconnect = /*#__PURE__*/function () {
-              var _ref175 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee175(i) {
+              var _ref176 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee175(i) {
                 var _xe$19, _r25, s;
                 return _regeneratorRuntime().wrap(function _callee175$(_context176) {
                   while (1) switch (_context176.prev = _context176.next) {
@@ -71815,10 +71815,10 @@
                 }, _callee175);
               }));
               return function (_x161) {
-                return _ref175.apply(this, arguments);
+                return _ref176.apply(this, arguments);
               };
             }(), this.isValidPairingTopic = /*#__PURE__*/function () {
-              var _ref176 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee176(i) {
+              var _ref177 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee176(i) {
                 var _xe$20, _s7, _xe$21, _s8, _xe$22, _s9;
                 return _regeneratorRuntime().wrap(function _callee176$(_context177) {
                   while (1) switch (_context177.prev = _context177.next) {
@@ -71853,7 +71853,7 @@
                 }, _callee176);
               }));
               return function (_x162) {
-                return _ref176.apply(this, arguments);
+                return _ref177.apply(this, arguments);
               };
             }(), this.core = e, this.logger = E$4(t, this.name), this.pairings = new kt(this.core, this.logger, this.name, this.storagePrefix);
           }
@@ -71876,7 +71876,7 @@
             value: function registerRelayerEvents() {
               var _this64 = this;
               this.core.relayer.on(f$4.message, /*#__PURE__*/function () {
-                var _ref177 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee177(e) {
+                var _ref178 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee177(e) {
                   var t, i, s;
                   return _regeneratorRuntime().wrap(function _callee177$(_context178) {
                     while (1) switch (_context178.prev = _context178.next) {
@@ -71933,7 +71933,7 @@
                   }, _callee177, null, [[6, 20]]);
                 }));
                 return function (_x163) {
-                  return _ref177.apply(this, arguments);
+                  return _ref178.apply(this, arguments);
                 };
               }());
             }
@@ -71942,7 +71942,7 @@
             value: function registerExpirerEvents() {
               var _this65 = this;
               this.core.expirer.on(C$4.expired, /*#__PURE__*/function () {
-                var _ref178 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee178(e) {
+                var _ref179 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee178(e) {
                   var _l5, t;
                   return _regeneratorRuntime().wrap(function _callee178$(_context179) {
                     while (1) switch (_context179.prev = _context179.next) {
@@ -71966,7 +71966,7 @@
                   }, _callee178);
                 }));
                 return function (_x164) {
-                  return _ref178.apply(this, arguments);
+                  return _ref179.apply(this, arguments);
                 };
               }());
             }
@@ -72020,7 +72020,7 @@
               };
               _this66.records.set(o.id, o), _this66.persist(), _this66.events.emit(I$2.created, o);
             }, _this66.resolve = /*#__PURE__*/function () {
-              var _ref180 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee180(i) {
+              var _ref181 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee180(i) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee180$(_context181) {
                   while (1) switch (_context181.prev = _context181.next) {
@@ -72051,10 +72051,10 @@
                 }, _callee180);
               }));
               return function (_x165) {
-                return _ref180.apply(this, arguments);
+                return _ref181.apply(this, arguments);
               };
             }(), _this66.get = /*#__PURE__*/function () {
-              var _ref181 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee181(i, s) {
+              var _ref182 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee181(i, s) {
                 return _regeneratorRuntime().wrap(function _callee181$(_context182) {
                   while (1) switch (_context182.prev = _context182.next) {
                     case 0:
@@ -72077,7 +72077,7 @@
                 }, _callee181);
               }));
               return function (_x166, _x167) {
-                return _ref181.apply(this, arguments);
+                return _ref182.apply(this, arguments);
               };
             }(), _this66.delete = function (i, s) {
               _this66.isInitialized(), _this66.logger.debug("Deleting record"), _this66.logger.trace({
@@ -72091,7 +72091,7 @@
                 }
               }), _this66.persist();
             }, _this66.exists = /*#__PURE__*/function () {
-              var _ref182 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee182(i, s) {
+              var _ref183 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee182(i, s) {
                 return _regeneratorRuntime().wrap(function _callee182$(_context183) {
                   while (1) switch (_context183.prev = _context183.next) {
                     case 0:
@@ -72119,7 +72119,7 @@
                 }, _callee182);
               }));
               return function (_x168, _x169) {
-                return _ref182.apply(this, arguments);
+                return _ref183.apply(this, arguments);
               };
             }(), _this66.on = function (i, s) {
               _this66.events.on(i, s);
@@ -72645,7 +72645,7 @@
             var _this72;
             _classCallCheck2(this, jt);
             _this72 = _callSuper(this, jt, [e, t]), _this72.projectId = e, _this72.logger = t, _this72.name = Z$1, _this72.initialized = false, _this72.queue = [], _this72.verifyDisabled = false, _this72.init = /*#__PURE__*/function () {
-              var _ref184 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee192(i) {
+              var _ref185 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee192(i) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee192$(_context193) {
                   while (1) switch (_context193.prev = _context193.next) {
@@ -72675,10 +72675,10 @@
                 }, _callee192, null, [[4, 9]]);
               }));
               return function (_x172) {
-                return _ref184.apply(this, arguments);
+                return _ref185.apply(this, arguments);
               };
             }(), _this72.register = /*#__PURE__*/function () {
-              var _ref185 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee193(i) {
+              var _ref186 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee193(i) {
                 return _regeneratorRuntime().wrap(function _callee193$(_context194) {
                   while (1) switch (_context194.prev = _context194.next) {
                     case 0:
@@ -72700,10 +72700,10 @@
                 }, _callee193);
               }));
               return function (_x173) {
-                return _ref185.apply(this, arguments);
+                return _ref186.apply(this, arguments);
               };
             }(), _this72.resolve = /*#__PURE__*/function () {
-              var _ref186 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee194(i) {
+              var _ref187 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee194(i) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee194$(_context195) {
                   while (1) switch (_context195.prev = _context195.next) {
@@ -72723,10 +72723,10 @@
                 }, _callee194);
               }));
               return function (_x174) {
-                return _ref186.apply(this, arguments);
+                return _ref187.apply(this, arguments);
               };
             }(), _this72.fetchAttestation = /*#__PURE__*/function () {
-              var _ref187 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee195(i, s) {
+              var _ref188 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee195(i, s) {
                 var r, o;
                 return _regeneratorRuntime().wrap(function _callee195$(_context196) {
                   while (1) switch (_context196.prev = _context196.next) {
@@ -72761,7 +72761,7 @@
                 }, _callee195);
               }));
               return function (_x175, _x176) {
-                return _ref187.apply(this, arguments);
+                return _ref188.apply(this, arguments);
               };
             }(), _this72.addToQueue = function (i) {
               _this72.queue.push(i);
@@ -72831,7 +72831,7 @@
             var _this74;
             _classCallCheck2(this, Gt);
             _this74 = _callSuper(this, Gt, [e, t]), _this74.projectId = e, _this74.logger = t, _this74.context = Rt, _this74.registerDeviceToken = /*#__PURE__*/function () {
-              var _ref189 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee197(i) {
+              var _ref190 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee197(i) {
                 var s, r, o, _i$enableEncrypted, a, h;
                 return _regeneratorRuntime().wrap(function _callee197$(_context198) {
                   while (1) switch (_context198.prev = _context198.next) {
@@ -72857,7 +72857,7 @@
                 }, _callee197);
               }));
               return function (_x177) {
-                return _ref189.apply(this, arguments);
+                return _ref190.apply(this, arguments);
               };
             }(), _this74.logger = E$4(t, _this74.context);
             return _this74;
@@ -73339,7 +73339,7 @@
                 }
               }, _callee203);
             })), _this76.connect = /*#__PURE__*/function () {
-              var _ref192 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee205(t) {
+              var _ref193 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee205(t) {
                 var e, s, i, r, o, a, c, h, d, _yield$_this76$client, _v5, _O, _xe$31, _v6, u, p, w, y, _a7, S, T, _, P;
                 return _regeneratorRuntime().wrap(function _callee205$(_context206) {
                   while (1) switch (_context206.prev = _context206.next) {
@@ -73410,12 +73410,12 @@
                       T = _a7.resolve;
                       _ = _a7.done;
                       _this76.events.once(v0("session_connect"), /*#__PURE__*/function () {
-                        var _ref194 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee204(_ref193) {
+                        var _ref195 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee204(_ref194) {
                           var v, O, _Q;
                           return _regeneratorRuntime().wrap(function _callee204$(_context205) {
                             while (1) switch (_context205.prev = _context205.next) {
                               case 0:
-                                v = _ref193.error, O = _ref193.session;
+                                v = _ref194.error, O = _ref194.session;
                                 if (!v) {
                                   _context205.next = 5;
                                   break;
@@ -73460,7 +73460,7 @@
                           }, _callee204);
                         }));
                         return function (_x180) {
-                          return _ref194.apply(this, arguments);
+                          return _ref195.apply(this, arguments);
                         };
                       }());
                       _context206.next = 37;
@@ -73488,10 +73488,10 @@
                 }, _callee205, null, [[7, 11]]);
               }));
               return function (_x179) {
-                return _ref192.apply(this, arguments);
+                return _ref193.apply(this, arguments);
               };
             }(), _this76.pair = /*#__PURE__*/function () {
-              var _ref195 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee206(t) {
+              var _ref196 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee206(t) {
                 return _regeneratorRuntime().wrap(function _callee206$(_context207) {
                   while (1) switch (_context207.prev = _context207.next) {
                     case 0:
@@ -73514,10 +73514,10 @@
                 }, _callee206, null, [[2, 8]]);
               }));
               return function (_x181) {
-                return _ref195.apply(this, arguments);
+                return _ref196.apply(this, arguments);
               };
             }(), _this76.approve = /*#__PURE__*/function () {
-              var _ref196 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee207(t) {
+              var _ref197 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee207(t) {
                 var e, s, i, r, o, a, _a8, c, h, d, u, p, w, y, S, T;
                 return _regeneratorRuntime().wrap(function _callee207$(_context208) {
                   while (1) switch (_context208.prev = _context208.next) {
@@ -73662,10 +73662,10 @@
                 }, _callee207, null, [[2, 7], [11, 15], [36, 43]]);
               }));
               return function (_x182) {
-                return _ref196.apply(this, arguments);
+                return _ref197.apply(this, arguments);
               };
             }(), _this76.reject = /*#__PURE__*/function () {
-              var _ref197 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee208(t) {
+              var _ref198 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee208(t) {
                 var e, s, i;
                 return _regeneratorRuntime().wrap(function _callee208$(_context209) {
                   while (1) switch (_context209.prev = _context209.next) {
@@ -73716,10 +73716,10 @@
                 }, _callee208, null, [[2, 7], [11, 15]]);
               }));
               return function (_x183) {
-                return _ref197.apply(this, arguments);
+                return _ref198.apply(this, arguments);
               };
             }(), _this76.update = /*#__PURE__*/function () {
-              var _ref198 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee209(t) {
+              var _ref199 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee209(t) {
                 var e, s, _a9, i, r, o, a, c, h;
                 return _regeneratorRuntime().wrap(function _callee209$(_context210) {
                   while (1) switch (_context210.prev = _context210.next) {
@@ -73739,8 +73739,8 @@
                       throw _this76.client.logger.error("update() -> isValidUpdate() failed"), _context210.t0;
                     case 10:
                       e = t.topic, s = t.namespaces, _a9 = a0(), i = _a9.done, r = _a9.resolve, o = _a9.reject, a = payloadId(), c = getBigIntRpcId().toString(), h = _this76.client.session.get(e).namespaces;
-                      _this76.events.once(v0("session_update", a), function (_ref199) {
-                        var d = _ref199.error;
+                      _this76.events.once(v0("session_update", a), function (_ref200) {
+                        var d = _ref200.error;
                         d ? o(d) : r();
                       });
                       _context210.next = 14;
@@ -73774,10 +73774,10 @@
                 }, _callee209, null, [[2, 7]]);
               }));
               return function (_x184) {
-                return _ref198.apply(this, arguments);
+                return _ref199.apply(this, arguments);
               };
             }(), _this76.extend = /*#__PURE__*/function () {
-              var _ref200 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee210(t) {
+              var _ref201 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee210(t) {
                 var e, s, _a10, i, r, o;
                 return _regeneratorRuntime().wrap(function _callee210$(_context211) {
                   while (1) switch (_context211.prev = _context211.next) {
@@ -73797,8 +73797,8 @@
                       throw _this76.client.logger.error("extend() -> isValidExtend() failed"), _context211.t0;
                     case 10:
                       e = t.topic, s = payloadId(), _a10 = a0(), i = _a10.done, r = _a10.resolve, o = _a10.reject;
-                      _this76.events.once(v0("session_extend", s), function (_ref201) {
-                        var a = _ref201.error;
+                      _this76.events.once(v0("session_extend", s), function (_ref202) {
+                        var a = _ref202.error;
                         a ? o(a) : r();
                       });
                       _context211.next = 14;
@@ -73823,10 +73823,10 @@
                 }, _callee210, null, [[2, 7]]);
               }));
               return function (_x185) {
-                return _ref200.apply(this, arguments);
+                return _ref201.apply(this, arguments);
               };
             }(), _this76.request = /*#__PURE__*/function () {
-              var _ref202 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee213(t) {
+              var _ref203 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee213(t) {
                 var e, s, i, _t$expiry, r, o, a, c, _a11, h, d, u;
                 return _regeneratorRuntime().wrap(function _callee213$(_context214) {
                   while (1) switch (_context214.prev = _context214.next) {
@@ -73846,14 +73846,14 @@
                       throw _this76.client.logger.error("request() -> isValidRequest() failed"), _context214.t0;
                     case 10:
                       e = t.chainId, s = t.request, i = t.topic, _t$expiry = t.expiry, r = _t$expiry === void 0 ? R$2.wc_sessionRequest.req.ttl : _t$expiry, o = _this76.client.session.get(i), a = payloadId(), c = getBigIntRpcId().toString(), _a11 = a0(r, "Request expired. Please try again."), h = _a11.done, d = _a11.resolve, u = _a11.reject;
-                      _this76.events.once(v0("session_request", a), function (_ref203) {
-                        var p = _ref203.error,
-                          w = _ref203.result;
+                      _this76.events.once(v0("session_request", a), function (_ref204) {
+                        var p = _ref204.error,
+                          w = _ref204.result;
                         p ? u(p) : d(w);
                       });
                       _context214.next = 14;
                       return Promise.all([new Promise( /*#__PURE__*/function () {
-                        var _ref204 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee211(p) {
+                        var _ref205 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee211(p) {
                           return _regeneratorRuntime().wrap(function _callee211$(_context212) {
                             while (1) switch (_context212.prev = _context212.next) {
                               case 0:
@@ -73889,10 +73889,10 @@
                           }, _callee211);
                         }));
                         return function (_x187) {
-                          return _ref204.apply(this, arguments);
+                          return _ref205.apply(this, arguments);
                         };
                       }()), new Promise( /*#__PURE__*/function () {
-                        var _ref205 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee212(p) {
+                        var _ref206 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee212(p) {
                           var w, _y3;
                           return _regeneratorRuntime().wrap(function _callee212$(_context213) {
                             while (1) switch (_context213.prev = _context213.next) {
@@ -73919,7 +73919,7 @@
                           }, _callee212);
                         }));
                         return function (_x188) {
-                          return _ref205.apply(this, arguments);
+                          return _ref206.apply(this, arguments);
                         };
                       }()), h()]).then(function (p) {
                         return p[2];
@@ -73933,10 +73933,10 @@
                 }, _callee213, null, [[2, 7]]);
               }));
               return function (_x186) {
-                return _ref202.apply(this, arguments);
+                return _ref203.apply(this, arguments);
               };
             }(), _this76.respond = /*#__PURE__*/function () {
-              var _ref206 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee214(t) {
+              var _ref207 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee214(t) {
                 var e, s, i;
                 return _regeneratorRuntime().wrap(function _callee214$(_context215) {
                   while (1) switch (_context215.prev = _context215.next) {
@@ -73983,10 +73983,10 @@
                 }, _callee214);
               }));
               return function (_x189) {
-                return _ref206.apply(this, arguments);
+                return _ref207.apply(this, arguments);
               };
             }(), _this76.ping = /*#__PURE__*/function () {
-              var _ref207 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee215(t) {
+              var _ref208 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee215(t) {
                 var e, _s12, _i104, _a12, _r27, _o16, a;
                 return _regeneratorRuntime().wrap(function _callee215$(_context216) {
                   while (1) switch (_context216.prev = _context216.next) {
@@ -74011,8 +74011,8 @@
                         break;
                       }
                       _s12 = payloadId(), _i104 = getBigIntRpcId().toString(), _a12 = a0(), _r27 = _a12.done, _o16 = _a12.resolve, a = _a12.reject;
-                      _this76.events.once(v0("session_ping", _s12), function (_ref208) {
-                        var c = _ref208.error;
+                      _this76.events.once(v0("session_ping", _s12), function (_ref209) {
+                        var c = _ref209.error;
                         c ? a(c) : _o16();
                       });
                       _context216.next = 16;
@@ -74044,10 +74044,10 @@
                 }, _callee215, null, [[2, 7]]);
               }));
               return function (_x190) {
-                return _ref207.apply(this, arguments);
+                return _ref208.apply(this, arguments);
               };
             }(), _this76.emit = /*#__PURE__*/function () {
-              var _ref209 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee216(t) {
+              var _ref210 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee216(t) {
                 var e, s, i, r;
                 return _regeneratorRuntime().wrap(function _callee216$(_context217) {
                   while (1) switch (_context217.prev = _context217.next) {
@@ -74077,10 +74077,10 @@
                 }, _callee216);
               }));
               return function (_x191) {
-                return _ref209.apply(this, arguments);
+                return _ref210.apply(this, arguments);
               };
             }(), _this76.disconnect = /*#__PURE__*/function () {
-              var _ref210 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee217(t) {
+              var _ref211 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee217(t) {
                 var e, _xe$32, _s13;
                 return _regeneratorRuntime().wrap(function _callee217$(_context218) {
                   while (1) switch (_context218.prev = _context218.next) {
@@ -74134,7 +74134,7 @@
                 }, _callee217);
               }));
               return function (_x192) {
-                return _ref210.apply(this, arguments);
+                return _ref211.apply(this, arguments);
               };
             }(), _this76.find = function (t) {
               return _this76.isInitialized(), _this76.client.session.getAll().filter(function (e) {
@@ -74143,7 +74143,7 @@
             }, _this76.getPendingSessionRequests = function () {
               return _this76.client.pendingRequest.getAll();
             }, _this76.authenticate = /*#__PURE__*/function () {
-              var _ref211 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee220(t) {
+              var _ref212 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee220(t) {
                 var e, _t$statement, s, i, r, o, a, c, h, _t$methods, d, u, p, _yield$_this76$client2, w, y, S, T, _dn, _A, _f3, _, P, v, O, _a13, Q, Ie, ae, W, ce, K, z;
                 return _regeneratorRuntime().wrap(function _callee220$(_context221) {
                   while (1) switch (_context221.prev = _context221.next) {
@@ -74241,12 +74241,12 @@
                         },
                         expiryTimestamp: d0(R$2.wc_sessionPropose.req.ttl)
                       }, _a13 = a0(_, "Request expired"), Q = _a13.done, Ie = _a13.resolve, ae = _a13.reject, W = /*#__PURE__*/function () {
-                        var _ref213 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee218(_ref212) {
+                        var _ref214 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee218(_ref213) {
                           var A, f, _U;
                           return _regeneratorRuntime().wrap(function _callee218$(_context219) {
                             while (1) switch (_context219.prev = _context219.next) {
                               case 0:
-                                A = _ref212.error, f = _ref212.session;
+                                A = _ref213.error, f = _ref213.session;
                                 if (!(_this76.events.off(v0("session_request", K), ce), A)) {
                                   _context219.next = 5;
                                   break;
@@ -74291,10 +74291,10 @@
                           }, _callee218);
                         }));
                         return function W(_x194) {
-                          return _ref213.apply(this, arguments);
+                          return _ref214.apply(this, arguments);
                         };
                       }(), ce = /*#__PURE__*/function () {
-                        var _ref214 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee219(A) {
+                        var _ref215 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee219(A) {
                           var _H4, _A$result, f, U, le, qe, _iterator29, _step29, _H5, _he, _pe, _Ne, _et, _de, _tt, _i105, _Ne2, _de2, Z, ee;
                           return _regeneratorRuntime().wrap(function _callee219$(_context220) {
                             while (1) switch (_context220.prev = _context220.next) {
@@ -74420,7 +74420,7 @@
                           }, _callee219, null, [[10, 26, 29, 32]]);
                         }));
                         return function ce(_x195) {
-                          return _ref214.apply(this, arguments);
+                          return _ref215.apply(this, arguments);
                         };
                       }(), K = payloadId(), z = payloadId();
                       _this76.events.once(v0("session_connect"), W), _this76.events.once(v0("session_request", K), ce);
@@ -74473,10 +74473,10 @@
                 }, _callee220, null, [[35, 40]]);
               }));
               return function (_x193) {
-                return _ref211.apply(this, arguments);
+                return _ref212.apply(this, arguments);
               };
             }(), _this76.approveSessionAuthenticate = /*#__PURE__*/function () {
-              var _ref215 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee221(t) {
+              var _ref216 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee221(t) {
                 var e, s, i, r, o, a, c, h, d, _iterator30, _step30, w, _P, _y4, _S, _T, _2, _P2, _v7, _i106, _T2, _P3, u, p;
                 return _regeneratorRuntime().wrap(function _callee221$(_context222) {
                   while (1) switch (_context222.prev = _context222.next) {
@@ -74635,10 +74635,10 @@
                 }, _callee221, null, [[13, 31, 34, 37]]);
               }));
               return function (_x196) {
-                return _ref215.apply(this, arguments);
+                return _ref216.apply(this, arguments);
               };
             }(), _this76.rejectSessionAuthenticate = /*#__PURE__*/function () {
-              var _ref216 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee222(t) {
+              var _ref217 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee222(t) {
                 var e, s, i, r, o, a, c;
                 return _regeneratorRuntime().wrap(function _callee222$(_context223) {
                   while (1) switch (_context223.prev = _context223.next) {
@@ -74688,7 +74688,7 @@
                 }, _callee222);
               }));
               return function (_x197) {
-                return _ref216.apply(this, arguments);
+                return _ref217.apply(this, arguments);
               };
             }(), _this76.formatAuthMessage = function (t) {
               _this76.isInitialized();
@@ -74736,7 +74736,7 @@
                 }, _callee223, null, [[2, 10]]);
               })), 50);
             }, _this76.cleanupDuplicatePairings = /*#__PURE__*/function () {
-              var _ref218 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee224(t) {
+              var _ref219 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee224(t) {
                 var _e24, _s14;
                 return _regeneratorRuntime().wrap(function _callee224$(_context225) {
                   while (1) switch (_context225.prev = _context225.next) {
@@ -74778,10 +74778,10 @@
                 }, _callee224, null, [[1, 11]]);
               }));
               return function (_x198) {
-                return _ref218.apply(this, arguments);
+                return _ref219.apply(this, arguments);
               };
             }(), _this76.deleteSession = /*#__PURE__*/function () {
-              var _ref219 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee225(t) {
+              var _ref220 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee225(t) {
                 var e, s, _t$expirerHasDeleted, i, _t$emitEvent, r, _t$id, o, _this76$client$sessio, a;
                 return _regeneratorRuntime().wrap(function _callee225$(_context226) {
                   while (1) switch (_context226.prev = _context226.next) {
@@ -74829,10 +74829,10 @@
                 }, _callee225);
               }));
               return function (_x199) {
-                return _ref219.apply(this, arguments);
+                return _ref220.apply(this, arguments);
               };
             }(), _this76.deleteProposal = /*#__PURE__*/function () {
-              var _ref220 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee226(t, e) {
+              var _ref221 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee226(t, e) {
                 return _regeneratorRuntime().wrap(function _callee226$(_context227) {
                   while (1) switch (_context227.prev = _context227.next) {
                     case 0:
@@ -74847,10 +74847,10 @@
                 }, _callee226);
               }));
               return function (_x200, _x201) {
-                return _ref220.apply(this, arguments);
+                return _ref221.apply(this, arguments);
               };
             }(), _this76.deletePendingSessionRequest = /*#__PURE__*/function () {
-              var _ref221 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee227(t, e) {
+              var _ref222 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee227(t, e) {
                 var s,
                   _args228 = arguments;
                 return _regeneratorRuntime().wrap(function _callee227$(_context228) {
@@ -74874,10 +74874,10 @@
                 }, _callee227);
               }));
               return function (_x202, _x203) {
-                return _ref221.apply(this, arguments);
+                return _ref222.apply(this, arguments);
               };
             }(), _this76.deletePendingAuthRequest = /*#__PURE__*/function () {
-              var _ref222 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee228(t, e) {
+              var _ref223 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee228(t, e) {
                 var s,
                   _args229 = arguments;
                 return _regeneratorRuntime().wrap(function _callee228$(_context229) {
@@ -74893,10 +74893,10 @@
                 }, _callee228);
               }));
               return function (_x204, _x205) {
-                return _ref222.apply(this, arguments);
+                return _ref223.apply(this, arguments);
               };
             }(), _this76.setExpiry = /*#__PURE__*/function () {
-              var _ref223 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee229(t, e) {
+              var _ref224 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee229(t, e) {
                 return _regeneratorRuntime().wrap(function _callee229$(_context230) {
                   while (1) switch (_context230.prev = _context230.next) {
                     case 0:
@@ -74917,10 +74917,10 @@
                 }, _callee229);
               }));
               return function (_x206, _x207) {
-                return _ref223.apply(this, arguments);
+                return _ref224.apply(this, arguments);
               };
             }(), _this76.setProposal = /*#__PURE__*/function () {
-              var _ref224 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee230(t, e) {
+              var _ref225 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee230(t, e) {
                 return _regeneratorRuntime().wrap(function _callee230$(_context231) {
                   while (1) switch (_context231.prev = _context231.next) {
                     case 0:
@@ -74934,10 +74934,10 @@
                 }, _callee230);
               }));
               return function (_x208, _x209) {
-                return _ref224.apply(this, arguments);
+                return _ref225.apply(this, arguments);
               };
             }(), _this76.setAuthRequest = /*#__PURE__*/function () {
-              var _ref225 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee231(t, e) {
+              var _ref226 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee231(t, e) {
                 var s, i;
                 return _regeneratorRuntime().wrap(function _callee231$(_context232) {
                   while (1) switch (_context232.prev = _context232.next) {
@@ -74960,10 +74960,10 @@
                 }, _callee231);
               }));
               return function (_x210, _x211) {
-                return _ref225.apply(this, arguments);
+                return _ref226.apply(this, arguments);
               };
             }(), _this76.setPendingSessionRequest = /*#__PURE__*/function () {
-              var _ref226 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee232(t) {
+              var _ref227 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee232(t) {
                 var e, s, i, r, o;
                 return _regeneratorRuntime().wrap(function _callee232$(_context233) {
                   while (1) switch (_context233.prev = _context233.next) {
@@ -74984,10 +74984,10 @@
                 }, _callee232);
               }));
               return function (_x212) {
-                return _ref226.apply(this, arguments);
+                return _ref227.apply(this, arguments);
               };
             }(), _this76.sendRequest = /*#__PURE__*/function () {
-              var _ref227 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee233(t) {
+              var _ref228 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee233(t) {
                 var e, s, i, r, o, a, c, h, p, d, u;
                 return _regeneratorRuntime().wrap(function _callee233$(_context234) {
                   while (1) switch (_context234.prev = _context234.next) {
@@ -75044,10 +75044,10 @@
                 }, _callee233, null, [[2, 8]]);
               }));
               return function (_x213) {
-                return _ref227.apply(this, arguments);
+                return _ref228.apply(this, arguments);
               };
             }(), _this76.sendResult = /*#__PURE__*/function () {
-              var _ref228 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee234(t) {
+              var _ref229 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee234(t) {
                 var e, s, i, r, o, a, c, h, d;
                 return _regeneratorRuntime().wrap(function _callee234$(_context235) {
                   while (1) switch (_context235.prev = _context235.next) {
@@ -75108,10 +75108,10 @@
                 }, _callee234, null, [[1, 7], [13, 19]]);
               }));
               return function (_x214) {
-                return _ref228.apply(this, arguments);
+                return _ref229.apply(this, arguments);
               };
             }(), _this76.sendError = /*#__PURE__*/function () {
-              var _ref229 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee235(t) {
+              var _ref230 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee235(t) {
                 var e, s, i, r, o, a, c, h, d;
                 return _regeneratorRuntime().wrap(function _callee235$(_context236) {
                   while (1) switch (_context236.prev = _context236.next) {
@@ -75156,7 +75156,7 @@
                 }, _callee235, null, [[1, 7], [13, 19]]);
               }));
               return function (_x215) {
-                return _ref229.apply(this, arguments);
+                return _ref230.apply(this, arguments);
               };
             }(), _this76.cleanup = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee236() {
               var t, e;
@@ -75185,7 +75185,7 @@
                 }
               }, _callee236);
             })), _this76.onRelayEventRequest = /*#__PURE__*/function () {
-              var _ref231 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee237(t) {
+              var _ref232 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee237(t) {
                 return _regeneratorRuntime().wrap(function _callee237$(_context238) {
                   while (1) switch (_context238.prev = _context238.next) {
                     case 0:
@@ -75199,7 +75199,7 @@
                 }, _callee237);
               }));
               return function (_x216) {
-                return _ref231.apply(this, arguments);
+                return _ref232.apply(this, arguments);
               };
             }(), _this76.processRequestsQueue = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee238() {
               var _t26;
@@ -75246,7 +75246,7 @@
                 }
               }, _callee238, null, [[8, 13]]);
             })), _this76.processRequest = /*#__PURE__*/function () {
-              var _ref233 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee239(t) {
+              var _ref234 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee239(t) {
                 var e, s, i;
                 return _regeneratorRuntime().wrap(function _callee239$(_context240) {
                   while (1) switch (_context240.prev = _context240.next) {
@@ -75316,10 +75316,10 @@
                 }, _callee239);
               }));
               return function (_x217) {
-                return _ref233.apply(this, arguments);
+                return _ref234.apply(this, arguments);
               };
             }(), _this76.onRelayEventResponse = /*#__PURE__*/function () {
-              var _ref234 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee240(t) {
+              var _ref235 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee240(t) {
                 var e, s, i;
                 return _regeneratorRuntime().wrap(function _callee240$(_context241) {
                   while (1) switch (_context241.prev = _context241.next) {
@@ -75356,7 +75356,7 @@
                 }, _callee240);
               }));
               return function (_x218) {
-                return _ref234.apply(this, arguments);
+                return _ref235.apply(this, arguments);
               };
             }(), _this76.onRelayEventUnknownPayload = function (t) {
               var e = t.topic,
@@ -75369,7 +75369,7 @@
                 i = _this76.expectedPairingMethodMap.get(e);
               return !i || i.includes(s) ? false : !!(i.includes("wc_sessionAuthenticate") && _this76.client.events.listenerCount("session_authenticate") > 0);
             }, _this76.onSessionProposeRequest = /*#__PURE__*/function () {
-              var _ref235 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee241(t, e) {
+              var _ref236 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee241(t, e) {
                 var s, i, _r28, _o17, a, c;
                 return _regeneratorRuntime().wrap(function _callee241$(_context242) {
                   while (1) switch (_context242.prev = _context242.next) {
@@ -75416,10 +75416,10 @@
                 }, _callee241, null, [[1, 13]]);
               }));
               return function (_x219, _x220) {
-                return _ref235.apply(this, arguments);
+                return _ref236.apply(this, arguments);
               };
             }(), _this76.onSessionProposeResponse = /*#__PURE__*/function () {
-              var _ref236 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee242(t, e) {
+              var _ref237 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee242(t, e) {
                 var s, _i107, _r29, _o18, a, c, h, _i108;
                 return _regeneratorRuntime().wrap(function _callee242$(_context243) {
                   while (1) switch (_context243.prev = _context243.next) {
@@ -75503,10 +75503,10 @@
                 }, _callee242);
               }));
               return function (_x221, _x222) {
-                return _ref236.apply(this, arguments);
+                return _ref237.apply(this, arguments);
               };
             }(), _this76.onSessionSettleRequest = /*#__PURE__*/function () {
-              var _ref237 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee243(t, e) {
+              var _ref238 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee243(t, e) {
                 var s, i, _e$params, _r30, _o19, a, c, h, d, _u2, p;
                 return _regeneratorRuntime().wrap(function _callee243$(_context244) {
                   while (1) switch (_context244.prev = _context244.next) {
@@ -75575,10 +75575,10 @@
                 }, _callee243, null, [[1, 12]]);
               }));
               return function (_x223, _x224) {
-                return _ref237.apply(this, arguments);
+                return _ref238.apply(this, arguments);
               };
             }(), _this76.onSessionSettleResponse = /*#__PURE__*/function () {
-              var _ref238 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee244(t, e) {
+              var _ref239 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee244(t, e) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee244$(_context245) {
                   while (1) switch (_context245.prev = _context245.next) {
@@ -75615,10 +75615,10 @@
                 }, _callee244);
               }));
               return function (_x225, _x226) {
-                return _ref238.apply(this, arguments);
+                return _ref239.apply(this, arguments);
               };
             }(), _this76.onSessionUpdateRequest = /*#__PURE__*/function () {
-              var _ref239 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee245(t, e) {
+              var _ref240 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee245(t, e) {
                 var s, i, _r31, _o20;
                 return _regeneratorRuntime().wrap(function _callee245$(_context246) {
                   while (1) switch (_context246.prev = _context246.next) {
@@ -75687,7 +75687,7 @@
                 }, _callee245, null, [[1, 21], [7, 15]]);
               }));
               return function (_x227, _x228) {
-                return _ref239.apply(this, arguments);
+                return _ref240.apply(this, arguments);
               };
             }(), _this76.isRequestOutOfSync = function (t, e) {
               return parseInt(e.toString().slice(0, -3)) <= parseInt(t.toString().slice(0, -3));
@@ -75699,7 +75699,7 @@
                 error: e.error
               });
             }, _this76.onSessionExtendRequest = /*#__PURE__*/function () {
-              var _ref240 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee246(t, e) {
+              var _ref241 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee246(t, e) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee246$(_context247) {
                   while (1) switch (_context247.prev = _context247.next) {
@@ -75744,7 +75744,7 @@
                 }, _callee246, null, [[1, 10]]);
               }));
               return function (_x229, _x230) {
-                return _ref240.apply(this, arguments);
+                return _ref241.apply(this, arguments);
               };
             }(), _this76.onSessionExtendResponse = function (t, e) {
               var s = e.id,
@@ -75754,7 +75754,7 @@
                 error: e.error
               });
             }, _this76.onSessionPingRequest = /*#__PURE__*/function () {
-              var _ref241 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee247(t, e) {
+              var _ref242 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee247(t, e) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee247$(_context248) {
                   while (1) switch (_context248.prev = _context248.next) {
@@ -75796,7 +75796,7 @@
                 }, _callee247, null, [[1, 8]]);
               }));
               return function (_x231, _x232) {
-                return _ref241.apply(this, arguments);
+                return _ref242.apply(this, arguments);
               };
             }(), _this76.onSessionPingResponse = function (t, e) {
               var s = e.id,
@@ -75808,7 +75808,7 @@
                 });
               }, 500);
             }, _this76.onSessionDeleteRequest = /*#__PURE__*/function () {
-              var _ref242 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee249(t, e) {
+              var _ref243 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee249(t, e) {
                 var s;
                 return _regeneratorRuntime().wrap(function _callee249$(_context250) {
                   while (1) switch (_context250.prev = _context250.next) {
@@ -75863,10 +75863,10 @@
                 }, _callee249, null, [[1, 7]]);
               }));
               return function (_x233, _x234) {
-                return _ref242.apply(this, arguments);
+                return _ref243.apply(this, arguments);
               };
             }(), _this76.onSessionRequest = /*#__PURE__*/function () {
-              var _ref244 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee250(t, e) {
+              var _ref245 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee250(t, e) {
                 var s, i, r, _o21, a, c, h;
                 return _regeneratorRuntime().wrap(function _callee250$(_context251) {
                   while (1) switch (_context251.prev = _context251.next) {
@@ -75914,7 +75914,7 @@
                 }, _callee250, null, [[1, 15]]);
               }));
               return function (_x235, _x236) {
-                return _ref244.apply(this, arguments);
+                return _ref245.apply(this, arguments);
               };
             }(), _this76.onSessionRequestResponse = function (t, e) {
               var s = e.id,
@@ -75926,7 +75926,7 @@
                 error: e.error
               });
             }, _this76.onSessionEventRequest = /*#__PURE__*/function () {
-              var _ref245 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee251(t, e) {
+              var _ref246 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee251(t, e) {
                 var s, i, _r32, _o22;
                 return _regeneratorRuntime().wrap(function _callee251$(_context252) {
                   while (1) switch (_context252.prev = _context252.next) {
@@ -75968,7 +75968,7 @@
                 }, _callee251, null, [[1, 9]]);
               }));
               return function (_x237, _x238) {
-                return _ref245.apply(this, arguments);
+                return _ref246.apply(this, arguments);
               };
             }(), _this76.onSessionAuthenticateResponse = function (t, e) {
               var s = e.id;
@@ -75983,7 +75983,7 @@
                 error: e.error
               });
             }, _this76.onSessionAuthenticateRequest = /*#__PURE__*/function () {
-              var _ref246 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee252(t, e) {
+              var _ref247 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee252(t, e) {
                 var _e$params2, _s15, _i109, _r33, _o23, a, c, _i110, _r34, _o24;
                 return _regeneratorRuntime().wrap(function _callee252$(_context253) {
                   while (1) switch (_context253.prev = _context253.next) {
@@ -76049,7 +76049,7 @@
                 }, _callee252, null, [[0, 15]]);
               }));
               return function (_x239, _x240) {
-                return _ref246.apply(this, arguments);
+                return _ref247.apply(this, arguments);
               };
             }(), _this76.addSessionRequestToSessionRequestQueue = function (t) {
               _this76.sessionRequestQueue.queue.push(t);
@@ -76060,9 +76060,9 @@
               }), setTimeout(function () {
                 _this76.sessionRequestQueue.state = D$3.idle, _this76.processSessionRequestQueue();
               }, cjsExports$3.toMiliseconds(_this76.requestQueueDelay));
-            }, _this76.cleanupPendingSentRequestsForTopic = function (_ref247) {
-              var t = _ref247.topic,
-                e = _ref247.error;
+            }, _this76.cleanupPendingSentRequestsForTopic = function (_ref248) {
+              var t = _ref248.topic,
+                e = _ref248.error;
               var s = _this76.client.core.history.pending;
               s.length > 0 && s.filter(function (i) {
                 return i.topic === t && i.request.method === "wc_sessionRequest";
@@ -76104,7 +76104,7 @@
                 sessionProperties: e.sessionProperties
               }, e.id));
             }, _this76.isValidConnect = /*#__PURE__*/function () {
-              var _ref248 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee253(t) {
+              var _ref249 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee253(t) {
                 var _xe$34, a, e, s, i, r, o, _xe$35, _a14;
                 return _regeneratorRuntime().wrap(function _callee253$(_context254) {
                   while (1) switch (_context254.prev = _context254.next) {
@@ -76140,13 +76140,13 @@
                 }, _callee253);
               }));
               return function (_x241) {
-                return _ref248.apply(this, arguments);
+                return _ref249.apply(this, arguments);
               };
             }(), _this76.validateNamespaces = function (t, e) {
               var s = Wu(t, "connect()", e);
               if (s) throw new Error(s.message);
             }, _this76.isValidApprove = /*#__PURE__*/function () {
-              var _ref249 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee254(t) {
+              var _ref250 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee254(t) {
                 var e, s, i, r, o, a, c, _xe$36, h;
                 return _regeneratorRuntime().wrap(function _callee254$(_context255) {
                   while (1) switch (_context255.prev = _context255.next) {
@@ -76191,10 +76191,10 @@
                 }, _callee254);
               }));
               return function (_x242) {
-                return _ref249.apply(this, arguments);
+                return _ref250.apply(this, arguments);
               };
             }(), _this76.isValidReject = /*#__PURE__*/function () {
-              var _ref250 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee255(t) {
+              var _ref251 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee255(t) {
                 var _xe$37, _i111, e, s, _xe$38, _i112;
                 return _regeneratorRuntime().wrap(function _callee255$(_context256) {
                   while (1) switch (_context256.prev = _context256.next) {
@@ -76224,7 +76224,7 @@
                 }, _callee255);
               }));
               return function (_x243) {
-                return _ref250.apply(this, arguments);
+                return _ref251.apply(this, arguments);
               };
             }(), _this76.isValidSessionSettleRequest = function (t) {
               if (!$u(t)) {
@@ -76251,7 +76251,7 @@
                 throw new Error(_c3);
               }
             }, _this76.isValidUpdate = /*#__PURE__*/function () {
-              var _ref251 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee256(t) {
+              var _ref252 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee256(t) {
                 var _xe$42, a, e, s, i, r, o;
                 return _regeneratorRuntime().wrap(function _callee256$(_context257) {
                   while (1) switch (_context257.prev = _context257.next) {
@@ -76288,10 +76288,10 @@
                 }, _callee256);
               }));
               return function (_x244) {
-                return _ref251.apply(this, arguments);
+                return _ref252.apply(this, arguments);
               };
             }(), _this76.isValidExtend = /*#__PURE__*/function () {
-              var _ref252 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee257(t) {
+              var _ref253 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee257(t) {
                 var _xe$43, _s16, e;
                 return _regeneratorRuntime().wrap(function _callee257$(_context258) {
                   while (1) switch (_context258.prev = _context258.next) {
@@ -76314,10 +76314,10 @@
                 }, _callee257);
               }));
               return function (_x245) {
-                return _ref252.apply(this, arguments);
+                return _ref253.apply(this, arguments);
               };
             }(), _this76.isValidRequest = /*#__PURE__*/function () {
-              var _ref253 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee258(t) {
+              var _ref254 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee258(t) {
                 var _xe$44, a, e, s, i, r, _this76$client$sessio2, o, _xe$45, _a15, _xe$46, _a16, _xe$47, _a17, _xe$48, _a18;
                 return _regeneratorRuntime().wrap(function _callee258$(_context259) {
                   while (1) switch (_context259.prev = _context259.next) {
@@ -76369,10 +76369,10 @@
                 }, _callee258);
               }));
               return function (_x246) {
-                return _ref253.apply(this, arguments);
+                return _ref254.apply(this, arguments);
               };
             }(), _this76.isValidRespond = /*#__PURE__*/function () {
-              var _ref254 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee259(t) {
+              var _ref255 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee259(t) {
                 var e, _xe$49, _r35, s, i, _xe$50, _r36;
                 return _regeneratorRuntime().wrap(function _callee259$(_context260) {
                   while (1) switch (_context260.prev = _context260.next) {
@@ -76409,10 +76409,10 @@
                 }, _callee259, null, [[4, 9]]);
               }));
               return function (_x247) {
-                return _ref254.apply(this, arguments);
+                return _ref255.apply(this, arguments);
               };
             }(), _this76.isValidPing = /*#__PURE__*/function () {
-              var _ref255 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee260(t) {
+              var _ref256 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee260(t) {
                 var _xe$51, _s17, e;
                 return _regeneratorRuntime().wrap(function _callee260$(_context261) {
                   while (1) switch (_context261.prev = _context261.next) {
@@ -76434,10 +76434,10 @@
                 }, _callee260);
               }));
               return function (_x248) {
-                return _ref255.apply(this, arguments);
+                return _ref256.apply(this, arguments);
               };
             }(), _this76.isValidEmit = /*#__PURE__*/function () {
-              var _ref256 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee261(t) {
+              var _ref257 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee261(t) {
                 var _xe$52, _o25, e, s, i, _this76$client$sessio3, r, _xe$53, _o26, _xe$54, _o27, _xe$55, _o28;
                 return _regeneratorRuntime().wrap(function _callee261$(_context262) {
                   while (1) switch (_context262.prev = _context262.next) {
@@ -76481,10 +76481,10 @@
                 }, _callee261);
               }));
               return function (_x249) {
-                return _ref256.apply(this, arguments);
+                return _ref257.apply(this, arguments);
               };
             }(), _this76.isValidDisconnect = /*#__PURE__*/function () {
-              var _ref257 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee262(t) {
+              var _ref258 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee262(t) {
                 var _xe$56, _s18, e;
                 return _regeneratorRuntime().wrap(function _callee262$(_context263) {
                   while (1) switch (_context263.prev = _context263.next) {
@@ -76506,7 +76506,7 @@
                 }, _callee262);
               }));
               return function (_x250) {
-                return _ref257.apply(this, arguments);
+                return _ref258.apply(this, arguments);
               };
             }(), _this76.isValidAuthenticate = function (t) {
               var e = t.chains,
@@ -76524,7 +76524,7 @@
                 o = _dn2.namespace;
               if (o !== "eip155") throw new Error("Only eip155 namespace is supported for authenticated sessions. Please use .connect() for non-eip155 chains.");
             }, _this76.getVerifyContext = /*#__PURE__*/function () {
-              var _ref258 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee263(t, e) {
+              var _ref259 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee263(t, e) {
                 var s, _i113;
                 return _regeneratorRuntime().wrap(function _callee263$(_context264) {
                   while (1) switch (_context264.prev = _context264.next) {
@@ -76560,7 +76560,7 @@
                 }, _callee263, null, [[1, 8]]);
               }));
               return function (_x251, _x252) {
-                return _ref258.apply(this, arguments);
+                return _ref259.apply(this, arguments);
               };
             }(), _this76.validateSessionProps = function (t, e) {
               Object.values(t).forEach(function (s) {
@@ -76642,16 +76642,16 @@
             key: "onRelayMessage",
             value: function () {
               var _onRelayMessage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee265(n) {
-                var t, e, _ref259, s, i;
+                var t, e, _ref260, s, i;
                 return _regeneratorRuntime().wrap(function _callee265$(_context266) {
                   while (1) switch (_context266.prev = _context266.next) {
                     case 0:
                       t = n.topic;
                       e = n.message;
-                      _ref259 = this.client.auth.authKeys.keys.includes(B$4) ? this.client.auth.authKeys.get(B$4) : {
+                      _ref260 = this.client.auth.authKeys.keys.includes(B$4) ? this.client.auth.authKeys.get(B$4) : {
                         publicKey: void 0
                       };
-                      s = _ref259.publicKey;
+                      s = _ref260.publicKey;
                       _context266.next = 6;
                       return this.client.core.crypto.decode(t, e, {
                         receiverPublicKey: s
@@ -76714,7 +76714,7 @@
             value: function registerExpirerEvents() {
               var _this78 = this;
               this.client.core.expirer.on(C$4.expired, /*#__PURE__*/function () {
-                var _ref260 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee266(n) {
+                var _ref261 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee266(n) {
                   var _l6, t, e;
                   return _regeneratorRuntime().wrap(function _callee266$(_context267) {
                     while (1) switch (_context267.prev = _context267.next) {
@@ -76778,7 +76778,7 @@
                   }, _callee266);
                 }));
                 return function (_x254) {
-                  return _ref260.apply(this, arguments);
+                  return _ref261.apply(this, arguments);
                 };
               }());
             }
@@ -77071,7 +77071,7 @@
             }, _this86.removeAllListeners = function (e) {
               return _this86.events.removeAllListeners(e);
             }, _this86.connect = /*#__PURE__*/function () {
-              var _ref261 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee271(e) {
+              var _ref262 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee271(e) {
                 return _regeneratorRuntime().wrap(function _callee271$(_context272) {
                   while (1) switch (_context272.prev = _context272.next) {
                     case 0:
@@ -77091,10 +77091,10 @@
                 }, _callee271, null, [[0, 6]]);
               }));
               return function (_x258) {
-                return _ref261.apply(this, arguments);
+                return _ref262.apply(this, arguments);
               };
             }(), _this86.pair = /*#__PURE__*/function () {
-              var _ref262 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee272(e) {
+              var _ref263 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee272(e) {
                 return _regeneratorRuntime().wrap(function _callee272$(_context273) {
                   while (1) switch (_context273.prev = _context273.next) {
                     case 0:
@@ -77114,10 +77114,10 @@
                 }, _callee272, null, [[0, 6]]);
               }));
               return function (_x259) {
-                return _ref262.apply(this, arguments);
+                return _ref263.apply(this, arguments);
               };
             }(), _this86.approve = /*#__PURE__*/function () {
-              var _ref263 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee273(e) {
+              var _ref264 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee273(e) {
                 return _regeneratorRuntime().wrap(function _callee273$(_context274) {
                   while (1) switch (_context274.prev = _context274.next) {
                     case 0:
@@ -77137,10 +77137,10 @@
                 }, _callee273, null, [[0, 6]]);
               }));
               return function (_x260) {
-                return _ref263.apply(this, arguments);
+                return _ref264.apply(this, arguments);
               };
             }(), _this86.reject = /*#__PURE__*/function () {
-              var _ref264 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee274(e) {
+              var _ref265 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee274(e) {
                 return _regeneratorRuntime().wrap(function _callee274$(_context275) {
                   while (1) switch (_context275.prev = _context275.next) {
                     case 0:
@@ -77160,10 +77160,10 @@
                 }, _callee274, null, [[0, 6]]);
               }));
               return function (_x261) {
-                return _ref264.apply(this, arguments);
+                return _ref265.apply(this, arguments);
               };
             }(), _this86.update = /*#__PURE__*/function () {
-              var _ref265 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee275(e) {
+              var _ref266 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee275(e) {
                 return _regeneratorRuntime().wrap(function _callee275$(_context276) {
                   while (1) switch (_context276.prev = _context276.next) {
                     case 0:
@@ -77183,10 +77183,10 @@
                 }, _callee275, null, [[0, 6]]);
               }));
               return function (_x262) {
-                return _ref265.apply(this, arguments);
+                return _ref266.apply(this, arguments);
               };
             }(), _this86.extend = /*#__PURE__*/function () {
-              var _ref266 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee276(e) {
+              var _ref267 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee276(e) {
                 return _regeneratorRuntime().wrap(function _callee276$(_context277) {
                   while (1) switch (_context277.prev = _context277.next) {
                     case 0:
@@ -77206,10 +77206,10 @@
                 }, _callee276, null, [[0, 6]]);
               }));
               return function (_x263) {
-                return _ref266.apply(this, arguments);
+                return _ref267.apply(this, arguments);
               };
             }(), _this86.request = /*#__PURE__*/function () {
-              var _ref267 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee277(e) {
+              var _ref268 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee277(e) {
                 return _regeneratorRuntime().wrap(function _callee277$(_context278) {
                   while (1) switch (_context278.prev = _context278.next) {
                     case 0:
@@ -77229,10 +77229,10 @@
                 }, _callee277, null, [[0, 6]]);
               }));
               return function (_x264) {
-                return _ref267.apply(this, arguments);
+                return _ref268.apply(this, arguments);
               };
             }(), _this86.respond = /*#__PURE__*/function () {
-              var _ref268 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee278(e) {
+              var _ref269 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee278(e) {
                 return _regeneratorRuntime().wrap(function _callee278$(_context279) {
                   while (1) switch (_context279.prev = _context279.next) {
                     case 0:
@@ -77252,10 +77252,10 @@
                 }, _callee278, null, [[0, 6]]);
               }));
               return function (_x265) {
-                return _ref268.apply(this, arguments);
+                return _ref269.apply(this, arguments);
               };
             }(), _this86.ping = /*#__PURE__*/function () {
-              var _ref269 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee279(e) {
+              var _ref270 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee279(e) {
                 return _regeneratorRuntime().wrap(function _callee279$(_context280) {
                   while (1) switch (_context280.prev = _context280.next) {
                     case 0:
@@ -77275,10 +77275,10 @@
                 }, _callee279, null, [[0, 6]]);
               }));
               return function (_x266) {
-                return _ref269.apply(this, arguments);
+                return _ref270.apply(this, arguments);
               };
             }(), _this86.emit = /*#__PURE__*/function () {
-              var _ref270 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee280(e) {
+              var _ref271 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee280(e) {
                 return _regeneratorRuntime().wrap(function _callee280$(_context281) {
                   while (1) switch (_context281.prev = _context281.next) {
                     case 0:
@@ -77298,10 +77298,10 @@
                 }, _callee280, null, [[0, 6]]);
               }));
               return function (_x267) {
-                return _ref270.apply(this, arguments);
+                return _ref271.apply(this, arguments);
               };
             }(), _this86.disconnect = /*#__PURE__*/function () {
-              var _ref271 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee281(e) {
+              var _ref272 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee281(e) {
                 return _regeneratorRuntime().wrap(function _callee281$(_context282) {
                   while (1) switch (_context282.prev = _context282.next) {
                     case 0:
@@ -77321,7 +77321,7 @@
                 }, _callee281, null, [[0, 6]]);
               }));
               return function (_x268) {
-                return _ref271.apply(this, arguments);
+                return _ref272.apply(this, arguments);
               };
             }(), _this86.find = function (e) {
               try {
@@ -77336,7 +77336,7 @@
                 throw _this86.logger.error(e.message), e;
               }
             }, _this86.authenticate = /*#__PURE__*/function () {
-              var _ref272 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee282(e) {
+              var _ref273 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee282(e) {
                 return _regeneratorRuntime().wrap(function _callee282$(_context283) {
                   while (1) switch (_context283.prev = _context283.next) {
                     case 0:
@@ -77356,7 +77356,7 @@
                 }, _callee282, null, [[0, 6]]);
               }));
               return function (_x269) {
-                return _ref272.apply(this, arguments);
+                return _ref273.apply(this, arguments);
               };
             }(), _this86.formatAuthMessage = function (e) {
               try {
@@ -77365,7 +77365,7 @@
                 throw _this86.logger.error(s.message), s;
               }
             }, _this86.approveSessionAuthenticate = /*#__PURE__*/function () {
-              var _ref273 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee283(e) {
+              var _ref274 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee283(e) {
                 return _regeneratorRuntime().wrap(function _callee283$(_context284) {
                   while (1) switch (_context284.prev = _context284.next) {
                     case 0:
@@ -77385,10 +77385,10 @@
                 }, _callee283, null, [[0, 6]]);
               }));
               return function (_x270) {
-                return _ref273.apply(this, arguments);
+                return _ref274.apply(this, arguments);
               };
             }(), _this86.rejectSessionAuthenticate = /*#__PURE__*/function () {
-              var _ref274 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee284(e) {
+              var _ref275 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee284(e) {
                 return _regeneratorRuntime().wrap(function _callee284$(_context285) {
                   while (1) switch (_context285.prev = _context285.next) {
                     case 0:
@@ -77408,7 +77408,7 @@
                 }, _callee284, null, [[0, 6]]);
               }));
               return function (_x271) {
-                return _ref274.apply(this, arguments);
+                return _ref275.apply(this, arguments);
               };
             }(), _this86.name = (n === null || n === void 0 ? void 0 : n.name) || re$2.name, _this86.metadata = (n === null || n === void 0 ? void 0 : n.metadata) || Xo(), _this86.signConfig = n === null || n === void 0 ? void 0 : n.signConfig;
             var t = _typeof2(n === null || n === void 0 ? void 0 : n.logger) < "u" && typeof (n === null || n === void 0 ? void 0 : n.logger) != "string" ? n.logger : ot$1(k$2({
@@ -78899,9 +78899,9 @@
            */
           function TransportStatusError(statusCode) {
             var _this96;
-            var _ref275 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-              _ref275$canBeMappedTo = _ref275.canBeMappedToChildError,
-              canBeMappedToChildError = _ref275$canBeMappedTo === void 0 ? true : _ref275$canBeMappedTo;
+            var _ref276 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+              _ref276$canBeMappedTo = _ref276.canBeMappedToChildError,
+              canBeMappedToChildError = _ref276$canBeMappedTo === void 0 ? true : _ref276$canBeMappedTo;
             _classCallCheck2(this, TransportStatusError);
             var statusText = Object.keys(StatusCodes).find(function (k) {
               return StatusCodes[k] === statusCode;
@@ -83905,9 +83905,9 @@
           return typeof fn === 'function';
         }
         var defaultSelectAccount = function defaultSelectAccount(_a) {
-          return __awaiter$8(this, arguments, void 0, function (_ref276) {
-            var accounts = _ref276.accounts,
-              ledgerUtils = _ref276.ledgerUtils;
+          return __awaiter$8(this, arguments, void 0, function (_ref277) {
+            var accounts = _ref277.accounts,
+              ledgerUtils = _ref277.ledgerUtils;
             return /*#__PURE__*/_regeneratorRuntime().mark(function _callee298() {
               var account, closeConfirm;
               return _regeneratorRuntime().wrap(function _callee298$(_context299) {
@@ -85556,17 +85556,17 @@
             }
           };
         function Ie() {
-          var _ref277 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            _ref277$timeout = _ref277.timeout,
-            e = _ref277$timeout === void 0 ? 1e3 : _ref277$timeout,
-            _ref277$flag = _ref277.flag,
-            t = _ref277$flag === void 0 ? "eip1193" : _ref277$flag;
+          var _ref278 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            _ref278$timeout = _ref278.timeout,
+            e = _ref278$timeout === void 0 ? 1e3 : _ref278$timeout,
+            _ref278$flag = _ref278.flag,
+            t = _ref278$flag === void 0 ? "eip1193" : _ref278$flag;
           a();
           var r = F(),
             i = false,
             n = X(t);
           return new Promise( /*#__PURE__*/function () {
-            var _ref278 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee319(l) {
+            var _ref279 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee319(l) {
               var p;
               return _regeneratorRuntime().wrap(function _callee319$(_context320) {
                 while (1) switch (_context320.prev = _context320.next) {
@@ -85609,7 +85609,7 @@
               }, _callee319);
             }));
             return function (_x275) {
-              return _ref278.apply(this, arguments);
+              return _ref279.apply(this, arguments);
             };
           }());
           function a() {
@@ -85644,12 +85644,12 @@
         var K = ae(Q());
         var q = K.default;
         var _ = /*#__PURE__*/function () {
-          function _(_ref279) {
-            var _ref279$debug = _ref279.debug,
-              t = _ref279$debug === void 0 ? false : _ref279$debug,
-              r = _ref279.preferredOpenLink,
-              _ref279$useDeeplink = _ref279.useDeeplink,
-              i = _ref279$useDeeplink === void 0 ? false : _ref279$useDeeplink;
+          function _(_ref280) {
+            var _ref280$debug = _ref280.debug,
+              t = _ref280$debug === void 0 ? false : _ref280$debug,
+              r = _ref280.preferredOpenLink,
+              _ref280$useDeeplink = _ref280.useDeeplink,
+              i = _ref280$useDeeplink === void 0 ? false : _ref280$useDeeplink;
             _classCallCheck2(this, _);
             this.debug = false;
             this.useDeeplink = false;
@@ -85833,43 +85833,60 @@
             _this108._checkPromise = null;
             _this108._updateWallet = function () {
               return __awaiter$5(_this108, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee321() {
-                var _a, _b, state, address, adapter;
+                var _a, _b, _c, _d, _e, state, address, adapter, tron, _tronWeb2;
                 return _regeneratorRuntime().wrap(function _callee321$(_context322) {
                   while (1) switch (_context322.prev = _context322.next) {
                     case 0:
                       state = this.state;
                       address = this.address;
                       if (!supportBitgetWallet()) {
-                        _context322.next = 15;
+                        _context322.next = 21;
+                        break;
+                      }
+                      if (!isInMobileBrowser()) {
+                        _context322.next = 14;
                         break;
                       }
                       adapter = new P();
-                      _context322.next = 6;
+                      _context322.next = 7;
                       return adapter === null || adapter === void 0 ? void 0 : adapter.getProvider().tronLink;
-                    case 6:
+                    case 7:
                       _context322.t0 = _context322.sent;
                       if (_context322.t0) {
-                        _context322.next = 9;
+                        _context322.next = 10;
                         break;
                       }
                       _context322.t0 = (_a = window.bitkeep) === null || _a === void 0 ? void 0 : _a.tronLink;
-                    case 9:
-                      this._wallet = _context322.t0;
-                      address = ((_b = this._wallet.tronWeb.defaultAddress) === null || _b === void 0 ? void 0 : _b.base58) || null;
-                      state = this._wallet.ready ? AdapterState.Connected : AdapterState.Disconnect;
-                      if (!this._wallet.ready) {
+                    case 10:
+                      tron = _context322.t0;
+                      this._wallet = {
+                        tron: tron,
+                        tronWeb: tron === null || tron === void 0 ? void 0 : tron.tronWeb
+                      };
+                      _context322.next = 16;
+                      break;
+                    case 14:
+                      _tronWeb2 = (_b = window.bitkeep) === null || _b === void 0 ? void 0 : _b.tronWeb;
+                      this._wallet = {
+                        tron: window.bitkeep.tronLink,
+                        tronWeb: _tronWeb2
+                      };
+                    case 16:
+                      address = ((_c = this._wallet.tronWeb.defaultAddress) === null || _c === void 0 ? void 0 : _c.base58) || null;
+                      state = ((_d = this._wallet.tron) === null || _d === void 0 ? void 0 : _d.ready) ? AdapterState.Connected : AdapterState.Disconnect;
+                      if (!((_e = this._wallet.tron) === null || _e === void 0 ? void 0 : _e.ready)) {
                         this.checkForWalletReady();
                       }
-                      _context322.next = 18;
+                      _context322.next = 24;
                       break;
-                    case 15:
+                    case 21:
                       this._wallet = null;
                       address = null;
                       state = AdapterState.NotFound;
-                    case 18:
+                    case 24:
                       this.setAddress(address);
                       this.setState(state);
-                    case 20:
+                    case 26:
                     case "end":
                       return _context322.stop();
                   }
@@ -86026,7 +86043,7 @@
                       this._connecting = true;
                       _context324.prev = 14;
                       _context324.next = 17;
-                      return wallet.request({
+                      return wallet.tron.request({
                         method: 'tron_requestAccounts'
                       });
                     case 17:
@@ -86037,7 +86054,7 @@
                       _context324.t0 = _context324["catch"](14);
                       throw new WalletConnectionError(_context324.t0.message);
                     case 22:
-                      _address10 = ((_a = wallet.tronWeb.defaultAddress) === null || _a === void 0 ? void 0 : _a.base58) || ((_d = (_c = (_b = window.bitkeep) === null || _b === void 0 ? void 0 : _b.tronWeb) === null || _c === void 0 ? void 0 : _c.defaultAddress) === null || _d === void 0 ? void 0 : _d.base58) || '';
+                      _address10 = ((_a = wallet === null || wallet === void 0 ? void 0 : wallet.tronWeb.defaultAddress) === null || _a === void 0 ? void 0 : _a.base58) || ((_d = (_c = (_b = window.bitkeep) === null || _b === void 0 ? void 0 : _b.tronWeb) === null || _c === void 0 ? void 0 : _c.defaultAddress) === null || _d === void 0 ? void 0 : _d.base58) || '';
                       this.setAddress(_address10);
                       this.setState(AdapterState.Connected);
                       this.emit('connect', this.address || '');
@@ -86255,10 +86272,11 @@
               var maxTimes = Math.floor(this.config.checkTimeout / 200);
               var check = function check() {
                 return __awaiter$5(_this109, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee329() {
+                  var _a;
                   return _regeneratorRuntime().wrap(function _callee329$(_context330) {
                     while (1) switch (_context330.prev = _context330.next) {
                       case 0:
-                        if (!(this._wallet && this._wallet.ready)) {
+                        if (!(this._wallet && ((_a = this._wallet) === null || _a === void 0 ? void 0 : _a.tron.ready))) {
                           _context330.next = 8;
                           break;
                         }
@@ -89204,8 +89222,8 @@
           },
           adapters: []
         });
-        function WalletProvider(_ref280) {
-          var children = _ref280.children;
+        function WalletProvider(_ref281) {
+          var children = _ref281.children;
           var adapters = reactExports.useMemo(function () {
             return [new TronLinkAdapter(), new TokenPocketAdapter(), new OkxWalletAdapter(), new BitKeepAdapter(), new GateWalletAdapter(), new ImTokenAdapter(), new FoxWalletAdapter(), new BybitWalletAdapter(), new LedgerAdapter(), new WalletConnectAdapter(walletconnectConfig)];
           }, []);
@@ -100826,8 +100844,8 @@
           }
           return data;
         }
-        function parseEvent(event, _ref281) {
-          var abi = _ref281.inputs;
+        function parseEvent(event, _ref282) {
+          var abi = _ref282.inputs;
           if (!event.result) return event;
           if (isObject$1(event.result)) {
             for (var _i136 = 0; _i136 < abi.length; _i136++) {
@@ -100858,21 +100876,21 @@
           return _sleep.apply(this, arguments);
         }
         function _sleep() {
-          _sleep = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee534() {
+          _sleep = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee535() {
             var millis,
-              _args537 = arguments;
-            return _regeneratorRuntime().wrap(function _callee534$(_context537) {
-              while (1) switch (_context537.prev = _context537.next) {
+              _args538 = arguments;
+            return _regeneratorRuntime().wrap(function _callee535$(_context538) {
+              while (1) switch (_context538.prev = _context538.next) {
                 case 0:
-                  millis = _args537.length > 0 && _args537[0] !== undefined ? _args537[0] : 1000;
-                  return _context537.abrupt("return", new Promise(function (resolve) {
+                  millis = _args538.length > 0 && _args538[0] !== undefined ? _args538[0] : 1000;
+                  return _context538.abrupt("return", new Promise(function (resolve) {
                     return setTimeout(resolve, millis);
                   }));
                 case 2:
                 case "end":
-                  return _context537.stop();
+                  return _context538.stop();
               }
-            }, _callee534);
+            }, _callee535);
           }));
           return _sleep.apply(this, arguments);
         }
@@ -100946,27 +100964,27 @@
          *  It %%types%% is specified, the values are checked.
          */
         function _resolveProperties() {
-          _resolveProperties = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee535(value) {
+          _resolveProperties = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee536(value) {
             var keys, results;
-            return _regeneratorRuntime().wrap(function _callee535$(_context538) {
-              while (1) switch (_context538.prev = _context538.next) {
+            return _regeneratorRuntime().wrap(function _callee536$(_context539) {
+              while (1) switch (_context539.prev = _context539.next) {
                 case 0:
                   keys = Object.keys(value);
-                  _context538.next = 3;
+                  _context539.next = 3;
                   return Promise.all(keys.map(function (k) {
                     return Promise.resolve(value[k]);
                   }));
                 case 3:
-                  results = _context538.sent;
-                  return _context538.abrupt("return", results.reduce(function (accum, v, index) {
+                  results = _context539.sent;
+                  return _context539.abrupt("return", results.reduce(function (accum, v, index) {
                     accum[keys[index]] = v;
                     return accum;
                   }, {}));
                 case 5:
                 case "end":
-                  return _context538.stop();
+                  return _context539.stop();
               }
-            }, _callee535);
+            }, _callee536);
           }));
           return _resolveProperties.apply(this, arguments);
         }
@@ -102609,7 +102627,7 @@
         // call of async fn will return Promise, which will be fullfiled only on
         // next scheduler queue processing step and this is exactly what we need.
         var nextTick = /*#__PURE__*/function () {
-          var _ref282 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee370() {
+          var _ref283 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee370() {
             return _regeneratorRuntime().wrap(function _callee370$(_context371) {
               while (1) switch (_context371.prev = _context371.next) {
                 case 0:
@@ -102619,7 +102637,7 @@
             }, _callee370);
           }));
           return function nextTick() {
-            return _ref282.apply(this, arguments);
+            return _ref283.apply(this, arguments);
           };
         }();
         // Returns control to thread each 'tick' ms to avoid blocking
@@ -102630,40 +102648,40 @@
          * @example utf8ToBytes('abc') // new Uint8Array([97, 98, 99])
          */
         function _asyncLoop() {
-          _asyncLoop = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee536(iters, tick, cb) {
+          _asyncLoop = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee537(iters, tick, cb) {
             var ts, _i262, diff;
-            return _regeneratorRuntime().wrap(function _callee536$(_context539) {
-              while (1) switch (_context539.prev = _context539.next) {
+            return _regeneratorRuntime().wrap(function _callee537$(_context540) {
+              while (1) switch (_context540.prev = _context540.next) {
                 case 0:
                   ts = Date.now();
                   _i262 = 0;
                 case 2:
                   if (!(_i262 < iters)) {
-                    _context539.next = 13;
+                    _context540.next = 13;
                     break;
                   }
                   cb(_i262);
                   // Date.now() is not monotonic, so in case if clock goes backwards we return return control too
                   diff = Date.now() - ts;
                   if (!(diff >= 0 && diff < tick)) {
-                    _context539.next = 7;
+                    _context540.next = 7;
                     break;
                   }
-                  return _context539.abrupt("continue", 10);
+                  return _context540.abrupt("continue", 10);
                 case 7:
-                  _context539.next = 9;
+                  _context540.next = 9;
                   return nextTick();
                 case 9:
                   ts += diff;
                 case 10:
                   _i262++;
-                  _context539.next = 2;
+                  _context540.next = 2;
                   break;
                 case 13:
                 case "end":
-                  return _context539.stop();
+                  return _context540.stop();
               }
-            }, _callee536);
+            }, _callee537);
           }));
           return _asyncLoop.apply(this, arguments);
         }
@@ -103191,9 +103209,9 @@
             var _fromBig = fromBig(lst[_i159], le),
               _h11 = _fromBig.h,
               l = _fromBig.l;
-            var _ref283 = [_h11, l];
-            Ah[_i159] = _ref283[0];
-            Al[_i159] = _ref283[1];
+            var _ref284 = [_h11, l];
+            Ah[_i159] = _ref284[0];
+            Al[_i159] = _ref284[1];
           }
           return [Ah, Al];
         }
@@ -103298,14 +103316,14 @@
 
         // Round contants (first 32 bits of the fractional parts of the cube roots of the first 80 primes 2..409):
         // prettier-ignore
-        var _ref284 = /* @__PURE__ */function () {
+        var _ref285 = /* @__PURE__ */function () {
             return u64.split(['0x428a2f98d728ae22', '0x7137449123ef65cd', '0xb5c0fbcfec4d3b2f', '0xe9b5dba58189dbbc', '0x3956c25bf348b538', '0x59f111f1b605d019', '0x923f82a4af194f9b', '0xab1c5ed5da6d8118', '0xd807aa98a3030242', '0x12835b0145706fbe', '0x243185be4ee4b28c', '0x550c7dc3d5ffb4e2', '0x72be5d74f27b896f', '0x80deb1fe3b1696b1', '0x9bdc06a725c71235', '0xc19bf174cf692694', '0xe49b69c19ef14ad2', '0xefbe4786384f25e3', '0x0fc19dc68b8cd5b5', '0x240ca1cc77ac9c65', '0x2de92c6f592b0275', '0x4a7484aa6ea6e483', '0x5cb0a9dcbd41fbd4', '0x76f988da831153b5', '0x983e5152ee66dfab', '0xa831c66d2db43210', '0xb00327c898fb213f', '0xbf597fc7beef0ee4', '0xc6e00bf33da88fc2', '0xd5a79147930aa725', '0x06ca6351e003826f', '0x142929670a0e6e70', '0x27b70a8546d22ffc', '0x2e1b21385c26c926', '0x4d2c6dfc5ac42aed', '0x53380d139d95b3df', '0x650a73548baf63de', '0x766a0abb3c77b2a8', '0x81c2c92e47edaee6', '0x92722c851482353b', '0xa2bfe8a14cf10364', '0xa81a664bbc423001', '0xc24b8b70d0f89791', '0xc76c51a30654be30', '0xd192e819d6ef5218', '0xd69906245565a910', '0xf40e35855771202a', '0x106aa07032bbd1b8', '0x19a4c116b8d2d0c8', '0x1e376c085141ab53', '0x2748774cdf8eeb99', '0x34b0bcb5e19b48a8', '0x391c0cb3c5c95a63', '0x4ed8aa4ae3418acb', '0x5b9cca4f7763e373', '0x682e6ff3d6b2b8a3', '0x748f82ee5defb2fc', '0x78a5636f43172f60', '0x84c87814a1f0ab72', '0x8cc702081a6439ec', '0x90befffa23631e28', '0xa4506cebde82bde9', '0xbef9a3f7b2c67915', '0xc67178f2e372532b', '0xca273eceea26619c', '0xd186b8c721c0c207', '0xeada7dd6cde0eb1e', '0xf57d4f7fee6ed178', '0x06f067aa72176fba', '0x0a637dc5a2c898a6', '0x113f9804bef90dae', '0x1b710b35131c471b', '0x28db77f523047d84', '0x32caab7b40c72493', '0x3c9ebe0a15c9bebc', '0x431d67c49c100d4c', '0x4cc5d4becb3e42b6', '0x597f299cfc657e2a', '0x5fcb6fab3ad6faec', '0x6c44198c4a475817'].map(function (n) {
               return BigInt(n);
             }));
           }(),
-          _ref285 = _slicedToArray2(_ref284, 2),
-          SHA512_Kh = _ref285[0],
-          SHA512_Kl = _ref285[1];
+          _ref286 = _slicedToArray2(_ref285, 2),
+          SHA512_Kh = _ref286[0],
+          SHA512_Kl = _ref286[1];
         // Temporary buffer, not used to store anything between runs
         var SHA512_W_H = /* @__PURE__ */new Uint32Array(80);
         var SHA512_W_L = /* @__PURE__ */new Uint32Array(80);
@@ -103615,9 +103633,9 @@
         var _0x71n = /* @__PURE__ */BigInt(0x71);
         for (var _round = 0, _R = _1n$a, _x280 = 1, _y6 = 0; _round < 24; _round++) {
           // Pi
-          var _ref286 = [_y6, (2 * _x280 + 3 * _y6) % 5];
-          _x280 = _ref286[0];
-          _y6 = _ref286[1];
+          var _ref287 = [_y6, (2 * _x280 + 3 * _y6) % 5];
+          _x280 = _ref287[0];
+          _y6 = _ref287[1];
           SHA3_PI.push(2 * (5 * _y6 + _x280));
           // Rotational
           SHA3_ROTL.push((_round + 1) * (_round + 2) / 2 % 64);
@@ -104382,21 +104400,21 @@
           return _scryptAsync2.apply(this, arguments);
         }
         function _scryptAsync2() {
-          _scryptAsync2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee537(password, salt, opts) {
+          _scryptAsync2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee538(password, salt, opts) {
             var _scryptInit2, N, r, p, dkLen, blockSize32, V, B32, B, tmp, blockMixCb, asyncTick, _loop11, _pi2;
-            return _regeneratorRuntime().wrap(function _callee537$(_context541) {
-              while (1) switch (_context541.prev = _context541.next) {
+            return _regeneratorRuntime().wrap(function _callee538$(_context542) {
+              while (1) switch (_context542.prev = _context542.next) {
                 case 0:
                   _scryptInit2 = scryptInit(password, salt, opts), N = _scryptInit2.N, r = _scryptInit2.r, p = _scryptInit2.p, dkLen = _scryptInit2.dkLen, blockSize32 = _scryptInit2.blockSize32, V = _scryptInit2.V, B32 = _scryptInit2.B32, B = _scryptInit2.B, tmp = _scryptInit2.tmp, blockMixCb = _scryptInit2.blockMixCb, asyncTick = _scryptInit2.asyncTick;
                   _loop11 = /*#__PURE__*/_regeneratorRuntime().mark(function _loop11() {
                     var Pi, _i263, pos;
-                    return _regeneratorRuntime().wrap(function _loop11$(_context540) {
-                      while (1) switch (_context540.prev = _context540.next) {
+                    return _regeneratorRuntime().wrap(function _loop11$(_context541) {
+                      while (1) switch (_context541.prev = _context541.next) {
                         case 0:
                           Pi = blockSize32 * _pi2;
                           for (_i263 = 0; _i263 < blockSize32; _i263++) V[_i263] = B32[Pi + _i263]; // V[0] = B[i]
                           pos = 0;
-                          _context540.next = 5;
+                          _context541.next = 5;
                           return asyncLoop(N - 1, asyncTick, function () {
                             BlockMix(V, pos, V, pos += blockSize32, r); // V[i] = BlockMix(V[i-1]);
                             blockMixCb();
@@ -104404,7 +104422,7 @@
                         case 5:
                           BlockMix(V, (N - 1) * blockSize32, B32, Pi, r); // Process last element
                           blockMixCb();
-                          _context540.next = 9;
+                          _context541.next = 9;
                           return asyncLoop(N, asyncTick, function () {
                             // First u32 of the last 64-byte block (u32 is LE)
                             var j = B32[Pi + blockSize32 - 16] % N; // j = Integrify(X) % iterations
@@ -104414,35 +104432,35 @@
                           });
                         case 9:
                         case "end":
-                          return _context540.stop();
+                          return _context541.stop();
                       }
                     }, _loop11);
                   });
                   _pi2 = 0;
                 case 3:
                   if (!(_pi2 < p)) {
-                    _context541.next = 8;
+                    _context542.next = 8;
                     break;
                   }
-                  return _context541.delegateYield(_loop11(), "t0", 5);
+                  return _context542.delegateYield(_loop11(), "t0", 5);
                 case 5:
                   _pi2++;
-                  _context541.next = 3;
+                  _context542.next = 3;
                   break;
                 case 8:
-                  return _context541.abrupt("return", scryptOutput(password, dkLen, B, V, tmp));
+                  return _context542.abrupt("return", scryptOutput(password, dkLen, B, V, tmp));
                 case 9:
                 case "end":
-                  return _context541.stop();
+                  return _context542.stop();
               }
-            }, _callee537);
+            }, _callee538);
           }));
           return _scryptAsync2.apply(this, arguments);
         }
         var lockedSync = false,
           lockedAsync = false;
         var _scryptAsync = /*#__PURE__*/function () {
-          var _ref287 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee371(passwd, salt, N, r, p, dkLen, onProgress) {
+          var _ref288 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee371(passwd, salt, N, r, p, dkLen, onProgress) {
             return _regeneratorRuntime().wrap(function _callee371$(_context372) {
               while (1) switch (_context372.prev = _context372.next) {
                 case 0:
@@ -104463,7 +104481,7 @@
             }, _callee371);
           }));
           return function _scryptAsync(_x288, _x289, _x290, _x291, _x292, _x293, _x294) {
-            return _ref287.apply(this, arguments);
+            return _ref288.apply(this, arguments);
           };
         }();
         var _scryptSync = function _scryptSync(passwd, salt, N, r, p, dkLen) {
@@ -104517,24 +104535,24 @@
           return _scrypt.apply(this, arguments);
         }
         function _scrypt() {
-          _scrypt = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee538(_passwd, _salt, N, r, p, dkLen, progress) {
+          _scrypt = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee539(_passwd, _salt, N, r, p, dkLen, progress) {
             var passwd, salt;
-            return _regeneratorRuntime().wrap(function _callee538$(_context542) {
-              while (1) switch (_context542.prev = _context542.next) {
+            return _regeneratorRuntime().wrap(function _callee539$(_context543) {
+              while (1) switch (_context543.prev = _context543.next) {
                 case 0:
                   passwd = getBytes(_passwd, "passwd");
                   salt = getBytes(_salt, "salt");
-                  _context542.t0 = hexlify;
-                  _context542.next = 5;
+                  _context543.t0 = hexlify;
+                  _context543.next = 5;
                   return __scryptAsync(passwd, salt, N, r, p, dkLen, progress);
                 case 5:
-                  _context542.t1 = _context542.sent;
-                  return _context542.abrupt("return", (0, _context542.t0)(_context542.t1));
+                  _context543.t1 = _context543.sent;
+                  return _context543.abrupt("return", (0, _context543.t0)(_context543.t1));
                 case 7:
                 case "end":
-                  return _context542.stop();
+                  return _context543.stop();
               }
-            }, _callee538);
+            }, _callee539);
           }));
           return _scrypt.apply(this, arguments);
         }
@@ -106038,9 +106056,9 @@
             }], [{
               key: "fromAffine",
               value: function fromAffine(p) {
-                var _ref288 = p || {},
-                  x = _ref288.x,
-                  y = _ref288.y;
+                var _ref289 = p || {},
+                  x = _ref289.x,
+                  y = _ref289.y;
                 if (!p || !Fp.isValid(x) || !Fp.isValid(y)) throw new Error('invalid affine point');
                 if (p instanceof Point) throw new Error('projective point not allowed');
                 var is0 = function is0(i) {
@@ -106999,7 +107017,7 @@
               }(sig.s, sig.yParityAndS);
               assertError((getBytes(s)[0] & 0x80) == 0, "non-canonical s");
               // Get v; by any means necessary (we check consistency below)
-              var _ref289 = function (_v, yParityAndS, yParity) {
+              var _ref290 = function (_v, yParityAndS, yParity) {
                   if (_v != null) {
                     var _v15 = getBigInt(_v);
                     return {
@@ -107028,8 +107046,8 @@
                   }
                   assertError(false, "missing v");
                 }(sig.v, sig.yParityAndS, sig.yParity),
-                networkV = _ref289.networkV,
-                v = _ref289.v;
+                networkV = _ref290.networkV,
+                v = _ref290.v;
               var result = new Signature(_guard$4, r, s, v);
               if (networkV) {
                 _classPrivateFieldSet(_networkV, result, networkV);
@@ -107414,27 +107432,27 @@
          *    //_error:
          */
         function _checkAddress() {
-          _checkAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee539(target, promise) {
+          _checkAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee540(target, promise) {
             var result;
-            return _regeneratorRuntime().wrap(function _callee539$(_context543) {
-              while (1) switch (_context543.prev = _context543.next) {
+            return _regeneratorRuntime().wrap(function _callee540$(_context544) {
+              while (1) switch (_context544.prev = _context544.next) {
                 case 0:
-                  _context543.next = 2;
+                  _context544.next = 2;
                   return promise;
                 case 2:
-                  result = _context543.sent;
+                  result = _context544.sent;
                   if (result == null || result === "0x0000000000000000000000000000000000000000") {
                     assert(typeof target !== "string", "unconfigured name", "UNCONFIGURED_NAME", {
                       value: target
                     });
                     assertArgument(false, "invalid AddressLike value; did not resolve to a value address", "target", target);
                   }
-                  return _context543.abrupt("return", getAddress$1(result));
+                  return _context544.abrupt("return", getAddress$1(result));
                 case 5:
                 case "end":
-                  return _context543.stop();
+                  return _context544.stop();
               }
-            }, _callee539);
+            }, _callee540);
           }));
           return _checkAddress.apply(this, arguments);
         }
@@ -110301,9 +110319,9 @@
           return null;
         }
         function encodeType$1(name, fields) {
-          return "".concat(name, "(").concat(fields.map(function (_ref290) {
-            var name = _ref290.name,
-              type = _ref290.type;
+          return "".concat(name, "(").concat(fields.map(function (_ref291) {
+            var name = _ref291.name,
+              type = _ref291.type;
             return type + " " + name;
           }).join(","), ")");
         }
@@ -110367,9 +110385,9 @@
             var subtypes = new Map();
             var types = {};
             Object.keys(_types).forEach(function (type) {
-              types[type] = _types[type].map(function (_ref291) {
-                var name = _ref291.name,
-                  type = _ref291.type;
+              types[type] = _types[type].map(function (_ref292) {
+                var name = _ref292.name,
+                  type = _ref292.type;
                 // Normalize the base type (unless name conflict)
                 var _splitArray = splitArray(type),
                   base = _splitArray.base,
@@ -110576,9 +110594,9 @@
               // Struct
               var fields = this.types[type];
               if (fields) {
-                return fields.reduce(function (accum, _ref292) {
-                  var name = _ref292.name,
-                    type = _ref292.type;
+                return fields.reduce(function (accum, _ref293) {
+                  var name = _ref293.name,
+                    type = _ref293.type;
                   accum[name] = _this137._visit(type, value[name], callback);
                   return accum;
                 }, {});
@@ -110810,7 +110828,7 @@
          */
         // [ "a", "b" ] => { "a": 1, "b": 1 }
         function _getEncoder2(type) {
-          var _this176 = this;
+          var _this177 = this;
           // Basic encoder type (address, bool, uint256, etc)
           {
             var encoder = getBaseEncoder$1(type);
@@ -110826,7 +110844,7 @@
             return function (value) {
               assertArgument(array.count === -1 || array.count === value.length, "array length mismatch; expected length ".concat(array.count), "value", value);
               var result = value.map(subEncoder);
-              if (_classPrivateFieldGet(_fullTypes, _this176).has(subtype)) {
+              if (_classPrivateFieldGet(_fullTypes, _this177).has(subtype)) {
                 result = result.map(keccak256);
               }
               return keccak256(concat(result));
@@ -110837,11 +110855,11 @@
           if (fields) {
             var encodedType = id(_classPrivateFieldGet(_fullTypes, this).get(type));
             return function (value) {
-              var values = fields.map(function (_ref342) {
-                var name = _ref342.name,
-                  type = _ref342.type;
-                var result = _this176.getEncoder(type)(value[name]);
-                if (_classPrivateFieldGet(_fullTypes, _this176).has(type)) {
+              var values = fields.map(function (_ref341) {
+                var name = _ref341.name,
+                  type = _ref341.type;
+                var result = _this177.getEncoder(type)(value[name]);
+                if (_classPrivateFieldGet(_fullTypes, _this177).has(type)) {
                   return keccak256(result);
                 }
                 return result;
@@ -111574,21 +111592,21 @@
           }
           var result = process(this.type, value);
           if (result.then) {
-            promises.push(_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee540() {
-              return _regeneratorRuntime().wrap(function _callee540$(_context544) {
-                while (1) switch (_context544.prev = _context544.next) {
+            promises.push(_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee541() {
+              return _regeneratorRuntime().wrap(function _callee541$(_context545) {
+                while (1) switch (_context545.prev = _context545.next) {
                   case 0:
-                    _context544.t0 = setValue;
-                    _context544.next = 3;
+                    _context545.t0 = setValue;
+                    _context545.next = 3;
                     return result;
                   case 3:
-                    _context544.t1 = _context544.sent;
-                    (0, _context544.t0)(_context544.t1);
+                    _context545.t1 = _context545.sent;
+                    (0, _context545.t0)(_context545.t1);
                   case 5:
                   case "end":
-                    return _context544.stop();
+                    return _context545.stop();
                 }
-              }, _callee540);
+              }, _callee541);
             }))());
           } else {
             setValue(result);
@@ -111764,13 +111782,13 @@
           }]);
         }(); //import { resolveAddress } from "@ethersproject/address";
         function _getCoder(param) {
-          var _this177 = this;
+          var _this178 = this;
           if (param.isArray()) {
             return new ArrayCoder(_assertClassBrand(_AbiCoder_brand, this, _getCoder).call(this, param.arrayChildren), param.arrayLength, param.name);
           }
           if (param.isTuple()) {
             return new TupleCoder(param.components.map(function (c) {
-              return _assertClassBrand(_AbiCoder_brand, _this177, _getCoder).call(_this177, c);
+              return _assertClassBrand(_AbiCoder_brand, _this178, _getCoder).call(_this178, c);
             }), param.name);
           }
           switch (param.baseType) {
@@ -111904,10 +111922,10 @@
          *
          */
         function _populate() {
-          _populate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee541(signer, tx) {
+          _populate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee542(signer, tx) {
             var pop, _from2;
-            return _regeneratorRuntime().wrap(function _callee541$(_context545) {
-              while (1) switch (_context545.prev = _context545.next) {
+            return _regeneratorRuntime().wrap(function _callee542$(_context546) {
+              while (1) switch (_context546.prev = _context546.next) {
                 case 0:
                   pop = copyRequest(tx);
                   if (pop.to != null) {
@@ -111915,25 +111933,25 @@
                   }
                   if (pop.from != null) {
                     _from2 = pop.from;
-                    pop.from = Promise.all([signer.getAddress(), resolveAddress(_from2, signer)]).then(function (_ref344) {
-                      var _ref345 = _slicedToArray2(_ref344, 2),
-                        address = _ref345[0],
-                        from = _ref345[1];
+                    pop.from = Promise.all([signer.getAddress(), resolveAddress(_from2, signer)]).then(function (_ref343) {
+                      var _ref344 = _slicedToArray2(_ref343, 2),
+                        address = _ref344[0],
+                        from = _ref344[1];
                       assertArgument(address.toLowerCase() === from.toLowerCase(), "transaction from mismatch", "tx.from", from);
                       return address;
                     });
                   } else {
                     pop.from = signer.getAddress();
                   }
-                  _context545.next = 5;
+                  _context546.next = 5;
                   return resolveProperties(pop);
                 case 5:
-                  return _context545.abrupt("return", _context545.sent);
+                  return _context546.abrupt("return", _context546.sent);
                 case 6:
                 case "end":
-                  return _context545.stop();
+                  return _context546.stop();
               }
-            }, _callee541);
+            }, _callee542);
           }));
           return _populate.apply(this, arguments);
         }
@@ -112535,7 +112553,7 @@
                     case 0:
                       _context390.next = 2;
                       return TypedDataEncoder$1.resolveNames(domain, types, value, /*#__PURE__*/function () {
-                        var _ref293 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee388(name) {
+                        var _ref294 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee388(name) {
                           var address;
                           return _regeneratorRuntime().wrap(function _callee388$(_context389) {
                             while (1) switch (_context389.prev = _context389.next) {
@@ -112563,7 +112581,7 @@
                           }, _callee388);
                         }));
                         return function (_x331) {
-                          return _ref293.apply(this, arguments);
+                          return _ref294.apply(this, arguments);
                         };
                       }());
                     case 2:
@@ -113491,26 +113509,26 @@
          *  The default derivation path for Ethereum HD Nodes. (i.e. ``"m/44'/60'/0'/0/0"``)
          */
         function _encryptKeystoreJson() {
-          _encryptKeystoreJson = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee542(account, password, options) {
+          _encryptKeystoreJson = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee543(account, password, options) {
             var passwordBytes, kdf, key;
-            return _regeneratorRuntime().wrap(function _callee542$(_context546) {
-              while (1) switch (_context546.prev = _context546.next) {
+            return _regeneratorRuntime().wrap(function _callee543$(_context547) {
+              while (1) switch (_context547.prev = _context547.next) {
                 case 0:
                   if (options == null) {
                     options = {};
                   }
                   passwordBytes = getPassword(password);
                   kdf = getEncryptKdfParams(options);
-                  _context546.next = 5;
+                  _context547.next = 5;
                   return scrypt(passwordBytes, kdf.salt, kdf.N, kdf.r, kdf.p, 64, options.progressCallback);
                 case 5:
-                  key = _context546.sent;
-                  return _context546.abrupt("return", _encryptKeystore(getBytes(key), kdf, account, options));
+                  key = _context547.sent;
+                  return _context547.abrupt("return", _encryptKeystore(getBytes(key), kdf, account, options));
                 case 7:
                 case "end":
-                  return _context546.stop();
+                  return _context547.stop();
               }
-            }, _callee542);
+            }, _callee543);
           }));
           return _encryptKeystoreJson.apply(this, arguments);
         }
@@ -114844,21 +114862,21 @@
           }
           var result = process(this.type, value);
           if (result.then) {
-            promises.push(_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee543() {
-              return _regeneratorRuntime().wrap(function _callee543$(_context547) {
-                while (1) switch (_context547.prev = _context547.next) {
+            promises.push(_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee544() {
+              return _regeneratorRuntime().wrap(function _callee544$(_context548) {
+                while (1) switch (_context548.prev = _context548.next) {
                   case 0:
-                    _context547.t0 = setValue;
-                    _context547.next = 3;
+                    _context548.t0 = setValue;
+                    _context548.next = 3;
                     return result;
                   case 3:
-                    _context547.t1 = _context547.sent;
-                    (0, _context547.t0)(_context547.t1);
+                    _context548.t1 = _context548.sent;
+                    (0, _context548.t0)(_context548.t1);
                   case 5:
                   case "end":
-                    return _context547.stop();
+                    return _context548.stop();
                 }
-              }, _callee543);
+              }, _callee544);
             }))());
           } else {
             setValue(result);
@@ -116999,9 +117017,9 @@
         }, Symbol.toStringTag, {
           value: 'Module'
         }));
-        var ALPHABET$1 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+        var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
         var ALPHABET_MAP = {};
-        for (var _i223 = 0; _i223 < ALPHABET$1.length; _i223++) ALPHABET_MAP[ALPHABET$1.charAt(_i223)] = _i223;
+        for (var _i223 = 0; _i223 < ALPHABET.length; _i223++) ALPHABET_MAP[ALPHABET.charAt(_i223)] = _i223;
         var BASE = 58;
         function encode58(buffer) {
           if (buffer.length === 0) return '';
@@ -117026,7 +117044,7 @@
           }
           for (i = 0; buffer[i] === 0 && i < buffer.length - 1; i++) digits.push(0);
           return digits.reverse().map(function (digit) {
-            return ALPHABET$1[digit];
+            return ALPHABET[digit];
           }).join('');
         }
         function decode58(string) {
@@ -117308,9 +117326,9 @@
          * @returns {any}
          */
         function forEach(obj, fn) {
-          var _ref294 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-            _ref294$allOwnKeys = _ref294.allOwnKeys,
-            allOwnKeys = _ref294$allOwnKeys === void 0 ? false : _ref294$allOwnKeys;
+          var _ref295 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+            _ref295$allOwnKeys = _ref295.allOwnKeys,
+            allOwnKeys = _ref295$allOwnKeys === void 0 ? false : _ref295$allOwnKeys;
           // Don't bother if no value provided
           if (obj === null || typeof obj === 'undefined') {
             return;
@@ -117381,8 +117399,8 @@
          */
         function merge( /* obj1, obj2, obj3, ... */
         ) {
-          var _ref295 = isContextDefined(this) && this || {},
-            caseless = _ref295.caseless;
+          var _ref296 = isContextDefined(this) && this || {},
+            caseless = _ref296.caseless;
           var result = {};
           var assignValue = function assignValue(val, key) {
             var targetKey = caseless && findKey(result, key) || key;
@@ -117413,8 +117431,8 @@
          * @returns {Object} The resulting value of object a
          */
         var extend = function extend(a, b, thisArg) {
-          var _ref296 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-            allOwnKeys = _ref296.allOwnKeys;
+          var _ref297 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+            allOwnKeys = _ref297.allOwnKeys;
           forEach(b, function (val, key) {
             if (thisArg && isFunction(val)) {
               a[key] = bind(val, thisArg);
@@ -117589,8 +117607,8 @@
         };
 
         /* Creating a function that will check if an object has a property. */
-        var hasOwnProperty = function (_ref297) {
-          var hasOwnProperty = _ref297.hasOwnProperty;
+        var hasOwnProperty = function (_ref298) {
+          var hasOwnProperty = _ref298.hasOwnProperty;
           return function (obj, prop) {
             return hasOwnProperty.call(obj, prop);
           };
@@ -117655,23 +117673,6 @@
         var toFiniteNumber = function toFiniteNumber(value, defaultValue) {
           return value != null && Number.isFinite(value = +value) ? value : defaultValue;
         };
-        var ALPHA = 'abcdefghijklmnopqrstuvwxyz';
-        var DIGIT = '0123456789';
-        var ALPHABET = {
-          DIGIT: DIGIT,
-          ALPHA: ALPHA,
-          ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
-        };
-        var generateString = function generateString() {
-          var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 16;
-          var alphabet = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ALPHABET.ALPHA_DIGIT;
-          var str = '';
-          var length = alphabet.length;
-          while (size--) {
-            str += alphabet[Math.random() * length | 0];
-          }
-          return str;
-        };
 
         /**
          * If the thing is a FormData object, return true, otherwise return false.
@@ -117718,9 +117719,9 @@
             return setImmediate;
           }
           return postMessageSupported ? function (token, callbacks) {
-            _global.addEventListener("message", function (_ref298) {
-              var source = _ref298.source,
-                data = _ref298.data;
+            _global.addEventListener("message", function (_ref299) {
+              var source = _ref299.source,
+                data = _ref299.data;
               if (source === _global && data === token) {
                 callbacks.length && callbacks.shift()();
               }
@@ -117788,8 +117789,6 @@
           findKey: findKey,
           global: _global,
           isContextDefined: isContextDefined,
-          ALPHABET: ALPHABET,
-          generateString: generateString,
           isSpecCompliantForm: isSpecCompliantForm,
           toJSONObject: toJSONObject,
           isAsyncFn: isAsyncFn,
@@ -118124,7 +118123,7 @@
          *
          * @param {string} url The base of the url (e.g., http://www.google.com)
          * @param {object} [params] The params to be appended
-         * @param {?object} options
+         * @param {?(object|Function)} options
          *
          * @returns {string} The formatted url
          */
@@ -118134,6 +118133,11 @@
             return url;
           }
           var _encode = options && options.encode || encode;
+          if (utils$2.isFunction(options)) {
+            options = {
+              serialize: options
+            };
+          }
           var serializeFn = options && options.serialize;
           var serializedParams;
           if (serializeFn) {
@@ -118756,10 +118760,10 @@
           }, {
             key: "toString",
             value: function toString() {
-              return Object.entries(this.toJSON()).map(function (_ref299) {
-                var _ref300 = _slicedToArray2(_ref299, 2),
-                  header = _ref300[0],
-                  value = _ref300[1];
+              return Object.entries(this.toJSON()).map(function (_ref300) {
+                var _ref301 = _slicedToArray2(_ref300, 2),
+                  header = _ref301[0],
+                  value = _ref301[1];
                 return header + ': ' + value;
               }).join('\n');
             }
@@ -118808,8 +118812,8 @@
         AxiosHeaders$1.accessor(['Content-Type', 'Content-Length', 'Accept', 'Accept-Encoding', 'User-Agent', 'Authorization']);
 
         // reserved names hotfix
-        utils$2.reduceDescriptors(AxiosHeaders$1.prototype, function (_ref301, key) {
-          var value = _ref301.value;
+        utils$2.reduceDescriptors(AxiosHeaders$1.prototype, function (_ref302, key) {
+          var value = _ref302.value;
           var mapped = key[0].toUpperCase() + key.slice(1); // map `set` => `Set`
           return {
             get: function get() {
@@ -119013,60 +119017,14 @@
             });
           };
         };
-        var isURLSameOrigin = platform.hasStandardBrowserEnv ?
-        // Standard browser envs have full support of the APIs needed to test
-        // whether the request URL is of the same origin as current location.
-        function standardBrowserEnv() {
-          var msie = platform.navigator && /(msie|trident)/i.test(platform.navigator.userAgent);
-          var urlParsingNode = document.createElement('a');
-          var originURL;
-
-          /**
-          * Parse a URL to discover its components
-          *
-          * @param {String} url The URL to be parsed
-          * @returns {Object}
-          */
-          function resolveURL(url) {
-            var href = url;
-            if (msie) {
-              // IE needs attribute set twice to normalize properties
-              urlParsingNode.setAttribute('href', href);
-              href = urlParsingNode.href;
-            }
-            urlParsingNode.setAttribute('href', href);
-
-            // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-            return {
-              href: urlParsingNode.href,
-              protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-              host: urlParsingNode.host,
-              search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-              hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-              hostname: urlParsingNode.hostname,
-              port: urlParsingNode.port,
-              pathname: urlParsingNode.pathname.charAt(0) === '/' ? urlParsingNode.pathname : '/' + urlParsingNode.pathname
-            };
-          }
-          originURL = resolveURL(window.location.href);
-
-          /**
-          * Determine if a URL shares the same origin as the current location
-          *
-          * @param {String} requestURL The URL to test
-          * @returns {boolean} True if URL shares the same origin, otherwise false
-          */
-          return function isURLSameOrigin(requestURL) {
-            var parsed = utils$2.isString(requestURL) ? resolveURL(requestURL) : requestURL;
-            return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
+        var isURLSameOrigin = platform.hasStandardBrowserEnv ? function (origin, isMSIE) {
+          return function (url) {
+            url = new URL(url, platform.origin);
+            return origin.protocol === url.protocol && origin.host === url.host && (isMSIE || origin.port === url.port);
           };
-        }() :
-        // Non standard browser envs (web workers, react-native) lack needed support.
-        function nonStandardBrowserEnv() {
-          return function isURLSameOrigin() {
-            return true;
-          };
-        }();
+        }(new URL(platform.origin), platform.navigator && /(msie|trident)/i.test(platform.navigator.userAgent)) : function () {
+          return true;
+        };
         var cookies = platform.hasStandardBrowserEnv ?
         // Standard browser envs support document.cookie
         {
@@ -119131,8 +119089,9 @@
          *
          * @returns {string} The combined full path
          */
-        function buildFullPath(baseURL, requestedURL) {
-          if (baseURL && !isAbsoluteURL(requestedURL)) {
+        function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
+          var isRelativeUrl = !isAbsoluteURL(requestedURL);
+          if (baseURL && isRelativeUrl || allowAbsoluteUrls == false) {
             return combineURLs(baseURL, requestedURL);
           }
           return requestedURL;
@@ -119154,7 +119113,7 @@
           // eslint-disable-next-line no-param-reassign
           config2 = config2 || {};
           var config = {};
-          function getMergedValue(target, source, caseless) {
+          function getMergedValue(target, source, prop, caseless) {
             if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source)) {
               return utils$2.merge.call({
                 caseless: caseless
@@ -119168,11 +119127,11 @@
           }
 
           // eslint-disable-next-line consistent-return
-          function mergeDeepProperties(a, b, caseless) {
+          function mergeDeepProperties(a, b, prop, caseless) {
             if (!utils$2.isUndefined(b)) {
-              return getMergedValue(a, b, caseless);
+              return getMergedValue(a, b, prop, caseless);
             } else if (!utils$2.isUndefined(a)) {
-              return getMergedValue(undefined, a, caseless);
+              return getMergedValue(undefined, a, prop, caseless);
             }
           }
 
@@ -119229,8 +119188,8 @@
             socketPath: defaultToConfig2,
             responseEncoding: defaultToConfig2,
             validateStatus: mergeDirectKeys,
-            headers: function headers(a, b) {
-              return mergeDeepProperties(headersToObject(a), headersToObject(b), true);
+            headers: function headers(a, b, prop) {
+              return mergeDeepProperties(headersToObject(a), headersToObject(b), prop, true);
             }
           };
           utils$2.forEach(Object.keys(Object.assign({}, config1, config2)), function computeConfigValue(prop) {
@@ -119261,12 +119220,12 @@
               headers.setContentType(undefined); // Let the browser set it
             } else if ((contentType = headers.getContentType()) !== false) {
               // fix semicolon duplication issue for ReactNative FormData implementation
-              var _ref302 = contentType ? contentType.split(';').map(function (token) {
+              var _ref303 = contentType ? contentType.split(';').map(function (token) {
                   return token.trim();
                 }).filter(Boolean) : [],
-                _ref303 = _toArray(_ref302),
-                _type12 = _ref303[0],
-                tokens = _ref303.slice(1);
+                _ref304 = _toArray(_ref303),
+                _type12 = _ref304[0],
+                tokens = _ref304.slice(1);
               headers.setContentType([_type12 || 'multipart/form-data'].concat(_toConsumableArray2(tokens)).join('; '));
             }
           }
@@ -119459,38 +119418,42 @@
           });
         };
         var composeSignals = function composeSignals(signals, timeout) {
-          var controller = new AbortController();
-          var aborted;
-          var onabort = function onabort(cancel) {
-            if (!aborted) {
-              aborted = true;
-              unsubscribe();
-              var err = cancel instanceof Error ? cancel : this.reason;
-              controller.abort(err instanceof AxiosError$1 ? err : new CanceledError$1(err instanceof Error ? err.message : err));
-            }
-          };
-          var timer = timeout && setTimeout(function () {
-            onabort(new AxiosError$1("timeout ".concat(timeout, " of ms exceeded"), AxiosError$1.ETIMEDOUT));
-          }, timeout);
-          var unsubscribe = function unsubscribe() {
-            if (signals) {
-              timer && clearTimeout(timer);
+          var _signals = signals = signals ? signals.filter(Boolean) : [],
+            length = _signals.length;
+          if (timeout || length) {
+            var controller = new AbortController();
+            var aborted;
+            var onabort = function onabort(reason) {
+              if (!aborted) {
+                aborted = true;
+                unsubscribe();
+                var err = reason instanceof Error ? reason : this.reason;
+                controller.abort(err instanceof AxiosError$1 ? err : new CanceledError$1(err instanceof Error ? err.message : err));
+              }
+            };
+            var timer = timeout && setTimeout(function () {
               timer = null;
-              signals.forEach(function (signal) {
-                signal && (signal.removeEventListener ? signal.removeEventListener('abort', onabort) : signal.unsubscribe(onabort));
-              });
-              signals = null;
-            }
-          };
-          signals.forEach(function (signal) {
-            return signal && signal.addEventListener && signal.addEventListener('abort', onabort);
-          });
-          var signal = controller.signal;
-          signal.unsubscribe = unsubscribe;
-          return [signal, function () {
-            timer && clearTimeout(timer);
-            timer = null;
-          }];
+              onabort(new AxiosError$1("timeout ".concat(timeout, " of ms exceeded"), AxiosError$1.ETIMEDOUT));
+            }, timeout);
+            var unsubscribe = function unsubscribe() {
+              if (signals) {
+                timer && clearTimeout(timer);
+                timer = null;
+                signals.forEach(function (signal) {
+                  signal.unsubscribe ? signal.unsubscribe(onabort) : signal.removeEventListener('abort', onabort);
+                });
+                signals = null;
+              }
+            };
+            signals.forEach(function (signal) {
+              return signal.addEventListener('abort', onabort);
+            });
+            var signal = controller.signal;
+            signal.unsubscribe = function () {
+              return utils$2.asap(unsubscribe);
+            };
+            return signal;
+          }
         };
         var streamChunk = /*#__PURE__*/_regeneratorRuntime().mark(function streamChunk(chunk, chunkSize) {
           var len, pos, end;
@@ -119527,7 +119490,7 @@
           }, streamChunk);
         });
         var readBytes = /*#__PURE__*/function () {
-          var _ref4 = _wrapAsyncGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee392(iterable, chunkSize, encode) {
+          var _ref4 = _wrapAsyncGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee392(iterable, chunkSize) {
             var _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator2, _step2, chunk;
             return _regeneratorRuntime().wrap(function _callee392$(_context394) {
               while (1) switch (_context394.prev = _context394.next) {
@@ -119535,82 +119498,111 @@
                   _iteratorAbruptCompletion = false;
                   _didIteratorError = false;
                   _context394.prev = 2;
-                  _iterator2 = _asyncIterator(iterable);
+                  _iterator2 = _asyncIterator(readStream(iterable));
                 case 4:
                   _context394.next = 6;
                   return _awaitAsyncGenerator(_iterator2.next());
                 case 6:
                   if (!(_iteratorAbruptCompletion = !(_step2 = _context394.sent).done)) {
-                    _context394.next = 27;
+                    _context394.next = 12;
                     break;
                   }
                   chunk = _step2.value;
-                  _context394.t0 = _asyncGeneratorDelegate;
-                  _context394.t1 = _asyncIterator;
-                  _context394.t2 = streamChunk;
-                  if (!ArrayBuffer.isView(chunk)) {
-                    _context394.next = 15;
-                    break;
-                  }
-                  _context394.t3 = chunk;
-                  _context394.next = 18;
-                  break;
-                case 15:
-                  _context394.next = 17;
-                  return _awaitAsyncGenerator(encode(String(chunk)));
-                case 17:
-                  _context394.t3 = _context394.sent;
-                case 18:
-                  _context394.t4 = _context394.t3;
-                  _context394.t5 = chunkSize;
-                  _context394.t6 = (0, _context394.t2)(_context394.t4, _context394.t5);
-                  _context394.t7 = (0, _context394.t1)(_context394.t6);
-                  _context394.t8 = _awaitAsyncGenerator;
-                  return _context394.delegateYield((0, _context394.t0)(_context394.t7, _context394.t8), "t9", 24);
-                case 24:
+                  return _context394.delegateYield(_asyncGeneratorDelegate(_asyncIterator(streamChunk(chunk, chunkSize)), _awaitAsyncGenerator), "t0", 9);
+                case 9:
                   _iteratorAbruptCompletion = false;
                   _context394.next = 4;
                   break;
-                case 27:
-                  _context394.next = 33;
+                case 12:
+                  _context394.next = 18;
                   break;
-                case 29:
-                  _context394.prev = 29;
-                  _context394.t10 = _context394["catch"](2);
+                case 14:
+                  _context394.prev = 14;
+                  _context394.t1 = _context394["catch"](2);
                   _didIteratorError = true;
-                  _iteratorError = _context394.t10;
-                case 33:
-                  _context394.prev = 33;
-                  _context394.prev = 34;
+                  _iteratorError = _context394.t1;
+                case 18:
+                  _context394.prev = 18;
+                  _context394.prev = 19;
                   if (!(_iteratorAbruptCompletion && _iterator2.return != null)) {
-                    _context394.next = 38;
+                    _context394.next = 23;
                     break;
                   }
-                  _context394.next = 38;
+                  _context394.next = 23;
                   return _awaitAsyncGenerator(_iterator2.return());
-                case 38:
-                  _context394.prev = 38;
+                case 23:
+                  _context394.prev = 23;
                   if (!_didIteratorError) {
-                    _context394.next = 41;
+                    _context394.next = 26;
                     break;
                   }
                   throw _iteratorError;
-                case 41:
-                  return _context394.finish(38);
-                case 42:
-                  return _context394.finish(33);
-                case 43:
+                case 26:
+                  return _context394.finish(23);
+                case 27:
+                  return _context394.finish(18);
+                case 28:
                 case "end":
                   return _context394.stop();
               }
-            }, _callee392, null, [[2, 29, 33, 43], [34,, 38, 42]]);
+            }, _callee392, null, [[2, 14, 18, 28], [19,, 23, 27]]);
           }));
-          return function readBytes(_x, _x2, _x3) {
+          return function readBytes(_x, _x2) {
             return _ref4.apply(this, arguments);
           };
         }();
-        var trackStream = function trackStream(stream, chunkSize, onProgress, onFinish, encode) {
-          var iterator = readBytes(stream, chunkSize, encode);
+        var readStream = /*#__PURE__*/function () {
+          var _ref5 = _wrapAsyncGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee393(stream) {
+            var reader, _yield$_awaitAsyncGen, done, value;
+            return _regeneratorRuntime().wrap(function _callee393$(_context395) {
+              while (1) switch (_context395.prev = _context395.next) {
+                case 0:
+                  if (!stream[Symbol.asyncIterator]) {
+                    _context395.next = 3;
+                    break;
+                  }
+                  return _context395.delegateYield(_asyncGeneratorDelegate(_asyncIterator(stream), _awaitAsyncGenerator), "t0", 2);
+                case 2:
+                  return _context395.abrupt("return");
+                case 3:
+                  reader = stream.getReader();
+                  _context395.prev = 4;
+                case 5:
+                  _context395.next = 7;
+                  return _awaitAsyncGenerator(reader.read());
+                case 7:
+                  _yield$_awaitAsyncGen = _context395.sent;
+                  done = _yield$_awaitAsyncGen.done;
+                  value = _yield$_awaitAsyncGen.value;
+                  if (!done) {
+                    _context395.next = 12;
+                    break;
+                  }
+                  return _context395.abrupt("break", 16);
+                case 12:
+                  _context395.next = 14;
+                  return value;
+                case 14:
+                  _context395.next = 5;
+                  break;
+                case 16:
+                  _context395.prev = 16;
+                  _context395.next = 19;
+                  return _awaitAsyncGenerator(reader.cancel());
+                case 19:
+                  return _context395.finish(16);
+                case 20:
+                case "end":
+                  return _context395.stop();
+              }
+            }, _callee393, null, [[4,, 16, 20]]);
+          }));
+          return function readStream(_x3) {
+            return _ref5.apply(this, arguments);
+          };
+        }();
+        var trackStream = function trackStream(stream, chunkSize, onProgress, onFinish) {
+          var iterator = readBytes(stream, chunkSize);
           var bytes = 0;
           var done;
           var _onFinish = function _onFinish(e) {
@@ -119621,25 +119613,25 @@
           };
           return new ReadableStream({
             pull: function pull(controller) {
-              return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee393() {
+              return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee394() {
                 var _yield$iterator$next, _done, value, len, loadedBytes;
-                return _regeneratorRuntime().wrap(function _callee393$(_context395) {
-                  while (1) switch (_context395.prev = _context395.next) {
+                return _regeneratorRuntime().wrap(function _callee394$(_context396) {
+                  while (1) switch (_context396.prev = _context396.next) {
                     case 0:
-                      _context395.prev = 0;
-                      _context395.next = 3;
+                      _context396.prev = 0;
+                      _context396.next = 3;
                       return iterator.next();
                     case 3:
-                      _yield$iterator$next = _context395.sent;
+                      _yield$iterator$next = _context396.sent;
                       _done = _yield$iterator$next.done;
                       value = _yield$iterator$next.value;
                       if (!_done) {
-                        _context395.next = 10;
+                        _context396.next = 10;
                         break;
                       }
                       _onFinish();
                       controller.close();
-                      return _context395.abrupt("return");
+                      return _context396.abrupt("return");
                     case 10:
                       len = value.byteLength;
                       if (onProgress) {
@@ -119647,18 +119639,18 @@
                         onProgress(loadedBytes);
                       }
                       controller.enqueue(new Uint8Array(value));
-                      _context395.next = 19;
+                      _context396.next = 19;
                       break;
                     case 15:
-                      _context395.prev = 15;
-                      _context395.t0 = _context395["catch"](0);
-                      _onFinish(_context395.t0);
-                      throw _context395.t0;
+                      _context396.prev = 15;
+                      _context396.t0 = _context396["catch"](0);
+                      _onFinish(_context396.t0);
+                      throw _context396.t0;
                     case 19:
                     case "end":
-                      return _context395.stop();
+                      return _context396.stop();
                   }
-                }, _callee393, null, [[0, 15]]);
+                }, _callee394, null, [[0, 15]]);
               }))();
             },
             cancel: function cancel(reason) {
@@ -119678,24 +119670,24 @@
             return encoder.encode(str);
           };
         }(new TextEncoder()) : ( /*#__PURE__*/function () {
-          var _ref304 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee394(str) {
-            return _regeneratorRuntime().wrap(function _callee394$(_context396) {
-              while (1) switch (_context396.prev = _context396.next) {
+          var _ref305 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee395(str) {
+            return _regeneratorRuntime().wrap(function _callee395$(_context397) {
+              while (1) switch (_context397.prev = _context397.next) {
                 case 0:
-                  _context396.t0 = Uint8Array;
-                  _context396.next = 3;
+                  _context397.t0 = Uint8Array;
+                  _context397.next = 3;
                   return new Response(str).arrayBuffer();
                 case 3:
-                  _context396.t1 = _context396.sent;
-                  return _context396.abrupt("return", new _context396.t0(_context396.t1));
+                  _context397.t1 = _context397.sent;
+                  return _context397.abrupt("return", new _context397.t0(_context397.t1));
                 case 5:
                 case "end":
-                  return _context396.stop();
+                  return _context397.stop();
               }
-            }, _callee394);
+            }, _callee395);
           }));
           return function (_x339) {
-            return _ref304.apply(this, arguments);
+            return _ref305.apply(this, arguments);
           };
         }()));
         var test = function test(fn) {
@@ -119739,105 +119731,107 @@
           });
         }(new Response());
         var getBodyLength = /*#__PURE__*/function () {
-          var _ref305 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee395(body) {
-            return _regeneratorRuntime().wrap(function _callee395$(_context397) {
-              while (1) switch (_context397.prev = _context397.next) {
+          var _ref306 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee396(body) {
+            var _request;
+            return _regeneratorRuntime().wrap(function _callee396$(_context398) {
+              while (1) switch (_context398.prev = _context398.next) {
                 case 0:
                   if (!(body == null)) {
-                    _context397.next = 2;
+                    _context398.next = 2;
                     break;
                   }
-                  return _context397.abrupt("return", 0);
+                  return _context398.abrupt("return", 0);
                 case 2:
                   if (!utils$2.isBlob(body)) {
-                    _context397.next = 4;
+                    _context398.next = 4;
                     break;
                   }
-                  return _context397.abrupt("return", body.size);
+                  return _context398.abrupt("return", body.size);
                 case 4:
                   if (!utils$2.isSpecCompliantForm(body)) {
-                    _context397.next = 8;
+                    _context398.next = 9;
                     break;
                   }
-                  _context397.next = 7;
-                  return new Request(body).arrayBuffer();
-                case 7:
-                  return _context397.abrupt("return", _context397.sent.byteLength);
+                  _request = new Request(platform.origin, {
+                    method: 'POST',
+                    body: body
+                  });
+                  _context398.next = 8;
+                  return _request.arrayBuffer();
                 case 8:
+                  return _context398.abrupt("return", _context398.sent.byteLength);
+                case 9:
                   if (!(utils$2.isArrayBufferView(body) || utils$2.isArrayBuffer(body))) {
-                    _context397.next = 10;
+                    _context398.next = 11;
                     break;
                   }
-                  return _context397.abrupt("return", body.byteLength);
-                case 10:
+                  return _context398.abrupt("return", body.byteLength);
+                case 11:
                   if (utils$2.isURLSearchParams(body)) {
                     body = body + '';
                   }
                   if (!utils$2.isString(body)) {
-                    _context397.next = 15;
+                    _context398.next = 16;
                     break;
                   }
-                  _context397.next = 14;
+                  _context398.next = 15;
                   return encodeText(body);
-                case 14:
-                  return _context397.abrupt("return", _context397.sent.byteLength);
                 case 15:
-                case "end":
-                  return _context397.stop();
-              }
-            }, _callee395);
-          }));
-          return function getBodyLength(_x340) {
-            return _ref305.apply(this, arguments);
-          };
-        }();
-        var resolveBodyLength = /*#__PURE__*/function () {
-          var _ref306 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee396(headers, body) {
-            var length;
-            return _regeneratorRuntime().wrap(function _callee396$(_context398) {
-              while (1) switch (_context398.prev = _context398.next) {
-                case 0:
-                  length = utils$2.toFiniteNumber(headers.getContentLength());
-                  return _context398.abrupt("return", length == null ? getBodyLength(body) : length);
-                case 2:
+                  return _context398.abrupt("return", _context398.sent.byteLength);
+                case 16:
                 case "end":
                   return _context398.stop();
               }
             }, _callee396);
           }));
-          return function resolveBodyLength(_x341, _x342) {
+          return function getBodyLength(_x340) {
             return _ref306.apply(this, arguments);
           };
         }();
-        var fetchAdapter = isFetchSupported && ( /*#__PURE__*/function () {
-          var _ref307 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee397(config) {
-            var _resolveConfig, url, method, data, signal, cancelToken, timeout, onDownloadProgress, onUploadProgress, responseType, headers, _resolveConfig$withCr, withCredentials, fetchOptions, _ref308, _ref309, composedSignal, stopTimeout, finished, request, onFinish, requestContentLength, _request, contentTypeHeader, _progressEventDecorat, _progressEventDecorat2, onProgress, flush, isCredentialsSupported, response, isStreamResponse, options, responseContentLength, _ref310, _ref311, _onProgress, _flush, responseData;
+        var resolveBodyLength = /*#__PURE__*/function () {
+          var _ref307 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee397(headers, body) {
+            var length;
             return _regeneratorRuntime().wrap(function _callee397$(_context399) {
               while (1) switch (_context399.prev = _context399.next) {
                 case 0:
+                  length = utils$2.toFiniteNumber(headers.getContentLength());
+                  return _context399.abrupt("return", length == null ? getBodyLength(body) : length);
+                case 2:
+                case "end":
+                  return _context399.stop();
+              }
+            }, _callee397);
+          }));
+          return function resolveBodyLength(_x341, _x342) {
+            return _ref307.apply(this, arguments);
+          };
+        }();
+        var fetchAdapter = isFetchSupported && ( /*#__PURE__*/function () {
+          var _ref308 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee398(config) {
+            var _resolveConfig, url, method, data, signal, cancelToken, timeout, onDownloadProgress, onUploadProgress, responseType, headers, _resolveConfig$withCr, withCredentials, fetchOptions, composedSignal, request, unsubscribe, requestContentLength, _request, contentTypeHeader, _progressEventDecorat, _progressEventDecorat2, onProgress, flush, isCredentialsSupported, response, isStreamResponse, options, responseContentLength, _ref309, _ref310, _onProgress, _flush, responseData;
+            return _regeneratorRuntime().wrap(function _callee398$(_context400) {
+              while (1) switch (_context400.prev = _context400.next) {
+                case 0:
                   _resolveConfig = resolveConfig(config), url = _resolveConfig.url, method = _resolveConfig.method, data = _resolveConfig.data, signal = _resolveConfig.signal, cancelToken = _resolveConfig.cancelToken, timeout = _resolveConfig.timeout, onDownloadProgress = _resolveConfig.onDownloadProgress, onUploadProgress = _resolveConfig.onUploadProgress, responseType = _resolveConfig.responseType, headers = _resolveConfig.headers, _resolveConfig$withCr = _resolveConfig.withCredentials, withCredentials = _resolveConfig$withCr === void 0 ? 'same-origin' : _resolveConfig$withCr, fetchOptions = _resolveConfig.fetchOptions;
                   responseType = responseType ? (responseType + '').toLowerCase() : 'text';
-                  _ref308 = signal || cancelToken || timeout ? composeSignals([signal, cancelToken], timeout) : [], _ref309 = _slicedToArray2(_ref308, 2), composedSignal = _ref309[0], stopTimeout = _ref309[1];
-                  onFinish = function onFinish() {
-                    !finished && setTimeout(function () {
-                      composedSignal && composedSignal.unsubscribe();
-                    });
-                    finished = true;
+                  composedSignal = composeSignals([signal, cancelToken && cancelToken.toAbortSignal()], timeout);
+                  unsubscribe = composedSignal && composedSignal.unsubscribe && function () {
+                    composedSignal.unsubscribe();
                   };
-                  _context399.prev = 4;
-                  _context399.t0 = onUploadProgress && supportsRequestStream && method !== 'get' && method !== 'head';
-                  if (!_context399.t0) {
-                    _context399.next = 11;
+                  _context400.prev = 4;
+                  _context400.t0 = onUploadProgress && supportsRequestStream && method !== 'get' && method !== 'head';
+                  if (!_context400.t0) {
+                    _context400.next = 11;
                     break;
                   }
-                  _context399.next = 9;
+                  _context400.next = 9;
                   return resolveBodyLength(headers, data);
                 case 9:
-                  _context399.t1 = requestContentLength = _context399.sent;
-                  _context399.t0 = _context399.t1 !== 0;
+                  _context400.t1 = requestContentLength = _context400.sent;
+                  _context400.t0 = _context400.t1 !== 0;
                 case 11:
-                  if (!_context399.t0) {
-                    _context399.next = 15;
+                  if (!_context400.t0) {
+                    _context400.next = 15;
                     break;
                   }
                   _request = new Request(url, {
@@ -119850,7 +119844,7 @@
                   }
                   if (_request.body) {
                     _progressEventDecorat = progressEventDecorator(requestContentLength, progressEventReducer(asyncDecorator(onUploadProgress))), _progressEventDecorat2 = _slicedToArray2(_progressEventDecorat, 2), onProgress = _progressEventDecorat2[0], flush = _progressEventDecorat2[1];
-                    data = trackStream(_request.body, DEFAULT_CHUNK_SIZE, onProgress, flush, encodeText);
+                    data = trackStream(_request.body, DEFAULT_CHUNK_SIZE, onProgress, flush);
                   }
                 case 15:
                   if (!utils$2.isString(withCredentials)) {
@@ -119868,31 +119862,30 @@
                     duplex: "half",
                     credentials: isCredentialsSupported ? withCredentials : undefined
                   }));
-                  _context399.next = 20;
+                  _context400.next = 20;
                   return fetch(request);
                 case 20:
-                  response = _context399.sent;
+                  response = _context400.sent;
                   isStreamResponse = supportsResponseStream && (responseType === 'stream' || responseType === 'response');
-                  if (supportsResponseStream && (onDownloadProgress || isStreamResponse)) {
+                  if (supportsResponseStream && (onDownloadProgress || isStreamResponse && unsubscribe)) {
                     options = {};
                     ['status', 'statusText', 'headers'].forEach(function (prop) {
                       options[prop] = response[prop];
                     });
                     responseContentLength = utils$2.toFiniteNumber(response.headers.get('content-length'));
-                    _ref310 = onDownloadProgress && progressEventDecorator(responseContentLength, progressEventReducer(asyncDecorator(onDownloadProgress), true)) || [], _ref311 = _slicedToArray2(_ref310, 2), _onProgress = _ref311[0], _flush = _ref311[1];
+                    _ref309 = onDownloadProgress && progressEventDecorator(responseContentLength, progressEventReducer(asyncDecorator(onDownloadProgress), true)) || [], _ref310 = _slicedToArray2(_ref309, 2), _onProgress = _ref310[0], _flush = _ref310[1];
                     response = new Response(trackStream(response.body, DEFAULT_CHUNK_SIZE, _onProgress, function () {
                       _flush && _flush();
-                      isStreamResponse && onFinish();
-                    }, encodeText), options);
+                      unsubscribe && unsubscribe();
+                    }), options);
                   }
                   responseType = responseType || 'text';
-                  _context399.next = 26;
+                  _context400.next = 26;
                   return resolvers[utils$2.findKey(resolvers, responseType) || 'text'](response, config);
                 case 26:
-                  responseData = _context399.sent;
-                  !isStreamResponse && onFinish();
-                  stopTimeout && stopTimeout();
-                  _context399.next = 31;
+                  responseData = _context400.sent;
+                  !isStreamResponse && unsubscribe && unsubscribe();
+                  _context400.next = 30;
                   return new Promise(function (resolve, reject) {
                     settle(resolve, reject, {
                       data: responseData,
@@ -119903,29 +119896,29 @@
                       request: request
                     });
                   });
-                case 31:
-                  return _context399.abrupt("return", _context399.sent);
-                case 34:
-                  _context399.prev = 34;
-                  _context399.t2 = _context399["catch"](4);
-                  onFinish();
-                  if (!(_context399.t2 && _context399.t2.name === 'TypeError' && /fetch/i.test(_context399.t2.message))) {
-                    _context399.next = 39;
+                case 30:
+                  return _context400.abrupt("return", _context400.sent);
+                case 33:
+                  _context400.prev = 33;
+                  _context400.t2 = _context400["catch"](4);
+                  unsubscribe && unsubscribe();
+                  if (!(_context400.t2 && _context400.t2.name === 'TypeError' && /fetch/i.test(_context400.t2.message))) {
+                    _context400.next = 38;
                     break;
                   }
                   throw Object.assign(new AxiosError$1('Network Error', AxiosError$1.ERR_NETWORK, config, request), {
-                    cause: _context399.t2.cause || _context399.t2
+                    cause: _context400.t2.cause || _context400.t2
                   });
+                case 38:
+                  throw AxiosError$1.from(_context400.t2, _context400.t2 && _context400.t2.code, config, request);
                 case 39:
-                  throw AxiosError$1.from(_context399.t2, _context399.t2 && _context399.t2.code, config, request);
-                case 40:
                 case "end":
-                  return _context399.stop();
+                  return _context400.stop();
               }
-            }, _callee397, null, [[4, 34]]);
+            }, _callee398, null, [[4, 33]]);
           }));
           return function (_x343) {
-            return _ref307.apply(this, arguments);
+            return _ref308.apply(this, arguments);
           };
         }());
         var knownAdapters = {
@@ -119977,10 +119970,10 @@
               rejectedReasons[_id || '#' + _i225] = adapter;
             }
             if (!adapter) {
-              var reasons = Object.entries(rejectedReasons).map(function (_ref312) {
-                var _ref313 = _slicedToArray2(_ref312, 2),
-                  id = _ref313[0],
-                  state = _ref313[1];
+              var reasons = Object.entries(rejectedReasons).map(function (_ref311) {
+                var _ref312 = _slicedToArray2(_ref311, 2),
+                  id = _ref312[0],
+                  state = _ref312[1];
                 return "adapter ".concat(id, " ") + (state === false ? 'is not supported by the environment' : 'is not available in the build');
               });
               var _s25 = length ? reasons.length > 1 ? 'since :\n' + reasons.map(renderReason).join('\n') : ' ' + renderReason(reasons[0]) : 'as no adapter specified';
@@ -120044,7 +120037,7 @@
             return Promise.reject(reason);
           });
         }
-        var VERSION$1 = "1.7.5";
+        var VERSION$1 = "1.8.2";
         var validators$1 = {};
 
         // eslint-disable-next-line func-names
@@ -120080,6 +120073,13 @@
               console.warn(formatMessage(opt, ' has been deprecated since v' + version + ' and will be removed in the near future'));
             }
             return validator ? validator(value, opt, opts) : true;
+          };
+        };
+        validators$1.spelling = function spelling(correctSpelling) {
+          return function (value, opt) {
+            // eslint-disable-next-line no-console
+            console.warn("".concat(opt, " is likely a misspelling of ").concat(correctSpelling));
+            return true;
           };
         };
 
@@ -120149,41 +120149,42 @@
           return _createClass2(Axios, [{
             key: "request",
             value: (function () {
-              var _request3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee398(configOrUrl, config) {
+              var _request3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee399(configOrUrl, config) {
                 var dummy, stack;
-                return _regeneratorRuntime().wrap(function _callee398$(_context400) {
-                  while (1) switch (_context400.prev = _context400.next) {
+                return _regeneratorRuntime().wrap(function _callee399$(_context401) {
+                  while (1) switch (_context401.prev = _context401.next) {
                     case 0:
-                      _context400.prev = 0;
-                      _context400.next = 3;
+                      _context401.prev = 0;
+                      _context401.next = 3;
                       return this._request(configOrUrl, config);
                     case 3:
-                      return _context400.abrupt("return", _context400.sent);
+                      return _context401.abrupt("return", _context401.sent);
                     case 6:
-                      _context400.prev = 6;
-                      _context400.t0 = _context400["catch"](0);
-                      if (_context400.t0 instanceof Error) {
-                        Error.captureStackTrace ? Error.captureStackTrace(dummy = {}) : dummy = new Error();
+                      _context401.prev = 6;
+                      _context401.t0 = _context401["catch"](0);
+                      if (_context401.t0 instanceof Error) {
+                        dummy = {};
+                        Error.captureStackTrace ? Error.captureStackTrace(dummy) : dummy = new Error();
 
                         // slice off the Error: ... line
                         stack = dummy.stack ? dummy.stack.replace(/^.+\n/, '') : '';
                         try {
-                          if (!_context400.t0.stack) {
-                            _context400.t0.stack = stack;
+                          if (!_context401.t0.stack) {
+                            _context401.t0.stack = stack;
                             // match without the 2 top stack lines
-                          } else if (stack && !String(_context400.t0.stack).endsWith(stack.replace(/^.+\n.+\n/, ''))) {
-                            _context400.t0.stack += '\n' + stack;
+                          } else if (stack && !String(_context401.t0.stack).endsWith(stack.replace(/^.+\n.+\n/, ''))) {
+                            _context401.t0.stack += '\n' + stack;
                           }
                         } catch (e) {
                           // ignore the case where "stack" is an un-writable property
                         }
                       }
-                      throw _context400.t0;
+                      throw _context401.t0;
                     case 10:
                     case "end":
-                      return _context400.stop();
+                      return _context401.stop();
                   }
-                }, _callee398, this, [[0, 6]]);
+                }, _callee399, this, [[0, 6]]);
               }));
               function request(_x344, _x345) {
                 return _request3.apply(this, arguments);
@@ -120225,6 +120226,17 @@
                   }, true);
                 }
               }
+
+              // Set config.allowAbsoluteUrls
+              if (config.allowAbsoluteUrls !== undefined) ;else if (this.defaults.allowAbsoluteUrls !== undefined) {
+                config.allowAbsoluteUrls = this.defaults.allowAbsoluteUrls;
+              } else {
+                config.allowAbsoluteUrls = true;
+              }
+              validator.assertOptions(config, {
+                baseUrl: validators.spelling('baseURL'),
+                withXsrfToken: validators.spelling('withXSRFToken')
+              }, true);
 
               // Set config.method
               config.method = (config.method || this.defaults.method || 'get').toLowerCase();
@@ -120293,7 +120305,7 @@
             key: "getUri",
             value: function getUri(config) {
               config = mergeConfig$1(this.defaults, config);
-              var fullPath = buildFullPath(config.baseURL, config.url);
+              var fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
               return buildURL(fullPath, config.params, config.paramsSerializer);
             }
           }]);
@@ -120423,6 +120435,20 @@
                 this._listeners.splice(index, 1);
               }
             }
+          }, {
+            key: "toAbortSignal",
+            value: function toAbortSignal() {
+              var _this160 = this;
+              var controller = new AbortController();
+              var abort = function abort(err) {
+                controller.abort(err);
+              };
+              this.subscribe(abort);
+              controller.signal.unsubscribe = function () {
+                return _this160.unsubscribe(abort);
+              };
+              return controller.signal;
+            }
 
             /**
              * Returns an object that contains a new `CancelToken` and a function that, when called,
@@ -120545,10 +120571,10 @@
           NotExtended: 510,
           NetworkAuthenticationRequired: 511
         };
-        Object.entries(HttpStatusCode$1).forEach(function (_ref314) {
-          var _ref315 = _slicedToArray2(_ref314, 2),
-            key = _ref315[0],
-            value = _ref315[1];
+        Object.entries(HttpStatusCode$1).forEach(function (_ref313) {
+          var _ref314 = _slicedToArray2(_ref313, 2),
+            key = _ref314[0],
+            value = _ref314[1];
           HttpStatusCode$1[value] = key;
         });
 
@@ -120681,23 +120707,23 @@
           }, {
             key: "isConnected",
             value: function () {
-              var _isConnected = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee399() {
+              var _isConnected = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee400() {
                 var statusPage,
-                  _args401 = arguments;
-                return _regeneratorRuntime().wrap(function _callee399$(_context401) {
-                  while (1) switch (_context401.prev = _context401.next) {
+                  _args402 = arguments;
+                return _regeneratorRuntime().wrap(function _callee400$(_context402) {
+                  while (1) switch (_context402.prev = _context402.next) {
                     case 0:
-                      statusPage = _args401.length > 0 && _args401[0] !== undefined ? _args401[0] : this.statusPage;
-                      return _context401.abrupt("return", this.request(statusPage).then(function (data) {
+                      statusPage = _args402.length > 0 && _args402[0] !== undefined ? _args402[0] : this.statusPage;
+                      return _context402.abrupt("return", this.request(statusPage).then(function (data) {
                         return hasProperties(data, 'blockID', 'block_header');
                       }).catch(function () {
                         return false;
                       }));
                     case 2:
                     case "end":
-                      return _context401.stop();
+                      return _context402.stop();
                   }
-                }, _callee399, this);
+                }, _callee400, this);
               }));
               function isConnected() {
                 return _isConnected.apply(this, arguments);
@@ -120715,8 +120741,8 @@
                 params: method == 'get' && payload,
                 url: url,
                 method: method
-              }).then(function (_ref316) {
-                var data = _ref316.data;
+              }).then(function (_ref315) {
+                var data = _ref315.data;
                 return data;
               });
             }
@@ -145121,18 +145147,18 @@
           return _createTransaction.apply(this, arguments);
         }
         function _createTransaction() {
-          _createTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee544(tronWeb, type, value, Permission_id) {
+          _createTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee545(tronWeb, type, value, Permission_id) {
             var options,
               tx,
               pb,
-              _args548 = arguments;
-            return _regeneratorRuntime().wrap(function _callee544$(_context548) {
-              while (1) switch (_context548.prev = _context548.next) {
+              _args549 = arguments;
+            return _regeneratorRuntime().wrap(function _callee545$(_context549) {
+              while (1) switch (_context549.prev = _context549.next) {
                 case 0:
-                  options = _args548.length > 4 && _args548[4] !== undefined ? _args548[4] : {};
-                  _context548.t0 = _objectSpread2;
-                  _context548.t1 = _objectSpread2;
-                  _context548.t2 = {
+                  options = _args549.length > 4 && _args549[4] !== undefined ? _args549[4] : {};
+                  _context549.t0 = _objectSpread2;
+                  _context549.t1 = _objectSpread2;
+                  _context549.t2 = {
                     contract: [{
                       parameter: {
                         value: value,
@@ -145142,27 +145168,27 @@
                     }]
                   };
                   if (!checkBlockHeader(options)) {
-                    _context548.next = 8;
+                    _context549.next = 8;
                     break;
                   }
-                  _context548.t3 = {};
-                  _context548.next = 11;
+                  _context549.t3 = {};
+                  _context549.next = 11;
                   break;
                 case 8:
-                  _context548.next = 10;
+                  _context549.next = 10;
                   return getHeaderInfo(tronWeb.fullNode);
                 case 10:
-                  _context548.t3 = _context548.sent;
+                  _context549.t3 = _context549.sent;
                 case 11:
-                  _context548.t4 = _context548.t3;
-                  _context548.t5 = (0, _context548.t1)(_context548.t2, _context548.t4);
-                  _context548.t6 = options;
-                  _context548.t7 = (0, _context548.t0)(_context548.t5, _context548.t6);
+                  _context549.t4 = _context549.t3;
+                  _context549.t5 = (0, _context549.t1)(_context549.t2, _context549.t4);
+                  _context549.t6 = options;
+                  _context549.t7 = (0, _context549.t0)(_context549.t5, _context549.t6);
                   tx = {
                     visible: false,
                     txID: '',
                     raw_data_hex: '',
-                    raw_data: _context548.t7
+                    raw_data: _context549.t7
                   };
                   if (Permission_id) {
                     tx.raw_data.contract[0].Permission_id = Permission_id;
@@ -145170,12 +145196,12 @@
                   pb = txJsonToPb(tx);
                   tx.txID = txPbToTxID(pb).replace(/^0x/, '');
                   tx.raw_data_hex = txPbToRawDataHex(pb).toLowerCase();
-                  return _context548.abrupt("return", tx);
+                  return _context549.abrupt("return", tx);
                 case 21:
                 case "end":
-                  return _context548.stop();
+                  return _context549.stop();
               }
-            }, _callee544);
+            }, _callee545);
           }));
           return _createTransaction.apply(this, arguments);
         }
@@ -145204,19 +145230,19 @@
           return _createClass2(TransactionBuilder, [{
             key: "sendTrx",
             value: function () {
-              var _sendTrx = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee400(to) {
+              var _sendTrx = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee401(to) {
                 var amount,
                   from,
                   options,
                   data,
                   transactionOptions,
-                  _args402 = arguments;
-                return _regeneratorRuntime().wrap(function _callee400$(_context402) {
-                  while (1) switch (_context402.prev = _context402.next) {
+                  _args403 = arguments;
+                return _regeneratorRuntime().wrap(function _callee401$(_context403) {
+                  while (1) switch (_context403.prev = _context403.next) {
                     case 0:
-                      amount = _args402.length > 1 && _args402[1] !== undefined ? _args402[1] : 0;
-                      from = _args402.length > 2 && _args402[2] !== undefined ? _args402[2] : this.tronWeb.defaultAddress.hex;
-                      options = _args402.length > 3 && _args402[3] !== undefined ? _args402[3] : {};
+                      amount = _args403.length > 1 && _args403[1] !== undefined ? _args403[1] : 0;
+                      from = _args403.length > 2 && _args403[2] !== undefined ? _args403[2] : this.tronWeb.defaultAddress.hex;
+                      options = _args403.length > 3 && _args403[3] !== undefined ? _args403[3] : {};
                       // accept amounts passed as strings
                       amount = parseInt(amount);
                       this.validator.notValid([{
@@ -145243,12 +145269,12 @@
                         amount: amount
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context402.abrupt("return", createTransaction(this.tronWeb, ContractType.TransferContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context403.abrupt("return", createTransaction(this.tronWeb, ContractType.TransferContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 8:
                     case "end":
-                      return _context402.stop();
+                      return _context403.stop();
                   }
-                }, _callee400, this);
+                }, _callee401, this);
               }));
               function sendTrx(_x350) {
                 return _sendTrx.apply(this, arguments);
@@ -145258,21 +145284,21 @@
           }, {
             key: "sendToken",
             value: function () {
-              var _sendToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee401(to) {
+              var _sendToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee402(to) {
                 var amount,
                   tokenId,
                   from,
                   options,
                   data,
                   transactionOptions,
-                  _args403 = arguments;
-                return _regeneratorRuntime().wrap(function _callee401$(_context403) {
-                  while (1) switch (_context403.prev = _context403.next) {
+                  _args404 = arguments;
+                return _regeneratorRuntime().wrap(function _callee402$(_context404) {
+                  while (1) switch (_context404.prev = _context404.next) {
                     case 0:
-                      amount = _args403.length > 1 && _args403[1] !== undefined ? _args403[1] : 0;
-                      tokenId = _args403.length > 2 ? _args403[2] : undefined;
-                      from = _args403.length > 3 && _args403[3] !== undefined ? _args403[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args403.length > 4 && _args403[4] !== undefined ? _args403[4] : {};
+                      amount = _args404.length > 1 && _args404[1] !== undefined ? _args404[1] : 0;
+                      tokenId = _args404.length > 2 ? _args404[2] : undefined;
+                      from = _args404.length > 3 && _args404[3] !== undefined ? _args404[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args404.length > 4 && _args404[4] !== undefined ? _args404[4] : {};
                       amount = parseInt(amount);
                       this.validator.notValid([{
                         name: 'recipient',
@@ -145303,12 +145329,12 @@
                         amount: amount
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context403.abrupt("return", createTransaction(this.tronWeb, ContractType.TransferAssetContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context404.abrupt("return", createTransaction(this.tronWeb, ContractType.TransferAssetContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 9:
                     case "end":
-                      return _context403.stop();
+                      return _context404.stop();
                   }
-                }, _callee401, this);
+                }, _callee402, this);
               }));
               function sendToken(_x351) {
                 return _sendToken.apply(this, arguments);
@@ -145318,19 +145344,19 @@
           }, {
             key: "purchaseToken",
             value: function () {
-              var _purchaseToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee402(issuerAddress, tokenId) {
+              var _purchaseToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee403(issuerAddress, tokenId) {
                 var amount,
                   buyer,
                   options,
                   data,
                   transactionOptions,
-                  _args404 = arguments;
-                return _regeneratorRuntime().wrap(function _callee402$(_context404) {
-                  while (1) switch (_context404.prev = _context404.next) {
+                  _args405 = arguments;
+                return _regeneratorRuntime().wrap(function _callee403$(_context405) {
+                  while (1) switch (_context405.prev = _context405.next) {
                     case 0:
-                      amount = _args404.length > 2 && _args404[2] !== undefined ? _args404[2] : 0;
-                      buyer = _args404.length > 3 && _args404[3] !== undefined ? _args404[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args404.length > 4 && _args404[4] !== undefined ? _args404[4] : {};
+                      amount = _args405.length > 2 && _args405[2] !== undefined ? _args405[2] : 0;
+                      buyer = _args405.length > 3 && _args405[3] !== undefined ? _args405[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args405.length > 4 && _args405[4] !== undefined ? _args405[4] : {};
                       this.validator.notValid([{
                         name: 'buyer',
                         type: 'address',
@@ -145360,12 +145386,12 @@
                         amount: parseInt(amount)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context404.abrupt("return", createTransaction(this.tronWeb, ContractType.ParticipateAssetIssueContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context405.abrupt("return", createTransaction(this.tronWeb, ContractType.ParticipateAssetIssueContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 7:
                     case "end":
-                      return _context404.stop();
+                      return _context405.stop();
                   }
-                }, _callee402, this);
+                }, _callee403, this);
               }));
               function purchaseToken(_x352, _x353) {
                 return _purchaseToken.apply(this, arguments);
@@ -145375,7 +145401,7 @@
           }, {
             key: "freezeBalance",
             value: function () {
-              var _freezeBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee403() {
+              var _freezeBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee404() {
                 var amount,
                   duration,
                   resource,
@@ -145384,16 +145410,16 @@
                   options,
                   data,
                   transactionOptions,
-                  _args405 = arguments;
-                return _regeneratorRuntime().wrap(function _callee403$(_context405) {
-                  while (1) switch (_context405.prev = _context405.next) {
+                  _args406 = arguments;
+                return _regeneratorRuntime().wrap(function _callee404$(_context406) {
+                  while (1) switch (_context406.prev = _context406.next) {
                     case 0:
-                      amount = _args405.length > 0 && _args405[0] !== undefined ? _args405[0] : 0;
-                      duration = _args405.length > 1 && _args405[1] !== undefined ? _args405[1] : 3;
-                      resource = _args405.length > 2 && _args405[2] !== undefined ? _args405[2] : 'BANDWIDTH';
-                      ownerAddress = _args405.length > 3 && _args405[3] !== undefined ? _args405[3] : this.tronWeb.defaultAddress.hex;
-                      receiverAddress = _args405.length > 4 ? _args405[4] : undefined;
-                      options = _args405.length > 5 && _args405[5] !== undefined ? _args405[5] : {};
+                      amount = _args406.length > 0 && _args406[0] !== undefined ? _args406[0] : 0;
+                      duration = _args406.length > 1 && _args406[1] !== undefined ? _args406[1] : 3;
+                      resource = _args406.length > 2 && _args406[2] !== undefined ? _args406[2] : 'BANDWIDTH';
+                      ownerAddress = _args406.length > 3 && _args406[3] !== undefined ? _args406[3] : this.tronWeb.defaultAddress.hex;
+                      receiverAddress = _args406.length > 4 ? _args406[4] : undefined;
+                      options = _args406.length > 5 && _args406[5] !== undefined ? _args406[5] : {};
                       this.validator.notValid([{
                         name: 'origin',
                         type: 'address',
@@ -145431,12 +145457,12 @@
                         data.receiver_address = toHex$1(receiverAddress);
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context405.abrupt("return", createTransaction(this.tronWeb, ContractType.FreezeBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context406.abrupt("return", createTransaction(this.tronWeb, ContractType.FreezeBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 12:
                     case "end":
-                      return _context405.stop();
+                      return _context406.stop();
                   }
-                }, _callee403, this);
+                }, _callee404, this);
               }));
               function freezeBalance() {
                 return _freezeBalance.apply(this, arguments);
@@ -145446,21 +145472,21 @@
           }, {
             key: "unfreezeBalance",
             value: function () {
-              var _unfreezeBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee404() {
+              var _unfreezeBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee405() {
                 var resource,
                   address,
                   receiverAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args406 = arguments;
-                return _regeneratorRuntime().wrap(function _callee404$(_context406) {
-                  while (1) switch (_context406.prev = _context406.next) {
+                  _args407 = arguments;
+                return _regeneratorRuntime().wrap(function _callee405$(_context407) {
+                  while (1) switch (_context407.prev = _context407.next) {
                     case 0:
-                      resource = _args406.length > 0 && _args406[0] !== undefined ? _args406[0] : 'BANDWIDTH';
-                      address = _args406.length > 1 && _args406[1] !== undefined ? _args406[1] : this.tronWeb.defaultAddress.hex;
-                      receiverAddress = _args406.length > 2 ? _args406[2] : undefined;
-                      options = _args406.length > 3 && _args406[3] !== undefined ? _args406[3] : {};
+                      resource = _args407.length > 0 && _args407[0] !== undefined ? _args407[0] : 'BANDWIDTH';
+                      address = _args407.length > 1 && _args407[1] !== undefined ? _args407[1] : this.tronWeb.defaultAddress.hex;
+                      receiverAddress = _args407.length > 2 ? _args407[2] : undefined;
+                      options = _args407.length > 3 && _args407[3] !== undefined ? _args407[3] : {};
                       this.validator.notValid([{
                         name: 'origin',
                         type: 'address',
@@ -145486,12 +145512,12 @@
                         data.receiver_address = toHex$1(receiverAddress);
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context406.abrupt("return", createTransaction(this.tronWeb, ContractType.UnfreezeBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context407.abrupt("return", createTransaction(this.tronWeb, ContractType.UnfreezeBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 10:
                     case "end":
-                      return _context406.stop();
+                      return _context407.stop();
                   }
-                }, _callee404, this);
+                }, _callee405, this);
               }));
               function unfreezeBalance() {
                 return _unfreezeBalance.apply(this, arguments);
@@ -145501,60 +145527,7 @@
           }, {
             key: "freezeBalanceV2",
             value: function () {
-              var _freezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee405() {
-                var amount,
-                  resource,
-                  address,
-                  options,
-                  data,
-                  transactionOptions,
-                  _args407 = arguments;
-                return _regeneratorRuntime().wrap(function _callee405$(_context407) {
-                  while (1) switch (_context407.prev = _context407.next) {
-                    case 0:
-                      amount = _args407.length > 0 && _args407[0] !== undefined ? _args407[0] : 0;
-                      resource = _args407.length > 1 && _args407[1] !== undefined ? _args407[1] : 'BANDWIDTH';
-                      address = _args407.length > 2 && _args407[2] !== undefined ? _args407[2] : this.tronWeb.defaultAddress.hex;
-                      options = _args407.length > 3 && _args407[3] !== undefined ? _args407[3] : {};
-                      this.validator.notValid([{
-                        name: 'origin',
-                        type: 'address',
-                        value: address
-                      }, {
-                        name: 'amount',
-                        type: 'integer',
-                        gt: 0,
-                        value: amount
-                      }, {
-                        name: 'resource',
-                        type: 'resource',
-                        value: resource,
-                        msg: 'Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"'
-                      }]);
-                      data = {
-                        owner_address: toHex$1(address),
-                        frozen_balance: parseInt(amount)
-                      };
-                      if (resource !== 'BANDWIDTH') {
-                        data.resource = resource;
-                      }
-                      transactionOptions = getTransactionOptions(options);
-                      return _context407.abrupt("return", createTransaction(this.tronWeb, ContractType.FreezeBalanceV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
-                    case 9:
-                    case "end":
-                      return _context407.stop();
-                  }
-                }, _callee405, this);
-              }));
-              function freezeBalanceV2() {
-                return _freezeBalanceV.apply(this, arguments);
-              }
-              return freezeBalanceV2;
-            }()
-          }, {
-            key: "unfreezeBalanceV2",
-            value: function () {
-              var _unfreezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee406() {
+              var _freezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee406() {
                 var amount,
                   resource,
                   address,
@@ -145586,18 +145559,71 @@
                       }]);
                       data = {
                         owner_address: toHex$1(address),
+                        frozen_balance: parseInt(amount)
+                      };
+                      if (resource !== 'BANDWIDTH') {
+                        data.resource = resource;
+                      }
+                      transactionOptions = getTransactionOptions(options);
+                      return _context408.abrupt("return", createTransaction(this.tronWeb, ContractType.FreezeBalanceV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                    case 9:
+                    case "end":
+                      return _context408.stop();
+                  }
+                }, _callee406, this);
+              }));
+              function freezeBalanceV2() {
+                return _freezeBalanceV.apply(this, arguments);
+              }
+              return freezeBalanceV2;
+            }()
+          }, {
+            key: "unfreezeBalanceV2",
+            value: function () {
+              var _unfreezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee407() {
+                var amount,
+                  resource,
+                  address,
+                  options,
+                  data,
+                  transactionOptions,
+                  _args409 = arguments;
+                return _regeneratorRuntime().wrap(function _callee407$(_context409) {
+                  while (1) switch (_context409.prev = _context409.next) {
+                    case 0:
+                      amount = _args409.length > 0 && _args409[0] !== undefined ? _args409[0] : 0;
+                      resource = _args409.length > 1 && _args409[1] !== undefined ? _args409[1] : 'BANDWIDTH';
+                      address = _args409.length > 2 && _args409[2] !== undefined ? _args409[2] : this.tronWeb.defaultAddress.hex;
+                      options = _args409.length > 3 && _args409[3] !== undefined ? _args409[3] : {};
+                      this.validator.notValid([{
+                        name: 'origin',
+                        type: 'address',
+                        value: address
+                      }, {
+                        name: 'amount',
+                        type: 'integer',
+                        gt: 0,
+                        value: amount
+                      }, {
+                        name: 'resource',
+                        type: 'resource',
+                        value: resource,
+                        msg: 'Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"'
+                      }]);
+                      data = {
+                        owner_address: toHex$1(address),
                         unfreeze_balance: parseInt(amount)
                       };
                       if (resource !== 'BANDWIDTH') {
                         data.resource = resource;
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context408.abrupt("return", createTransaction(this.tronWeb, ContractType.UnfreezeBalanceV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context409.abrupt("return", createTransaction(this.tronWeb, ContractType.UnfreezeBalanceV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 9:
                     case "end":
-                      return _context408.stop();
+                      return _context409.stop();
                   }
-                }, _callee406, this);
+                }, _callee407, this);
               }));
               function unfreezeBalanceV2() {
                 return _unfreezeBalanceV.apply(this, arguments);
@@ -145607,17 +145633,17 @@
           }, {
             key: "cancelUnfreezeBalanceV2",
             value: function () {
-              var _cancelUnfreezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee407() {
+              var _cancelUnfreezeBalanceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee408() {
                 var address,
                   options,
                   data,
                   transactionOptions,
-                  _args409 = arguments;
-                return _regeneratorRuntime().wrap(function _callee407$(_context409) {
-                  while (1) switch (_context409.prev = _context409.next) {
+                  _args410 = arguments;
+                return _regeneratorRuntime().wrap(function _callee408$(_context410) {
+                  while (1) switch (_context410.prev = _context410.next) {
                     case 0:
-                      address = _args409.length > 0 && _args409[0] !== undefined ? _args409[0] : this.tronWeb.defaultAddress.hex;
-                      options = _args409.length > 1 && _args409[1] !== undefined ? _args409[1] : {};
+                      address = _args410.length > 0 && _args410[0] !== undefined ? _args410[0] : this.tronWeb.defaultAddress.hex;
+                      options = _args410.length > 1 && _args410[1] !== undefined ? _args410[1] : {};
                       this.validator.notValid([{
                         name: 'origin',
                         type: 'address',
@@ -145627,12 +145653,12 @@
                         owner_address: toHex$1(address)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context409.abrupt("return", createTransaction(this.tronWeb, ContractType.CancelAllUnfreezeV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context410.abrupt("return", createTransaction(this.tronWeb, ContractType.CancelAllUnfreezeV2Contract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context409.stop();
+                      return _context410.stop();
                   }
-                }, _callee407, this);
+                }, _callee408, this);
               }));
               function cancelUnfreezeBalanceV2() {
                 return _cancelUnfreezeBalanceV.apply(this, arguments);
@@ -145642,7 +145668,7 @@
           }, {
             key: "delegateResource",
             value: function () {
-              var _delegateResource = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee408() {
+              var _delegateResource = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee409() {
                 var amount,
                   receiverAddress,
                   resource,
@@ -145652,17 +145678,17 @@
                   options,
                   data,
                   transactionOptions,
-                  _args410 = arguments;
-                return _regeneratorRuntime().wrap(function _callee408$(_context410) {
-                  while (1) switch (_context410.prev = _context410.next) {
+                  _args411 = arguments;
+                return _regeneratorRuntime().wrap(function _callee409$(_context411) {
+                  while (1) switch (_context411.prev = _context411.next) {
                     case 0:
-                      amount = _args410.length > 0 && _args410[0] !== undefined ? _args410[0] : 0;
-                      receiverAddress = _args410.length > 1 ? _args410[1] : undefined;
-                      resource = _args410.length > 2 && _args410[2] !== undefined ? _args410[2] : 'BANDWIDTH';
-                      address = _args410.length > 3 && _args410[3] !== undefined ? _args410[3] : this.tronWeb.defaultAddress.hex;
-                      lock = _args410.length > 4 && _args410[4] !== undefined ? _args410[4] : false;
-                      lockPeriod = _args410.length > 5 ? _args410[5] : undefined;
-                      options = _args410.length > 6 && _args410[6] !== undefined ? _args410[6] : {};
+                      amount = _args411.length > 0 && _args411[0] !== undefined ? _args411[0] : 0;
+                      receiverAddress = _args411.length > 1 ? _args411[1] : undefined;
+                      resource = _args411.length > 2 && _args411[2] !== undefined ? _args411[2] : 'BANDWIDTH';
+                      address = _args411.length > 3 && _args411[3] !== undefined ? _args411[3] : this.tronWeb.defaultAddress.hex;
+                      lock = _args411.length > 4 && _args411[4] !== undefined ? _args411[4] : false;
+                      lockPeriod = _args411.length > 5 ? _args411[5] : undefined;
+                      options = _args411.length > 6 && _args411[6] !== undefined ? _args411[6] : {};
                       this.validator.notValid([{
                         name: 'amount',
                         type: 'integer',
@@ -145693,7 +145719,7 @@
                         optional: true
                       }]);
                       if (!(toHex$1(receiverAddress) === toHex$1(address))) {
-                        _context410.next = 10;
+                        _context411.next = 10;
                         break;
                       }
                       throw new Error('Receiver address must not be the same as owner address');
@@ -145713,12 +145739,12 @@
                         }
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context410.abrupt("return", createTransaction(this.tronWeb, ContractType.DelegateResourceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context411.abrupt("return", createTransaction(this.tronWeb, ContractType.DelegateResourceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 15:
                     case "end":
-                      return _context410.stop();
+                      return _context411.stop();
                   }
-                }, _callee408, this);
+                }, _callee409, this);
               }));
               function delegateResource() {
                 return _delegateResource.apply(this, arguments);
@@ -145728,7 +145754,7 @@
           }, {
             key: "undelegateResource",
             value: function () {
-              var _undelegateResource = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee409() {
+              var _undelegateResource = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee410() {
                 var amount,
                   receiverAddress,
                   resource,
@@ -145736,15 +145762,15 @@
                   options,
                   data,
                   transactionOptions,
-                  _args411 = arguments;
-                return _regeneratorRuntime().wrap(function _callee409$(_context411) {
-                  while (1) switch (_context411.prev = _context411.next) {
+                  _args412 = arguments;
+                return _regeneratorRuntime().wrap(function _callee410$(_context412) {
+                  while (1) switch (_context412.prev = _context412.next) {
                     case 0:
-                      amount = _args411.length > 0 && _args411[0] !== undefined ? _args411[0] : 0;
-                      receiverAddress = _args411.length > 1 ? _args411[1] : undefined;
-                      resource = _args411.length > 2 && _args411[2] !== undefined ? _args411[2] : 'BANDWIDTH';
-                      address = _args411.length > 3 && _args411[3] !== undefined ? _args411[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args411.length > 4 && _args411[4] !== undefined ? _args411[4] : {};
+                      amount = _args412.length > 0 && _args412[0] !== undefined ? _args412[0] : 0;
+                      receiverAddress = _args412.length > 1 ? _args412[1] : undefined;
+                      resource = _args412.length > 2 && _args412[2] !== undefined ? _args412[2] : 'BANDWIDTH';
+                      address = _args412.length > 3 && _args412[3] !== undefined ? _args412[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args412.length > 4 && _args412[4] !== undefined ? _args412[4] : {};
                       this.validator.notValid([{
                         name: 'origin',
                         type: 'address',
@@ -145765,7 +145791,7 @@
                         msg: 'Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"'
                       }]);
                       if (!(toHex$1(receiverAddress) === toHex$1(address))) {
-                        _context411.next = 8;
+                        _context412.next = 8;
                         break;
                       }
                       throw new Error('Receiver address must not be the same as owner address');
@@ -145779,12 +145805,12 @@
                         data.resource = resource;
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context411.abrupt("return", createTransaction(this.tronWeb, ContractType.UnDelegateResourceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context412.abrupt("return", createTransaction(this.tronWeb, ContractType.UnDelegateResourceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 12:
                     case "end":
-                      return _context411.stop();
+                      return _context412.stop();
                   }
-                }, _callee409, this);
+                }, _callee410, this);
               }));
               function undelegateResource() {
                 return _undelegateResource.apply(this, arguments);
@@ -145794,42 +145820,7 @@
           }, {
             key: "withdrawExpireUnfreeze",
             value: function () {
-              var _withdrawExpireUnfreeze = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee410() {
-                var address,
-                  options,
-                  data,
-                  transactionOptions,
-                  _args412 = arguments;
-                return _regeneratorRuntime().wrap(function _callee410$(_context412) {
-                  while (1) switch (_context412.prev = _context412.next) {
-                    case 0:
-                      address = _args412.length > 0 && _args412[0] !== undefined ? _args412[0] : this.tronWeb.defaultAddress.hex;
-                      options = _args412.length > 1 && _args412[1] !== undefined ? _args412[1] : {};
-                      this.validator.notValid([{
-                        name: 'origin',
-                        type: 'address',
-                        value: address
-                      }]);
-                      data = {
-                        owner_address: toHex$1(address)
-                      };
-                      transactionOptions = getTransactionOptions(options);
-                      return _context412.abrupt("return", createTransaction(this.tronWeb, ContractType.WithdrawExpireUnfreezeContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
-                    case 6:
-                    case "end":
-                      return _context412.stop();
-                  }
-                }, _callee410, this);
-              }));
-              function withdrawExpireUnfreeze() {
-                return _withdrawExpireUnfreeze.apply(this, arguments);
-              }
-              return withdrawExpireUnfreeze;
-            }()
-          }, {
-            key: "withdrawBlockRewards",
-            value: function () {
-              var _withdrawBlockRewards = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee411() {
+              var _withdrawExpireUnfreeze = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee411() {
                 var address,
                   options,
                   data,
@@ -145849,12 +145840,47 @@
                         owner_address: toHex$1(address)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context413.abrupt("return", createTransaction(this.tronWeb, ContractType.WithdrawBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context413.abrupt("return", createTransaction(this.tronWeb, ContractType.WithdrawExpireUnfreezeContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
                       return _context413.stop();
                   }
                 }, _callee411, this);
+              }));
+              function withdrawExpireUnfreeze() {
+                return _withdrawExpireUnfreeze.apply(this, arguments);
+              }
+              return withdrawExpireUnfreeze;
+            }()
+          }, {
+            key: "withdrawBlockRewards",
+            value: function () {
+              var _withdrawBlockRewards = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee412() {
+                var address,
+                  options,
+                  data,
+                  transactionOptions,
+                  _args414 = arguments;
+                return _regeneratorRuntime().wrap(function _callee412$(_context414) {
+                  while (1) switch (_context414.prev = _context414.next) {
+                    case 0:
+                      address = _args414.length > 0 && _args414[0] !== undefined ? _args414[0] : this.tronWeb.defaultAddress.hex;
+                      options = _args414.length > 1 && _args414[1] !== undefined ? _args414[1] : {};
+                      this.validator.notValid([{
+                        name: 'origin',
+                        type: 'address',
+                        value: address
+                      }]);
+                      data = {
+                        owner_address: toHex$1(address)
+                      };
+                      transactionOptions = getTransactionOptions(options);
+                      return _context414.abrupt("return", createTransaction(this.tronWeb, ContractType.WithdrawBalanceContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                    case 6:
+                    case "end":
+                      return _context414.stop();
+                  }
+                }, _callee412, this);
               }));
               function withdrawBlockRewards() {
                 return _withdrawBlockRewards.apply(this, arguments);
@@ -145864,19 +145890,19 @@
           }, {
             key: "applyForSR",
             value: function () {
-              var _applyForSR = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee412() {
+              var _applyForSR = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee413() {
                 var address,
                   url,
                   options,
                   data,
                   transactionOptions,
-                  _args414 = arguments;
-                return _regeneratorRuntime().wrap(function _callee412$(_context414) {
-                  while (1) switch (_context414.prev = _context414.next) {
+                  _args415 = arguments;
+                return _regeneratorRuntime().wrap(function _callee413$(_context415) {
+                  while (1) switch (_context415.prev = _context415.next) {
                     case 0:
-                      address = _args414.length > 0 && _args414[0] !== undefined ? _args414[0] : this.tronWeb.defaultAddress.hex;
-                      url = _args414.length > 1 && _args414[1] !== undefined ? _args414[1] : '';
-                      options = _args414.length > 2 && _args414[2] !== undefined ? _args414[2] : {};
+                      address = _args415.length > 0 && _args415[0] !== undefined ? _args415[0] : this.tronWeb.defaultAddress.hex;
+                      url = _args415.length > 1 && _args415[1] !== undefined ? _args415[1] : '';
+                      options = _args415.length > 2 && _args415[2] !== undefined ? _args415[2] : {};
                       this.validator.notValid([{
                         name: 'origin',
                         type: 'address',
@@ -145898,12 +145924,12 @@
                         url: fromUtf8(url)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context414.abrupt("return", createTransaction(this.tronWeb, ContractType.WitnessCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context415.abrupt("return", createTransaction(this.tronWeb, ContractType.WitnessCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 7:
                     case "end":
-                      return _context414.stop();
+                      return _context415.stop();
                   }
-                }, _callee412, this);
+                }, _callee413, this);
               }));
               function applyForSR() {
                 return _applyForSR.apply(this, arguments);
@@ -145913,7 +145939,7 @@
           }, {
             key: "vote",
             value: function () {
-              var _vote = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee413() {
+              var _vote = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee414() {
                 var votes,
                   voterAddress,
                   options,
@@ -145926,13 +145952,13 @@
                   voteList,
                   data,
                   transactionOptions,
-                  _args415 = arguments;
-                return _regeneratorRuntime().wrap(function _callee413$(_context415) {
-                  while (1) switch (_context415.prev = _context415.next) {
+                  _args416 = arguments;
+                return _regeneratorRuntime().wrap(function _callee414$(_context416) {
+                  while (1) switch (_context416.prev = _context416.next) {
                     case 0:
-                      votes = _args415.length > 0 && _args415[0] !== undefined ? _args415[0] : {};
-                      voterAddress = _args415.length > 1 && _args415[1] !== undefined ? _args415[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args415.length > 2 && _args415[2] !== undefined ? _args415[2] : {};
+                      votes = _args416.length > 0 && _args416[0] !== undefined ? _args416[0] : {};
+                      voterAddress = _args416.length > 1 && _args416[1] !== undefined ? _args416[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args416.length > 2 && _args416[2] !== undefined ? _args416[2] : {};
                       this.validator.notValid([{
                         name: 'voter',
                         type: 'address',
@@ -145957,10 +145983,10 @@
                           msg: 'Invalid vote count provided for SR: ' + srAddress
                         }]);
                       }
-                      voteList = entries.map(function (_ref317) {
-                        var _ref318 = _slicedToArray2(_ref317, 2),
-                          srAddress = _ref318[0],
-                          voteCount = _ref318[1];
+                      voteList = entries.map(function (_ref316) {
+                        var _ref317 = _slicedToArray2(_ref316, 2),
+                          srAddress = _ref317[0],
+                          voteCount = _ref317[1];
                         return {
                           vote_address: toHex$1(srAddress),
                           vote_count: parseInt(voteCount)
@@ -145971,12 +145997,12 @@
                         votes: voteList
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context415.abrupt("return", createTransaction(this.tronWeb, ContractType.VoteWitnessContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context416.abrupt("return", createTransaction(this.tronWeb, ContractType.VoteWitnessContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 10:
                     case "end":
-                      return _context415.stop();
+                      return _context416.stop();
                   }
-                }, _callee413, this);
+                }, _callee414, this);
               }));
               function vote() {
                 return _vote.apply(this, arguments);
@@ -145986,7 +146012,7 @@
           }, {
             key: "createSmartContract",
             value: function () {
-              var _createSmartContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee414() {
+              var _createSmartContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee415() {
                 var _args$origin_address;
                 var options,
                   issuerAddress,
@@ -146021,12 +146047,12 @@
                   new_contract,
                   transactionOptions,
                   tx,
-                  _args417 = arguments;
-                return _regeneratorRuntime().wrap(function _callee414$(_context417) {
-                  while (1) switch (_context417.prev = _context417.next) {
+                  _args418 = arguments;
+                return _regeneratorRuntime().wrap(function _callee415$(_context418) {
+                  while (1) switch (_context418.prev = _context418.next) {
                     case 0:
-                      options = _args417.length > 0 && _args417[0] !== undefined ? _args417[0] : {};
-                      issuerAddress = _args417.length > 1 && _args417[1] !== undefined ? _args417[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args418.length > 0 && _args418[0] !== undefined ? _args418[0] : {};
+                      issuerAddress = _args418.length > 1 && _args418[1] !== undefined ? _args418[1] : this.tronWeb.defaultAddress.hex;
                       feeLimit = options.feeLimit || this.tronWeb.feeLimit;
                       userFeePercentage = options.userFeePercentage;
                       if (typeof userFeePercentage !== 'number' && !userFeePercentage) {
@@ -146042,16 +146068,16 @@
                       parameter = '';
                       _options$bytecode = options.bytecode, bytecode = _options$bytecode === void 0 ? false : _options$bytecode, _options$name = options.name, name = _options$name === void 0 ? '' : _options$name;
                       if (!(abi && isString$1(abi))) {
-                        _context417.next = 21;
+                        _context418.next = 21;
                         break;
                       }
-                      _context417.prev = 14;
+                      _context418.prev = 14;
                       abi = JSON.parse(abi);
-                      _context417.next = 21;
+                      _context418.next = 21;
                       break;
                     case 18:
-                      _context417.prev = 18;
-                      _context417.t0 = _context417["catch"](14);
+                      _context418.prev = 18;
+                      _context418.t0 = _context418["catch"](14);
                       throw new Error('Invalid options.abi provided');
                     case 21:
                       newAbi = abi;
@@ -146060,7 +146086,7 @@
                         entries = newAbi.entrys;
                       }
                       if (isArray$1(entries)) {
-                        _context417.next = 26;
+                        _context418.next = 26;
                         break;
                       }
                       throw new Error('Invalid options.abi provided');
@@ -146118,33 +146144,33 @@
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       if (!(!payable && (callValue > 0 || tokenValue > 0))) {
-                        _context417.next = 30;
+                        _context418.next = 30;
                         break;
                       }
                       throw new Error('When contract is not payable, options.callValue and options.tokenValue must be 0');
                     case 30:
                       rawParameter = options.rawParameter, funcABIV2 = options.funcABIV2, parametersV2 = options.parametersV2;
                       if (!(rawParameter && isString$1(rawParameter))) {
-                        _context417.next = 35;
+                        _context418.next = 35;
                         break;
                       }
                       parameter = rawParameter.replace(/^(0x)/, '');
-                      _context417.next = 64;
+                      _context418.next = 64;
                       break;
                     case 35:
                       if (!funcABIV2) {
-                        _context417.next = 39;
+                        _context418.next = 39;
                         break;
                       }
                       parameter = encodeParamsV2ByABI(funcABIV2, parametersV2).replace(/^(0x)/, '');
-                      _context417.next = 64;
+                      _context418.next = 64;
                       break;
                     case 39:
                       constructorParams = entries.find(function (it) {
                         return it.type === 'constructor';
                       });
                       if (!(typeof constructorParams !== 'undefined' && constructorParams)) {
-                        _context417.next = 63;
+                        _context418.next = 63;
                         break;
                       }
                       _abiCoder2 = new AbiCoder();
@@ -146152,7 +146178,7 @@
                       _values = [];
                       constructorParams = constructorParams.inputs;
                       if (!(parameters.length != constructorParams.length)) {
-                        _context417.next = 47;
+                        _context418.next = 47;
                         break;
                       }
                       throw new Error("constructor needs ".concat(constructorParams.length, " but ").concat(parameters.length, " provided"));
@@ -146160,13 +146186,13 @@
                       _loop9 = /*#__PURE__*/_regeneratorRuntime().mark(function _loop9() {
                         var _type$match;
                         var type, value, replaceAddressPrefix;
-                        return _regeneratorRuntime().wrap(function _loop9$(_context416) {
-                          while (1) switch (_context416.prev = _context416.next) {
+                        return _regeneratorRuntime().wrap(function _loop9$(_context417) {
+                          while (1) switch (_context417.prev = _context417.next) {
                             case 0:
                               type = constructorParams[_i232].type;
                               value = parameters[_i232];
                               if (!(!type || !isString$1(type) || !type.length)) {
-                                _context416.next = 4;
+                                _context417.next = 4;
                                 break;
                               }
                               throw new Error('Invalid parameter type provided: ' + type);
@@ -146186,32 +146212,32 @@
                               _values.push(value);
                             case 8:
                             case "end":
-                              return _context416.stop();
+                              return _context417.stop();
                           }
                         }, _loop9);
                       });
                       _i232 = 0;
                     case 49:
                       if (!(_i232 < parameters.length)) {
-                        _context417.next = 54;
+                        _context418.next = 54;
                         break;
                       }
-                      return _context417.delegateYield(_loop9(), "t1", 51);
+                      return _context418.delegateYield(_loop9(), "t1", 51);
                     case 51:
                       _i232++;
-                      _context417.next = 49;
+                      _context418.next = 49;
                       break;
                     case 54:
-                      _context417.prev = 54;
+                      _context418.prev = 54;
                       parameter = _abiCoder2.encode(_types3, _values).replace(/^(0x)/, '');
-                      _context417.next = 61;
+                      _context418.next = 61;
                       break;
                     case 58:
-                      _context417.prev = 58;
-                      _context417.t2 = _context417["catch"](54);
-                      throw new Error(_context417.t2);
+                      _context418.prev = 58;
+                      _context418.t2 = _context418["catch"](54);
+                      throw new Error(_context418.t2);
                     case 61:
-                      _context417.next = 64;
+                      _context418.next = 64;
                       break;
                     case 63:
                       parameter = '';
@@ -146262,19 +146288,19 @@
                         new_contract.name = args.name;
                       }
                       transactionOptions = getTransactionOptions(options);
-                      _context417.next = 82;
+                      _context418.next = 82;
                       return createTransaction(this.tronWeb, ContractType.CreateSmartContract, contract, options === null || options === void 0 ? void 0 : options.permissionId, _objectSpread2(_objectSpread2({}, transactionOptions), {}, {
                         fee_limit: args.fee_limit
                       }));
                     case 82:
-                      tx = _context417.sent;
+                      tx = _context418.sent;
                       tx.contract_address = genContractAddress(args.owner_address, tx.txID);
-                      return _context417.abrupt("return", tx);
+                      return _context418.abrupt("return", tx);
                     case 85:
                     case "end":
-                      return _context417.stop();
+                      return _context418.stop();
                   }
-                }, _callee414, this, [[14, 18], [54, 58]]);
+                }, _callee415, this, [[14, 18], [54, 58]]);
               }));
               function createSmartContract() {
                 return _createSmartContract.apply(this, arguments);
@@ -146284,11 +146310,11 @@
           }, {
             key: "triggerSmartContract",
             value: function () {
-              var _triggerSmartContract2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee415(contractAddress, functionSelector, options, parameters, issuerAddress) {
+              var _triggerSmartContract2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee416(contractAddress, functionSelector, options, parameters, issuerAddress) {
                 var _params$;
                 var params;
-                return _regeneratorRuntime().wrap(function _callee415$(_context418) {
-                  while (1) switch (_context418.prev = _context418.next) {
+                return _regeneratorRuntime().wrap(function _callee416$(_context419) {
+                  while (1) switch (_context419.prev = _context419.next) {
                     case 0:
                       params = [contractAddress, functionSelector, options, parameters, issuerAddress];
                       if (_typeof2(params[2]) !== 'object') {
@@ -146299,17 +146325,17 @@
                         params.splice(3, 1);
                       }
                       if (!((_params$ = params[2]) !== null && _params$ !== void 0 && _params$.txLocal)) {
-                        _context418.next = 4;
+                        _context419.next = 4;
                         break;
                       }
-                      return _context418.abrupt("return", this._triggerSmartContractLocal.apply(this, params));
+                      return _context419.abrupt("return", this._triggerSmartContractLocal.apply(this, params));
                     case 4:
-                      return _context418.abrupt("return", this._triggerSmartContract.apply(this, params));
+                      return _context419.abrupt("return", this._triggerSmartContract.apply(this, params));
                     case 5:
                     case "end":
-                      return _context418.stop();
+                      return _context419.stop();
                   }
-                }, _callee415, this);
+                }, _callee416, this);
               }));
               function triggerSmartContract(_x354, _x355, _x356, _x357, _x358) {
                 return _triggerSmartContract2.apply(this, arguments);
@@ -146319,34 +146345,7 @@
           }, {
             key: "triggerConstantContract",
             value: function () {
-              var _triggerConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee416(contractAddress, functionSelector) {
-                var options,
-                  parameters,
-                  issuerAddress,
-                  _args419 = arguments;
-                return _regeneratorRuntime().wrap(function _callee416$(_context419) {
-                  while (1) switch (_context419.prev = _context419.next) {
-                    case 0:
-                      options = _args419.length > 2 && _args419[2] !== undefined ? _args419[2] : {};
-                      parameters = _args419.length > 3 && _args419[3] !== undefined ? _args419[3] : [];
-                      issuerAddress = _args419.length > 4 && _args419[4] !== undefined ? _args419[4] : this.tronWeb.defaultAddress.hex;
-                      options._isConstant = true;
-                      return _context419.abrupt("return", this._triggerSmartContract(contractAddress, functionSelector, options, parameters, issuerAddress));
-                    case 5:
-                    case "end":
-                      return _context419.stop();
-                  }
-                }, _callee416, this);
-              }));
-              function triggerConstantContract(_x359, _x360) {
-                return _triggerConstantContract.apply(this, arguments);
-              }
-              return triggerConstantContract;
-            }()
-          }, {
-            key: "triggerConfirmedConstantContract",
-            value: function () {
-              var _triggerConfirmedConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee417(contractAddress, functionSelector) {
+              var _triggerConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee417(contractAddress, functionSelector) {
                 var options,
                   parameters,
                   issuerAddress,
@@ -146358,13 +146357,40 @@
                       parameters = _args420.length > 3 && _args420[3] !== undefined ? _args420[3] : [];
                       issuerAddress = _args420.length > 4 && _args420[4] !== undefined ? _args420[4] : this.tronWeb.defaultAddress.hex;
                       options._isConstant = true;
-                      options.confirmed = true;
                       return _context420.abrupt("return", this._triggerSmartContract(contractAddress, functionSelector, options, parameters, issuerAddress));
-                    case 6:
+                    case 5:
                     case "end":
                       return _context420.stop();
                   }
                 }, _callee417, this);
+              }));
+              function triggerConstantContract(_x359, _x360) {
+                return _triggerConstantContract.apply(this, arguments);
+              }
+              return triggerConstantContract;
+            }()
+          }, {
+            key: "triggerConfirmedConstantContract",
+            value: function () {
+              var _triggerConfirmedConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee418(contractAddress, functionSelector) {
+                var options,
+                  parameters,
+                  issuerAddress,
+                  _args421 = arguments;
+                return _regeneratorRuntime().wrap(function _callee418$(_context421) {
+                  while (1) switch (_context421.prev = _context421.next) {
+                    case 0:
+                      options = _args421.length > 2 && _args421[2] !== undefined ? _args421[2] : {};
+                      parameters = _args421.length > 3 && _args421[3] !== undefined ? _args421[3] : [];
+                      issuerAddress = _args421.length > 4 && _args421[4] !== undefined ? _args421[4] : this.tronWeb.defaultAddress.hex;
+                      options._isConstant = true;
+                      options.confirmed = true;
+                      return _context421.abrupt("return", this._triggerSmartContract(contractAddress, functionSelector, options, parameters, issuerAddress));
+                    case 6:
+                    case "end":
+                      return _context421.stop();
+                  }
+                }, _callee418, this);
               }));
               function triggerConfirmedConstantContract(_x361, _x362) {
                 return _triggerConfirmedConstantContract.apply(this, arguments);
@@ -146374,29 +146400,29 @@
           }, {
             key: "estimateEnergy",
             value: function () {
-              var _estimateEnergy = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee418(contractAddress, functionSelector) {
+              var _estimateEnergy = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee419(contractAddress, functionSelector) {
                 var options,
                   parameters,
                   issuerAddress,
                   result,
-                  _args421 = arguments;
-                return _regeneratorRuntime().wrap(function _callee418$(_context421) {
-                  while (1) switch (_context421.prev = _context421.next) {
+                  _args422 = arguments;
+                return _regeneratorRuntime().wrap(function _callee419$(_context422) {
+                  while (1) switch (_context422.prev = _context422.next) {
                     case 0:
-                      options = _args421.length > 2 && _args421[2] !== undefined ? _args421[2] : {};
-                      parameters = _args421.length > 3 && _args421[3] !== undefined ? _args421[3] : [];
-                      issuerAddress = _args421.length > 4 && _args421[4] !== undefined ? _args421[4] : this.tronWeb.defaultAddress.hex;
+                      options = _args422.length > 2 && _args422[2] !== undefined ? _args422[2] : {};
+                      parameters = _args422.length > 3 && _args422[3] !== undefined ? _args422[3] : [];
+                      issuerAddress = _args422.length > 4 && _args422[4] !== undefined ? _args422[4] : this.tronWeb.defaultAddress.hex;
                       options.estimateEnergy = true;
-                      _context421.next = 6;
+                      _context422.next = 6;
                       return this._triggerSmartContract(contractAddress, functionSelector, options, parameters, issuerAddress);
                     case 6:
-                      result = _context421.sent;
-                      return _context421.abrupt("return", result);
+                      result = _context422.sent;
+                      return _context422.abrupt("return", result);
                     case 8:
                     case "end":
-                      return _context421.stop();
+                      return _context422.stop();
                   }
-                }, _callee418, this);
+                }, _callee419, this);
               }));
               function estimateEnergy(_x363, _x364) {
                 return _estimateEnergy.apply(this, arguments);
@@ -146406,7 +146432,7 @@
           }, {
             key: "deployConstantContract",
             value: function () {
-              var _deployConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee419() {
+              var _deployConstantContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee420() {
                 var options,
                   input,
                   ownerAddress,
@@ -146417,11 +146443,11 @@
                   args,
                   pathInfo,
                   transaction,
-                  _args422 = arguments;
-                return _regeneratorRuntime().wrap(function _callee419$(_context422) {
-                  while (1) switch (_context422.prev = _context422.next) {
+                  _args423 = arguments;
+                return _regeneratorRuntime().wrap(function _callee420$(_context423) {
+                  while (1) switch (_context423.prev = _context423.next) {
                     case 0:
-                      options = _args422.length > 0 && _args422[0] !== undefined ? _args422[0] : {
+                      options = _args423.length > 0 && _args423[0] !== undefined ? _args423[0] : {
                         input: '',
                         ownerAddress: ''
                       };
@@ -146464,28 +146490,28 @@
                         args.call_token_value = tokenValue;
                       }
                       pathInfo = "wallet".concat(options.confirmed ? 'solidity' : '', "/estimateenergy");
-                      _context422.next = 9;
+                      _context423.next = 9;
                       return this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(pathInfo, args, 'post');
                     case 9:
-                      transaction = _context422.sent;
+                      transaction = _context423.sent;
                       if (!transaction.Error) {
-                        _context422.next = 12;
+                        _context423.next = 12;
                         break;
                       }
                       throw new Error(transaction.Error);
                     case 12:
                       if (!(transaction.result && transaction.result.message)) {
-                        _context422.next = 14;
+                        _context423.next = 14;
                         break;
                       }
                       throw new Error(this.tronWeb.toUtf8(transaction.result.message));
                     case 14:
-                      return _context422.abrupt("return", transaction);
+                      return _context423.abrupt("return", transaction);
                     case 15:
                     case "end":
-                      return _context422.stop();
+                      return _context423.stop();
                   }
-                }, _callee419, this);
+                }, _callee420, this);
               }));
               function deployConstantContract() {
                 return _deployConstantContract.apply(this, arguments);
@@ -146568,7 +146594,7 @@
           }, {
             key: "_triggerSmartContractLocal",
             value: function () {
-              var _triggerSmartContractLocal2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee420(contractAddress, functionSelector) {
+              var _triggerSmartContractLocal2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee421(contractAddress, functionSelector) {
                 var options,
                   parameters,
                   issuerAddress,
@@ -146581,13 +146607,13 @@
                   value,
                   transactionOptions,
                   transaction,
-                  _args423 = arguments;
-                return _regeneratorRuntime().wrap(function _callee420$(_context423) {
-                  while (1) switch (_context423.prev = _context423.next) {
+                  _args424 = arguments;
+                return _regeneratorRuntime().wrap(function _callee421$(_context424) {
+                  while (1) switch (_context424.prev = _context424.next) {
                     case 0:
-                      options = _args423.length > 2 && _args423[2] !== undefined ? _args423[2] : {};
-                      parameters = _args423.length > 3 && _args423[3] !== undefined ? _args423[3] : [];
-                      issuerAddress = _args423.length > 4 && _args423[4] !== undefined ? _args423[4] : this.tronWeb.defaultAddress.hex;
+                      options = _args424.length > 2 && _args424[2] !== undefined ? _args424[2] : {};
+                      parameters = _args424.length > 3 && _args424[3] !== undefined ? _args424[3] : [];
+                      issuerAddress = _args424.length > 4 && _args424[4] !== undefined ? _args424[4] : this.tronWeb.defaultAddress.hex;
                       _Object$assign3 = Object.assign({
                         callValue: 0,
                         feeLimit: this.tronWeb.feeLimit
@@ -146647,13 +146673,13 @@
                         value.token_id = args.token_id;
                       }
                       transactionOptions = getTransactionOptions(options);
-                      _context423.next = 14;
+                      _context424.next = 14;
                       return createTransaction(this.tronWeb, ContractType.TriggerSmartContract, value, options.permissionId, _objectSpread2(_objectSpread2({}, transactionOptions), {}, {
                         fee_limit: args.fee_limit
                       }));
                     case 14:
-                      transaction = _context423.sent;
-                      return _context423.abrupt("return", {
+                      transaction = _context424.sent;
+                      return _context424.abrupt("return", {
                         result: {
                           result: true
                         },
@@ -146661,9 +146687,9 @@
                       });
                     case 16:
                     case "end":
-                      return _context423.stop();
+                      return _context424.stop();
                   }
-                }, _callee420, this);
+                }, _callee421, this);
               }));
               function _triggerSmartContractLocal(_x365, _x366) {
                 return _triggerSmartContractLocal2.apply(this, arguments);
@@ -146673,7 +146699,7 @@
           }, {
             key: "_triggerSmartContract",
             value: function () {
-              var _triggerSmartContract3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee421(contractAddress, functionSelector) {
+              var _triggerSmartContract3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee422(contractAddress, functionSelector) {
                 var options,
                   parameters,
                   issuerAddress,
@@ -146685,13 +146711,13 @@
                   args,
                   pathInfo,
                   transaction,
-                  _args424 = arguments;
-                return _regeneratorRuntime().wrap(function _callee421$(_context424) {
-                  while (1) switch (_context424.prev = _context424.next) {
+                  _args425 = arguments;
+                return _regeneratorRuntime().wrap(function _callee422$(_context425) {
+                  while (1) switch (_context425.prev = _context425.next) {
                     case 0:
-                      options = _args424.length > 2 && _args424[2] !== undefined ? _args424[2] : {};
-                      parameters = _args424.length > 3 && _args424[3] !== undefined ? _args424[3] : [];
-                      issuerAddress = _args424.length > 4 && _args424[4] !== undefined ? _args424[4] : this.tronWeb.defaultAddress.hex;
+                      options = _args425.length > 2 && _args425[2] !== undefined ? _args425[2] : {};
+                      parameters = _args425.length > 3 && _args425[3] !== undefined ? _args425[3] : [];
+                      issuerAddress = _args425.length > 4 && _args425[4] !== undefined ? _args425[4] : this.tronWeb.defaultAddress.hex;
                       _Object$assign4 = Object.assign({
                         callValue: 0,
                         feeLimit: this.tronWeb.feeLimit
@@ -146740,16 +146766,16 @@
                         pathInfo = 'estimateenergy';
                       }
                       pathInfo = "wallet".concat(options.confirmed ? 'solidity' : '', "/").concat(pathInfo);
-                      _context424.next = 11;
+                      _context425.next = 11;
                       return this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(pathInfo, args, 'post');
                     case 11:
-                      transaction = _context424.sent;
-                      return _context424.abrupt("return", resultManagerTriggerSmartContract(transaction, args, options));
+                      transaction = _context425.sent;
+                      return _context425.abrupt("return", resultManagerTriggerSmartContract(transaction, args, options));
                     case 13:
                     case "end":
-                      return _context424.stop();
+                      return _context425.stop();
                   }
-                }, _callee421, this);
+                }, _callee422, this);
               }));
               function _triggerSmartContract(_x367, _x368) {
                 return _triggerSmartContract3.apply(this, arguments);
@@ -146759,25 +146785,25 @@
           }, {
             key: "clearABI",
             value: function () {
-              var _clearABI = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee422(contractAddress) {
+              var _clearABI = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee423(contractAddress) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args425 = arguments;
-                return _regeneratorRuntime().wrap(function _callee422$(_context425) {
-                  while (1) switch (_context425.prev = _context425.next) {
+                  _args426 = arguments;
+                return _regeneratorRuntime().wrap(function _callee423$(_context426) {
+                  while (1) switch (_context426.prev = _context426.next) {
                     case 0:
-                      ownerAddress = _args425.length > 1 && _args425[1] !== undefined ? _args425[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args425.length > 2 && _args425[2] !== undefined ? _args425[2] : {};
+                      ownerAddress = _args426.length > 1 && _args426[1] !== undefined ? _args426[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args426.length > 2 && _args426[2] !== undefined ? _args426[2] : {};
                       if (TronWeb.isAddress(contractAddress)) {
-                        _context425.next = 4;
+                        _context426.next = 4;
                         break;
                       }
                       throw new Error('Invalid contract address provided');
                     case 4:
                       if (TronWeb.isAddress(ownerAddress)) {
-                        _context425.next = 6;
+                        _context426.next = 6;
                         break;
                       }
                       throw new Error('Invalid owner address provided');
@@ -146793,12 +146819,12 @@
                         delete this.tronWeb.trx.cache.contracts[contractAddress];
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context425.abrupt("return", createTransaction(this.tronWeb, ContractType.ClearABIContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context426.abrupt("return", createTransaction(this.tronWeb, ContractType.ClearABIContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 10:
                     case "end":
-                      return _context425.stop();
+                      return _context426.stop();
                   }
-                }, _callee422, this);
+                }, _callee423, this);
               }));
               function clearABI(_x369) {
                 return _clearABI.apply(this, arguments);
@@ -146808,31 +146834,31 @@
           }, {
             key: "updateBrokerage",
             value: function () {
-              var _updateBrokerage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee423(brokerage) {
+              var _updateBrokerage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee424(brokerage) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args426 = arguments;
-                return _regeneratorRuntime().wrap(function _callee423$(_context426) {
-                  while (1) switch (_context426.prev = _context426.next) {
+                  _args427 = arguments;
+                return _regeneratorRuntime().wrap(function _callee424$(_context427) {
+                  while (1) switch (_context427.prev = _context427.next) {
                     case 0:
-                      ownerAddress = _args426.length > 1 && _args426[1] !== undefined ? _args426[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args426.length > 2 && _args426[2] !== undefined ? _args426[2] : {};
+                      ownerAddress = _args427.length > 1 && _args427[1] !== undefined ? _args427[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args427.length > 2 && _args427[2] !== undefined ? _args427[2] : {};
                       if (isNotNullOrUndefined(brokerage)) {
-                        _context426.next = 4;
+                        _context427.next = 4;
                         break;
                       }
                       throw new Error('Invalid brokerage provided');
                     case 4:
                       if (!(!isInteger(brokerage) || brokerage < 0 || brokerage > 100)) {
-                        _context426.next = 6;
+                        _context427.next = 6;
                         break;
                       }
                       throw new Error('Brokerage must be an integer between 0 and 100');
                     case 6:
                       if (TronWeb.isAddress(ownerAddress)) {
-                        _context426.next = 8;
+                        _context427.next = 8;
                         break;
                       }
                       throw new Error('Invalid owner address provided');
@@ -146842,12 +146868,12 @@
                         owner_address: toHex$1(ownerAddress)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context426.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateBrokerageContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context427.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateBrokerageContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 11:
                     case "end":
-                      return _context426.stop();
+                      return _context427.stop();
                   }
-                }, _callee423, this);
+                }, _callee424, this);
               }));
               function updateBrokerage(_x370) {
                 return _updateBrokerage.apply(this, arguments);
@@ -146857,7 +146883,7 @@
           }, {
             key: "createToken",
             value: function () {
-              var _createToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee424() {
+              var _createToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee425() {
                 var options,
                   issuerAddress,
                   _options$name2,
@@ -146890,12 +146916,12 @@
                   precision,
                   data,
                   transactionOptions,
-                  _args427 = arguments;
-                return _regeneratorRuntime().wrap(function _callee424$(_context427) {
-                  while (1) switch (_context427.prev = _context427.next) {
+                  _args428 = arguments;
+                return _regeneratorRuntime().wrap(function _callee425$(_context428) {
+                  while (1) switch (_context428.prev = _context428.next) {
                     case 0:
-                      options = _args427.length > 0 && _args427[0] !== undefined ? _args427[0] : {};
-                      issuerAddress = _args427.length > 1 && _args427[1] !== undefined ? _args427[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args428.length > 0 && _args428[0] !== undefined ? _args428[0] : {};
+                      issuerAddress = _args428.length > 1 && _args428[1] !== undefined ? _args428[1] : this.tronWeb.defaultAddress.hex;
                       _options$name2 = options.name, name = _options$name2 === void 0 ? false : _options$name2, _options$abbreviation = options.abbreviation, abbreviation = _options$abbreviation === void 0 ? false : _options$abbreviation, _options$description = options.description, description = _options$description === void 0 ? '' : _options$description, _options$url = options.url, url = _options$url === void 0 ? false : _options$url, _options$totalSupply = options.totalSupply, totalSupply = _options$totalSupply === void 0 ? 0 : _options$totalSupply, _options$trxRatio = options.trxRatio, trxRatio = _options$trxRatio === void 0 ? 1 : _options$trxRatio, _options$tokenRatio = options.tokenRatio, tokenRatio = _options$tokenRatio === void 0 ? 1 : _options$tokenRatio, _options$saleStart = options.saleStart, saleStart = _options$saleStart === void 0 ? Date.now() : _options$saleStart, _options$saleEnd = options.saleEnd, saleEnd = _options$saleEnd === void 0 ? false : _options$saleEnd, _options$freeBandwidt = options.freeBandwidth, freeBandwidth = _options$freeBandwidt === void 0 ? 0 : _options$freeBandwidt, _options$freeBandwidt2 = options.freeBandwidthLimit, freeBandwidthLimit = _options$freeBandwidt2 === void 0 ? 0 : _options$freeBandwidt2, _options$frozenAmount = options.frozenAmount, frozenAmount = _options$frozenAmount === void 0 ? 0 : _options$frozenAmount, _options$frozenDurati = options.frozenDuration, frozenDuration = _options$frozenDurati === void 0 ? 0 : _options$frozenDurati, voteScore = options.voteScore, precision = options.precision;
                       this.validator.notValid([{
                         name: 'Supply amount',
@@ -146959,13 +146985,13 @@
                         gte: 0
                       }]);
                       if (!(isNotNullOrUndefined(voteScore) && (!isInteger(voteScore) || voteScore <= 0))) {
-                        _context427.next = 6;
+                        _context428.next = 6;
                         break;
                       }
                       throw new Error('voteScore must be a positive integer greater than 0');
                     case 6:
                       if (!(isNotNullOrUndefined(precision) && (!isInteger(precision) || precision < 0 || precision > 6))) {
-                        _context427.next = 8;
+                        _context428.next = 8;
                         break;
                       }
                       throw new Error('precision must be a positive integer >= 0 and <= 6');
@@ -147007,12 +147033,12 @@
                         data.vote_score = parseInt(voteScore);
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context427.abrupt("return", createTransaction(this.tronWeb, ContractType.AssetIssueContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context428.abrupt("return", createTransaction(this.tronWeb, ContractType.AssetIssueContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 17:
                     case "end":
-                      return _context427.stop();
+                      return _context428.stop();
                   }
-                }, _callee424, this);
+                }, _callee425, this);
               }));
               function createToken() {
                 return _createToken.apply(this, arguments);
@@ -147022,17 +147048,17 @@
           }, {
             key: "createAccount",
             value: function () {
-              var _createAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee425(accountAddress) {
+              var _createAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee426(accountAddress) {
                 var address,
                   options,
                   data,
                   transactionOptions,
-                  _args428 = arguments;
-                return _regeneratorRuntime().wrap(function _callee425$(_context428) {
-                  while (1) switch (_context428.prev = _context428.next) {
+                  _args429 = arguments;
+                return _regeneratorRuntime().wrap(function _callee426$(_context429) {
+                  while (1) switch (_context429.prev = _context429.next) {
                     case 0:
-                      address = _args428.length > 1 && _args428[1] !== undefined ? _args428[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args428.length > 2 && _args428[2] !== undefined ? _args428[2] : {};
+                      address = _args429.length > 1 && _args429[1] !== undefined ? _args429[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args429.length > 2 && _args429[2] !== undefined ? _args429[2] : {};
                       this.validator.notValid([{
                         name: 'account',
                         type: 'address',
@@ -147047,12 +147073,12 @@
                         account_address: toHex$1(accountAddress)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context428.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context429.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context428.stop();
+                      return _context429.stop();
                   }
-                }, _callee425, this);
+                }, _callee426, this);
               }));
               function createAccount(_x371) {
                 return _createAccount.apply(this, arguments);
@@ -147062,17 +147088,17 @@
           }, {
             key: "updateAccount",
             value: function () {
-              var _updateAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee426(accountName) {
+              var _updateAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee427(accountName) {
                 var address,
                   options,
                   data,
                   transactionOptions,
-                  _args429 = arguments;
-                return _regeneratorRuntime().wrap(function _callee426$(_context429) {
-                  while (1) switch (_context429.prev = _context429.next) {
+                  _args430 = arguments;
+                return _regeneratorRuntime().wrap(function _callee427$(_context430) {
+                  while (1) switch (_context430.prev = _context430.next) {
                     case 0:
-                      address = _args429.length > 1 && _args429[1] !== undefined ? _args429[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args429.length > 2 && _args429[2] !== undefined ? _args429[2] : {};
+                      address = _args430.length > 1 && _args430[1] !== undefined ? _args430[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args430.length > 2 && _args430[2] !== undefined ? _args430[2] : {};
                       this.validator.notValid([{
                         name: 'Name',
                         type: 'string',
@@ -147090,12 +147116,12 @@
                         owner_address: toHex$1(address)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context429.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountUpdateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context430.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountUpdateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context429.stop();
+                      return _context430.stop();
                   }
-                }, _callee426, this);
+                }, _callee427, this);
               }));
               function updateAccount(_x372) {
                 return _updateAccount.apply(this, arguments);
@@ -147105,17 +147131,17 @@
           }, {
             key: "setAccountId",
             value: function () {
-              var _setAccountId = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee427(accountId) {
+              var _setAccountId = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee428(accountId) {
                 var address,
                   options,
                   data,
                   transactionOptions,
-                  _args430 = arguments;
-                return _regeneratorRuntime().wrap(function _callee427$(_context430) {
-                  while (1) switch (_context430.prev = _context430.next) {
+                  _args431 = arguments;
+                return _regeneratorRuntime().wrap(function _callee428$(_context431) {
+                  while (1) switch (_context431.prev = _context431.next) {
                     case 0:
-                      address = _args430.length > 1 && _args430[1] !== undefined ? _args430[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args430.length > 2 && _args430[2] !== undefined ? _args430[2] : {};
+                      address = _args431.length > 1 && _args431[1] !== undefined ? _args431[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args431.length > 2 && _args431[2] !== undefined ? _args431[2] : {};
                       if (accountId && isString$1(accountId) && accountId.startsWith('0x')) {
                         accountId = accountId.slice(2);
                       }
@@ -147139,12 +147165,12 @@
                         owner_address: toHex$1(address)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context430.abrupt("return", createTransaction(this.tronWeb, ContractType.SetAccountIdContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context431.abrupt("return", createTransaction(this.tronWeb, ContractType.SetAccountIdContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 7:
                     case "end":
-                      return _context430.stop();
+                      return _context431.stop();
                   }
-                }, _callee427, this);
+                }, _callee428, this);
               }));
               function setAccountId(_x373) {
                 return _setAccountId.apply(this, arguments);
@@ -147154,7 +147180,7 @@
           }, {
             key: "updateToken",
             value: function () {
-              var _updateToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee428() {
+              var _updateToken = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee429() {
                 var options,
                   issuerAddress,
                   _options$description2,
@@ -147167,12 +147193,12 @@
                   freeBandwidthLimit,
                   data,
                   transactionOptions,
-                  _args431 = arguments;
-                return _regeneratorRuntime().wrap(function _callee428$(_context431) {
-                  while (1) switch (_context431.prev = _context431.next) {
+                  _args432 = arguments;
+                return _regeneratorRuntime().wrap(function _callee429$(_context432) {
+                  while (1) switch (_context432.prev = _context432.next) {
                     case 0:
-                      options = _args431.length > 0 && _args431[0] !== undefined ? _args431[0] : {};
-                      issuerAddress = _args431.length > 1 && _args431[1] !== undefined ? _args431[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args432.length > 0 && _args432[0] !== undefined ? _args432[0] : {};
+                      issuerAddress = _args432.length > 1 && _args432[1] !== undefined ? _args432[1] : this.tronWeb.defaultAddress.hex;
                       _options$description2 = options.description, description = _options$description2 === void 0 ? '' : _options$description2, _options$url2 = options.url, url = _options$url2 === void 0 ? false : _options$url2, _options$freeBandwidt3 = options.freeBandwidth, freeBandwidth = _options$freeBandwidt3 === void 0 ? 0 : _options$freeBandwidt3, _options$freeBandwidt4 = options.freeBandwidthLimit, freeBandwidthLimit = _options$freeBandwidt4 === void 0 ? 0 : _options$freeBandwidt4;
                       this.validator.notValid([{
                         name: 'token description',
@@ -147205,12 +147231,12 @@
                         data.new_public_limit = parseInt(freeBandwidthLimit);
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context431.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateAssetContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context432.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateAssetContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 9:
                     case "end":
-                      return _context431.stop();
+                      return _context432.stop();
                   }
-                }, _callee428, this);
+                }, _callee429, this);
               }));
               function updateToken() {
                 return _updateToken.apply(this, arguments);
@@ -147220,25 +147246,25 @@
           }, {
             key: "sendAsset",
             value: function () {
-              var _sendAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee429(to) {
+              var _sendAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee430(to) {
                 var amount,
                   tokenId,
                   from,
                   options,
-                  _args432 = arguments;
-                return _regeneratorRuntime().wrap(function _callee429$(_context432) {
-                  while (1) switch (_context432.prev = _context432.next) {
+                  _args433 = arguments;
+                return _regeneratorRuntime().wrap(function _callee430$(_context433) {
+                  while (1) switch (_context433.prev = _context433.next) {
                     case 0:
-                      amount = _args432.length > 1 && _args432[1] !== undefined ? _args432[1] : 0;
-                      tokenId = _args432.length > 2 ? _args432[2] : undefined;
-                      from = _args432.length > 3 && _args432[3] !== undefined ? _args432[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args432.length > 4 && _args432[4] !== undefined ? _args432[4] : {};
-                      return _context432.abrupt("return", this.sendToken(to, amount, tokenId, from, options));
+                      amount = _args433.length > 1 && _args433[1] !== undefined ? _args433[1] : 0;
+                      tokenId = _args433.length > 2 ? _args433[2] : undefined;
+                      from = _args433.length > 3 && _args433[3] !== undefined ? _args433[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args433.length > 4 && _args433[4] !== undefined ? _args433[4] : {};
+                      return _context433.abrupt("return", this.sendToken(to, amount, tokenId, from, options));
                     case 5:
                     case "end":
-                      return _context432.stop();
+                      return _context433.stop();
                   }
-                }, _callee429, this);
+                }, _callee430, this);
               }));
               function sendAsset(_x374) {
                 return _sendAsset.apply(this, arguments);
@@ -147248,23 +147274,23 @@
           }, {
             key: "purchaseAsset",
             value: function () {
-              var _purchaseAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee430(issuerAddress, tokenId) {
+              var _purchaseAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee431(issuerAddress, tokenId) {
                 var amount,
                   buyer,
                   options,
-                  _args433 = arguments;
-                return _regeneratorRuntime().wrap(function _callee430$(_context433) {
-                  while (1) switch (_context433.prev = _context433.next) {
+                  _args434 = arguments;
+                return _regeneratorRuntime().wrap(function _callee431$(_context434) {
+                  while (1) switch (_context434.prev = _context434.next) {
                     case 0:
-                      amount = _args433.length > 2 && _args433[2] !== undefined ? _args433[2] : 0;
-                      buyer = _args433.length > 3 && _args433[3] !== undefined ? _args433[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args433.length > 4 && _args433[4] !== undefined ? _args433[4] : {};
-                      return _context433.abrupt("return", this.purchaseToken(issuerAddress, tokenId, amount, buyer, options));
+                      amount = _args434.length > 2 && _args434[2] !== undefined ? _args434[2] : 0;
+                      buyer = _args434.length > 3 && _args434[3] !== undefined ? _args434[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args434.length > 4 && _args434[4] !== undefined ? _args434[4] : {};
+                      return _context434.abrupt("return", this.purchaseToken(issuerAddress, tokenId, amount, buyer, options));
                     case 4:
                     case "end":
-                      return _context433.stop();
+                      return _context434.stop();
                   }
-                }, _callee430, this);
+                }, _callee431, this);
               }));
               function purchaseAsset(_x375, _x376) {
                 return _purchaseAsset.apply(this, arguments);
@@ -147274,16 +147300,16 @@
           }, {
             key: "createAsset",
             value: function () {
-              var _createAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee431(options, issuerAddress) {
-                return _regeneratorRuntime().wrap(function _callee431$(_context434) {
-                  while (1) switch (_context434.prev = _context434.next) {
+              var _createAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee432(options, issuerAddress) {
+                return _regeneratorRuntime().wrap(function _callee432$(_context435) {
+                  while (1) switch (_context435.prev = _context435.next) {
                     case 0:
-                      return _context434.abrupt("return", this.createToken(options, issuerAddress));
+                      return _context435.abrupt("return", this.createToken(options, issuerAddress));
                     case 1:
                     case "end":
-                      return _context434.stop();
+                      return _context435.stop();
                   }
-                }, _callee431, this);
+                }, _callee432, this);
               }));
               function createAsset(_x377, _x378) {
                 return _createAsset.apply(this, arguments);
@@ -147293,21 +147319,21 @@
           }, {
             key: "updateAsset",
             value: function () {
-              var _updateAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee432() {
+              var _updateAsset = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee433() {
                 var options,
                   issuerAddress,
-                  _args435 = arguments;
-                return _regeneratorRuntime().wrap(function _callee432$(_context435) {
-                  while (1) switch (_context435.prev = _context435.next) {
+                  _args436 = arguments;
+                return _regeneratorRuntime().wrap(function _callee433$(_context436) {
+                  while (1) switch (_context436.prev = _context436.next) {
                     case 0:
-                      options = _args435.length > 0 && _args435[0] !== undefined ? _args435[0] : {};
-                      issuerAddress = _args435.length > 1 && _args435[1] !== undefined ? _args435[1] : this.tronWeb.defaultAddress.hex;
-                      return _context435.abrupt("return", this.updateToken(options, issuerAddress));
+                      options = _args436.length > 0 && _args436[0] !== undefined ? _args436[0] : {};
+                      issuerAddress = _args436.length > 1 && _args436[1] !== undefined ? _args436[1] : this.tronWeb.defaultAddress.hex;
+                      return _context436.abrupt("return", this.updateToken(options, issuerAddress));
                     case 3:
                     case "end":
-                      return _context435.stop();
+                      return _context436.stop();
                   }
-                }, _callee432, this);
+                }, _callee433, this);
               }));
               function updateAsset() {
                 return _updateAsset.apply(this, arguments);
@@ -147321,7 +147347,7 @@
           }, {
             key: "createProposal",
             value: (function () {
-              var _createProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee433(parameters) {
+              var _createProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee434(parameters) {
                 var issuerAddress,
                   options,
                   invalid,
@@ -147331,12 +147357,12 @@
                   parameter,
                   data,
                   transactionOptions,
-                  _args436 = arguments;
-                return _regeneratorRuntime().wrap(function _callee433$(_context436) {
-                  while (1) switch (_context436.prev = _context436.next) {
+                  _args437 = arguments;
+                return _regeneratorRuntime().wrap(function _callee434$(_context437) {
+                  while (1) switch (_context437.prev = _context437.next) {
                     case 0:
-                      issuerAddress = _args436.length > 1 && _args436[1] !== undefined ? _args436[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args436.length > 2 && _args436[2] !== undefined ? _args436[2] : {};
+                      issuerAddress = _args437.length > 1 && _args437[1] !== undefined ? _args437[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args437.length > 2 && _args437[2] !== undefined ? _args437[2] : {};
                       this.validator.notValid([{
                         name: 'issuer',
                         type: 'address',
@@ -147344,52 +147370,52 @@
                       }]);
                       invalid = 'Invalid proposal parameters provided';
                       if (parameters) {
-                        _context436.next = 6;
+                        _context437.next = 6;
                         break;
                       }
                       throw new Error(invalid);
                     case 6:
                       newParams = isArray$1(parameters) ? parameters : [parameters];
                       _iterator55 = _createForOfIteratorHelper2(newParams);
-                      _context436.prev = 8;
+                      _context437.prev = 8;
                       _iterator55.s();
                     case 10:
                       if ((_step55 = _iterator55.n()).done) {
-                        _context436.next = 16;
+                        _context437.next = 16;
                         break;
                       }
                       parameter = _step55.value;
                       if (isObject$1(parameter)) {
-                        _context436.next = 14;
+                        _context437.next = 14;
                         break;
                       }
                       throw new Error(invalid);
                     case 14:
-                      _context436.next = 10;
+                      _context437.next = 10;
                       break;
                     case 16:
-                      _context436.next = 21;
+                      _context437.next = 21;
                       break;
                     case 18:
-                      _context436.prev = 18;
-                      _context436.t0 = _context436["catch"](8);
-                      _iterator55.e(_context436.t0);
+                      _context437.prev = 18;
+                      _context437.t0 = _context437["catch"](8);
+                      _iterator55.e(_context437.t0);
                     case 21:
-                      _context436.prev = 21;
+                      _context437.prev = 21;
                       _iterator55.f();
-                      return _context436.finish(21);
+                      return _context437.finish(21);
                     case 24:
                       data = {
                         owner_address: toHex$1(issuerAddress),
                         parameters: newParams
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context436.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context437.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 27:
                     case "end":
-                      return _context436.stop();
+                      return _context437.stop();
                   }
-                }, _callee433, this, [[8, 18, 21, 24]]);
+                }, _callee434, this, [[8, 18, 21, 24]]);
               }));
               function createProposal(_x379) {
                 return _createProposal.apply(this, arguments);
@@ -147404,17 +147430,17 @@
           }, {
             key: "deleteProposal",
             value: (function () {
-              var _deleteProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee434(proposalID) {
+              var _deleteProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee435(proposalID) {
                 var issuerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args437 = arguments;
-                return _regeneratorRuntime().wrap(function _callee434$(_context437) {
-                  while (1) switch (_context437.prev = _context437.next) {
+                  _args438 = arguments;
+                return _regeneratorRuntime().wrap(function _callee435$(_context438) {
+                  while (1) switch (_context438.prev = _context438.next) {
                     case 0:
-                      issuerAddress = _args437.length > 1 && _args437[1] !== undefined ? _args437[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args437.length > 2 && _args437[2] !== undefined ? _args437[2] : {};
+                      issuerAddress = _args438.length > 1 && _args438[1] !== undefined ? _args438[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args438.length > 2 && _args438[2] !== undefined ? _args438[2] : {};
                       this.validator.notValid([{
                         name: 'issuer',
                         type: 'address',
@@ -147430,12 +147456,12 @@
                         proposal_id: parseInt(proposalID)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context437.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalDeleteContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context438.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalDeleteContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context437.stop();
+                      return _context438.stop();
                   }
-                }, _callee434, this);
+                }, _callee435, this);
               }));
               function deleteProposal(_x380) {
                 return _deleteProposal.apply(this, arguments);
@@ -147450,19 +147476,19 @@
           }, {
             key: "voteProposal",
             value: (function () {
-              var _voteProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee435(proposalID) {
+              var _voteProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee436(proposalID) {
                 var isApproval,
                   voterAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args438 = arguments;
-                return _regeneratorRuntime().wrap(function _callee435$(_context438) {
-                  while (1) switch (_context438.prev = _context438.next) {
+                  _args439 = arguments;
+                return _regeneratorRuntime().wrap(function _callee436$(_context439) {
+                  while (1) switch (_context439.prev = _context439.next) {
                     case 0:
-                      isApproval = _args438.length > 1 && _args438[1] !== undefined ? _args438[1] : false;
-                      voterAddress = _args438.length > 2 && _args438[2] !== undefined ? _args438[2] : this.tronWeb.defaultAddress.hex;
-                      options = _args438.length > 3 && _args438[3] !== undefined ? _args438[3] : {};
+                      isApproval = _args439.length > 1 && _args439[1] !== undefined ? _args439[1] : false;
+                      voterAddress = _args439.length > 2 && _args439[2] !== undefined ? _args439[2] : this.tronWeb.defaultAddress.hex;
+                      options = _args439.length > 3 && _args439[3] !== undefined ? _args439[3] : {};
                       this.validator.notValid([{
                         name: 'voter',
                         type: 'address',
@@ -147483,12 +147509,12 @@
                         is_add_approval: isApproval
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context438.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalApproveContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context439.abrupt("return", createTransaction(this.tronWeb, ContractType.ProposalApproveContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 7:
                     case "end":
-                      return _context438.stop();
+                      return _context439.stop();
                   }
-                }, _callee435, this);
+                }, _callee436, this);
               }));
               function voteProposal(_x381) {
                 return _voteProposal.apply(this, arguments);
@@ -147504,17 +147530,17 @@
           }, {
             key: "createTRXExchange",
             value: (function () {
-              var _createTRXExchange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee436(tokenName, tokenBalance, trxBalance) {
+              var _createTRXExchange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee437(tokenName, tokenBalance, trxBalance) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args439 = arguments;
-                return _regeneratorRuntime().wrap(function _callee436$(_context439) {
-                  while (1) switch (_context439.prev = _context439.next) {
+                  _args440 = arguments;
+                return _regeneratorRuntime().wrap(function _callee437$(_context440) {
+                  while (1) switch (_context440.prev = _context440.next) {
                     case 0:
-                      ownerAddress = _args439.length > 3 && _args439[3] !== undefined ? _args439[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args439.length > 4 && _args439[4] !== undefined ? _args439[4] : {};
+                      ownerAddress = _args440.length > 3 && _args440[3] !== undefined ? _args440[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args440.length > 4 && _args440[4] !== undefined ? _args440[4] : {};
                       this.validator.notValid([{
                         name: 'owner',
                         type: 'address',
@@ -147541,12 +147567,12 @@
                         second_token_balance: trxBalance
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context439.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context440.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context439.stop();
+                      return _context440.stop();
                   }
-                }, _callee436, this);
+                }, _callee437, this);
               }));
               function createTRXExchange(_x382, _x383, _x384) {
                 return _createTRXExchange.apply(this, arguments);
@@ -147563,17 +147589,17 @@
           }, {
             key: "createTokenExchange",
             value: (function () {
-              var _createTokenExchange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee437(firstTokenName, firstTokenBalance, secondTokenName, secondTokenBalance) {
+              var _createTokenExchange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee438(firstTokenName, firstTokenBalance, secondTokenName, secondTokenBalance) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args440 = arguments;
-                return _regeneratorRuntime().wrap(function _callee437$(_context440) {
-                  while (1) switch (_context440.prev = _context440.next) {
+                  _args441 = arguments;
+                return _regeneratorRuntime().wrap(function _callee438$(_context441) {
+                  while (1) switch (_context441.prev = _context441.next) {
                     case 0:
-                      ownerAddress = _args440.length > 4 && _args440[4] !== undefined ? _args440[4] : this.tronWeb.defaultAddress.hex;
-                      options = _args440.length > 5 && _args440[5] !== undefined ? _args440[5] : {};
+                      ownerAddress = _args441.length > 4 && _args441[4] !== undefined ? _args441[4] : this.tronWeb.defaultAddress.hex;
+                      options = _args441.length > 5 && _args441[5] !== undefined ? _args441[5] : {};
                       this.validator.notValid([{
                         name: 'owner',
                         type: 'address',
@@ -147603,12 +147629,12 @@
                         second_token_balance: secondTokenBalance
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context440.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context441.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeCreateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context440.stop();
+                      return _context441.stop();
                   }
-                }, _callee437, this);
+                }, _callee438, this);
               }));
               function createTokenExchange(_x385, _x386, _x387, _x388) {
                 return _createTokenExchange.apply(this, arguments);
@@ -147624,65 +147650,7 @@
           }, {
             key: "injectExchangeTokens",
             value: (function () {
-              var _injectExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee438(exchangeID, tokenName, tokenAmount) {
-                var ownerAddress,
-                  options,
-                  data,
-                  transactionOptions,
-                  _args441 = arguments;
-                return _regeneratorRuntime().wrap(function _callee438$(_context441) {
-                  while (1) switch (_context441.prev = _context441.next) {
-                    case 0:
-                      ownerAddress = _args441.length > 3 && _args441[3] !== undefined ? _args441[3] : this.tronWeb.defaultAddress.hex;
-                      options = _args441.length > 4 && _args441[4] !== undefined ? _args441[4] : {};
-                      this.validator.notValid([{
-                        name: 'owner',
-                        type: 'address',
-                        value: ownerAddress
-                      }, {
-                        name: 'token name',
-                        type: 'not-empty-string',
-                        value: tokenName
-                      }, {
-                        name: 'token amount',
-                        type: 'integer',
-                        value: tokenAmount,
-                        gte: 1
-                      }, {
-                        name: 'exchangeID',
-                        type: 'integer',
-                        value: exchangeID,
-                        gte: 0
-                      }]);
-                      data = {
-                        owner_address: toHex$1(ownerAddress),
-                        exchange_id: parseInt(exchangeID),
-                        token_id: fromUtf8(tokenName),
-                        quant: parseInt(tokenAmount)
-                      };
-                      transactionOptions = getTransactionOptions(options);
-                      return _context441.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeInjectContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
-                    case 6:
-                    case "end":
-                      return _context441.stop();
-                  }
-                }, _callee438, this);
-              }));
-              function injectExchangeTokens(_x389, _x390, _x391) {
-                return _injectExchangeTokens.apply(this, arguments);
-              }
-              return injectExchangeTokens;
-            }()
-            /**
-             * Withdraws tokens from a bancor style exchange.
-             * Will withdraw at market rate both tokens.
-             * Use "_" for the constant value for TRX.
-             */
-            )
-          }, {
-            key: "withdrawExchangeTokens",
-            value: (function () {
-              var _withdrawExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee439(exchangeID, tokenName, tokenAmount) {
+              var _injectExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee439(exchangeID, tokenName, tokenAmount) {
                 var ownerAddress,
                   options,
                   data,
@@ -147719,12 +147687,70 @@
                         quant: parseInt(tokenAmount)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context442.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeWithdrawContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context442.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeInjectContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
                       return _context442.stop();
                   }
                 }, _callee439, this);
+              }));
+              function injectExchangeTokens(_x389, _x390, _x391) {
+                return _injectExchangeTokens.apply(this, arguments);
+              }
+              return injectExchangeTokens;
+            }()
+            /**
+             * Withdraws tokens from a bancor style exchange.
+             * Will withdraw at market rate both tokens.
+             * Use "_" for the constant value for TRX.
+             */
+            )
+          }, {
+            key: "withdrawExchangeTokens",
+            value: (function () {
+              var _withdrawExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee440(exchangeID, tokenName, tokenAmount) {
+                var ownerAddress,
+                  options,
+                  data,
+                  transactionOptions,
+                  _args443 = arguments;
+                return _regeneratorRuntime().wrap(function _callee440$(_context443) {
+                  while (1) switch (_context443.prev = _context443.next) {
+                    case 0:
+                      ownerAddress = _args443.length > 3 && _args443[3] !== undefined ? _args443[3] : this.tronWeb.defaultAddress.hex;
+                      options = _args443.length > 4 && _args443[4] !== undefined ? _args443[4] : {};
+                      this.validator.notValid([{
+                        name: 'owner',
+                        type: 'address',
+                        value: ownerAddress
+                      }, {
+                        name: 'token name',
+                        type: 'not-empty-string',
+                        value: tokenName
+                      }, {
+                        name: 'token amount',
+                        type: 'integer',
+                        value: tokenAmount,
+                        gte: 1
+                      }, {
+                        name: 'exchangeID',
+                        type: 'integer',
+                        value: exchangeID,
+                        gte: 0
+                      }]);
+                      data = {
+                        owner_address: toHex$1(ownerAddress),
+                        exchange_id: parseInt(exchangeID),
+                        token_id: fromUtf8(tokenName),
+                        quant: parseInt(tokenAmount)
+                      };
+                      transactionOptions = getTransactionOptions(options);
+                      return _context443.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeWithdrawContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                    case 6:
+                    case "end":
+                      return _context443.stop();
+                  }
+                }, _callee440, this);
               }));
               function withdrawExchangeTokens(_x392, _x393, _x394) {
                 return _withdrawExchangeTokens.apply(this, arguments);
@@ -147740,17 +147766,17 @@
           }, {
             key: "tradeExchangeTokens",
             value: (function () {
-              var _tradeExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee440(exchangeID, tokenName, tokenAmountSold, tokenAmountExpected) {
+              var _tradeExchangeTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee441(exchangeID, tokenName, tokenAmountSold, tokenAmountExpected) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args443 = arguments;
-                return _regeneratorRuntime().wrap(function _callee440$(_context443) {
-                  while (1) switch (_context443.prev = _context443.next) {
+                  _args444 = arguments;
+                return _regeneratorRuntime().wrap(function _callee441$(_context444) {
+                  while (1) switch (_context444.prev = _context444.next) {
                     case 0:
-                      ownerAddress = _args443.length > 4 && _args443[4] !== undefined ? _args443[4] : this.tronWeb.defaultAddress.hex;
-                      options = _args443.length > 5 && _args443[5] !== undefined ? _args443[5] : {};
+                      ownerAddress = _args444.length > 4 && _args444[4] !== undefined ? _args444[4] : this.tronWeb.defaultAddress.hex;
+                      options = _args444.length > 5 && _args444[5] !== undefined ? _args444[5] : {};
                       this.validator.notValid([{
                         name: 'owner',
                         type: 'address',
@@ -147783,12 +147809,12 @@
                         expected: parseInt(tokenAmountExpected)
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context443.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeTransactionContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context444.abrupt("return", createTransaction(this.tronWeb, ContractType.ExchangeTransactionContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context443.stop();
+                      return _context444.stop();
                   }
-                }, _callee440, this);
+                }, _callee441, this);
               }));
               function tradeExchangeTokens(_x395, _x396, _x397, _x398) {
                 return _tradeExchangeTokens.apply(this, arguments);
@@ -147802,17 +147828,17 @@
           }, {
             key: "updateSetting",
             value: (function () {
-              var _updateSetting = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee441(contractAddress, userFeePercentage) {
+              var _updateSetting = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee442(contractAddress, userFeePercentage) {
                 var ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args444 = arguments;
-                return _regeneratorRuntime().wrap(function _callee441$(_context444) {
-                  while (1) switch (_context444.prev = _context444.next) {
+                  _args445 = arguments;
+                return _regeneratorRuntime().wrap(function _callee442$(_context445) {
+                  while (1) switch (_context445.prev = _context445.next) {
                     case 0:
-                      ownerAddress = _args444.length > 2 && _args444[2] !== undefined ? _args444[2] : this.tronWeb.defaultAddress.hex;
-                      options = _args444.length > 3 && _args444[3] !== undefined ? _args444[3] : {};
+                      ownerAddress = _args445.length > 2 && _args445[2] !== undefined ? _args445[2] : this.tronWeb.defaultAddress.hex;
+                      options = _args445.length > 3 && _args445[3] !== undefined ? _args445[3] : {};
                       this.validator.notValid([{
                         name: 'owner',
                         type: 'address',
@@ -147834,12 +147860,12 @@
                         consume_user_resource_percent: userFeePercentage
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context444.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateSettingContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context445.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateSettingContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 6:
                     case "end":
-                      return _context444.stop();
+                      return _context445.stop();
                   }
-                }, _callee441, this);
+                }, _callee442, this);
               }));
               function updateSetting(_x399, _x400) {
                 return _updateSetting.apply(this, arguments);
@@ -147853,19 +147879,19 @@
           }, {
             key: "updateEnergyLimit",
             value: (function () {
-              var _updateEnergyLimit = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee442(contractAddress) {
+              var _updateEnergyLimit = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee443(contractAddress) {
                 var originEnergyLimit,
                   ownerAddress,
                   options,
                   data,
                   transactionOptions,
-                  _args445 = arguments;
-                return _regeneratorRuntime().wrap(function _callee442$(_context445) {
-                  while (1) switch (_context445.prev = _context445.next) {
+                  _args446 = arguments;
+                return _regeneratorRuntime().wrap(function _callee443$(_context446) {
+                  while (1) switch (_context446.prev = _context446.next) {
                     case 0:
-                      originEnergyLimit = _args445.length > 1 && _args445[1] !== undefined ? _args445[1] : 0;
-                      ownerAddress = _args445.length > 2 && _args445[2] !== undefined ? _args445[2] : this.tronWeb.defaultAddress.hex;
-                      options = _args445.length > 3 && _args445[3] !== undefined ? _args445[3] : {};
+                      originEnergyLimit = _args446.length > 1 && _args446[1] !== undefined ? _args446[1] : 0;
+                      ownerAddress = _args446.length > 2 && _args446[2] !== undefined ? _args446[2] : this.tronWeb.defaultAddress.hex;
+                      options = _args446.length > 3 && _args446[3] !== undefined ? _args446[3] : {};
                       this.validator.notValid([{
                         name: 'owner',
                         type: 'address',
@@ -147887,12 +147913,12 @@
                         origin_energy_limit: originEnergyLimit
                       };
                       transactionOptions = getTransactionOptions(options);
-                      return _context445.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateEnergyLimitContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context446.abrupt("return", createTransaction(this.tronWeb, ContractType.UpdateEnergyLimitContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 7:
                     case "end":
-                      return _context445.stop();
+                      return _context446.stop();
                   }
-                }, _callee442, this);
+                }, _callee443, this);
               }));
               function updateEnergyLimit(_x401) {
                 return _updateEnergyLimit.apply(this, arguments);
@@ -147926,8 +147952,8 @@
           }, {
             key: "updateAccountPermissions",
             value: function () {
-              var _updateAccountPermissions = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee443() {
-                var _this160 = this;
+              var _updateAccountPermissions = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee444() {
+                var _this161 = this;
                 var ownerAddress,
                   ownerPermission,
                   witnessPermission,
@@ -147942,29 +147968,29 @@
                   _witnessPermissions,
                   _activesPermissions,
                   transactionOptions,
-                  _args446 = arguments;
-                return _regeneratorRuntime().wrap(function _callee443$(_context446) {
-                  while (1) switch (_context446.prev = _context446.next) {
+                  _args447 = arguments;
+                return _regeneratorRuntime().wrap(function _callee444$(_context447) {
+                  while (1) switch (_context447.prev = _context447.next) {
                     case 0:
-                      ownerAddress = _args446.length > 0 && _args446[0] !== undefined ? _args446[0] : this.tronWeb.defaultAddress.hex;
-                      ownerPermission = _args446.length > 1 ? _args446[1] : undefined;
-                      witnessPermission = _args446.length > 2 ? _args446[2] : undefined;
-                      activesPermissions = _args446.length > 3 ? _args446[3] : undefined;
-                      options = _args446.length > 4 && _args446[4] !== undefined ? _args446[4] : {};
+                      ownerAddress = _args447.length > 0 && _args447[0] !== undefined ? _args447[0] : this.tronWeb.defaultAddress.hex;
+                      ownerPermission = _args447.length > 1 ? _args447[1] : undefined;
+                      witnessPermission = _args447.length > 2 ? _args447[2] : undefined;
+                      activesPermissions = _args447.length > 3 ? _args447[3] : undefined;
+                      options = _args447.length > 4 && _args447[4] !== undefined ? _args447[4] : {};
                       if (TronWeb.isAddress(ownerAddress)) {
-                        _context446.next = 7;
+                        _context447.next = 7;
                         break;
                       }
                       throw new Error('Invalid ownerAddress provided');
                     case 7:
                       if (this.checkPermissions(ownerPermission, 0)) {
-                        _context446.next = 9;
+                        _context447.next = 9;
                         break;
                       }
                       throw new Error('Invalid ownerPermissions provided');
                     case 9:
                       if (this.checkPermissions(witnessPermission, 1)) {
-                        _context446.next = 11;
+                        _context447.next = 11;
                         break;
                       }
                       throw new Error('Invalid witnessPermissions provided');
@@ -147973,33 +147999,33 @@
                         activesPermissions = [activesPermissions];
                       }
                       _iterator57 = _createForOfIteratorHelper2(activesPermissions);
-                      _context446.prev = 13;
+                      _context447.prev = 13;
                       _iterator57.s();
                     case 15:
                       if ((_step57 = _iterator57.n()).done) {
-                        _context446.next = 21;
+                        _context447.next = 21;
                         break;
                       }
                       activesPermission = _step57.value;
                       if (this.checkPermissions(activesPermission, 2)) {
-                        _context446.next = 19;
+                        _context447.next = 19;
                         break;
                       }
                       throw new Error('Invalid activesPermissions provided');
                     case 19:
-                      _context446.next = 15;
+                      _context447.next = 15;
                       break;
                     case 21:
-                      _context446.next = 26;
+                      _context447.next = 26;
                       break;
                     case 23:
-                      _context446.prev = 23;
-                      _context446.t0 = _context446["catch"](13);
-                      _iterator57.e(_context446.t0);
+                      _context447.prev = 23;
+                      _context447.t0 = _context447["catch"](13);
+                      _iterator57.e(_context447.t0);
                     case 26:
-                      _context446.prev = 26;
+                      _context447.prev = 26;
                       _iterator57.f();
-                      return _context446.finish(26);
+                      return _context447.finish(26);
                     case 29:
                       data = {
                         owner_address: toHex$1(ownerAddress)
@@ -148009,11 +148035,11 @@
                         if ('type' in _ownerPermissions) {
                           delete _ownerPermissions.type;
                         }
-                        _ownerPermissions.keys = (_ownerPermissions$key = _ownerPermissions.keys) === null || _ownerPermissions$key === void 0 ? void 0 : _ownerPermissions$key.map(function (_ref319) {
-                          var address = _ref319.address,
-                            weight = _ref319.weight;
+                        _ownerPermissions.keys = (_ownerPermissions$key = _ownerPermissions.keys) === null || _ownerPermissions$key === void 0 ? void 0 : _ownerPermissions$key.map(function (_ref318) {
+                          var address = _ref318.address,
+                            weight = _ref318.weight;
                           return {
-                            address: _this160.tronWeb.address.toHex(address),
+                            address: _this161.tronWeb.address.toHex(address),
                             weight: weight
                           };
                         });
@@ -148024,11 +148050,11 @@
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         _witnessPermissions.type = 'Witness';
-                        _witnessPermissions.keys = _witnessPermissions.keys.map(function (_ref320) {
-                          var address = _ref320.address,
-                            weight = _ref320.weight;
+                        _witnessPermissions.keys = _witnessPermissions.keys.map(function (_ref319) {
+                          var address = _ref319.address,
+                            weight = _ref319.weight;
                           return {
-                            address: _this160.tronWeb.address.toHex(address),
+                            address: _this161.tronWeb.address.toHex(address),
                             weight: weight
                           };
                         });
@@ -148042,11 +148068,11 @@
                           activePermissions.type = 'Active';
                         });
                         _activesPermissions.forEach(function (_activesPermission) {
-                          _activesPermission.keys = _activesPermission.keys.map(function (_ref321) {
-                            var address = _ref321.address,
-                              weight = _ref321.weight;
+                          _activesPermission.keys = _activesPermission.keys.map(function (_ref320) {
+                            var address = _ref320.address,
+                              weight = _ref320.weight;
                             return {
-                              address: _this160.tronWeb.address.toHex(address),
+                              address: _this161.tronWeb.address.toHex(address),
                               weight: weight
                             };
                           });
@@ -148054,12 +148080,12 @@
                         data.actives = _activesPermissions;
                       }
                       transactionOptions = getTransactionOptions(options);
-                      return _context446.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountPermissionUpdateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
+                      return _context447.abrupt("return", createTransaction(this.tronWeb, ContractType.AccountPermissionUpdateContract, data, options === null || options === void 0 ? void 0 : options.permissionId, transactionOptions));
                     case 35:
                     case "end":
-                      return _context446.stop();
+                      return _context447.stop();
                   }
-                }, _callee443, this, [[13, 23, 26, 29]]);
+                }, _callee444, this, [[13, 23, 26, 29]]);
               }));
               function updateAccountPermissions() {
                 return _updateAccountPermissions.apply(this, arguments);
@@ -148069,23 +148095,23 @@
           }, {
             key: "newTxID",
             value: function () {
-              var _newTxID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee444(transaction) {
+              var _newTxID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee445(transaction) {
                 var options,
                   contract,
                   tx,
                   res,
-                  _args447 = arguments;
-                return _regeneratorRuntime().wrap(function _callee444$(_context447) {
-                  while (1) switch (_context447.prev = _context447.next) {
+                  _args448 = arguments;
+                return _regeneratorRuntime().wrap(function _callee445$(_context448) {
+                  while (1) switch (_context448.prev = _context448.next) {
                     case 0:
-                      options = _args447.length > 1 && _args447[1] !== undefined ? _args447[1] : {};
+                      options = _args448.length > 1 && _args448[1] !== undefined ? _args448[1] : {};
                       if (!(options !== null && options !== void 0 && options.txLocal)) {
-                        _context447.next = 15;
+                        _context448.next = 15;
                         break;
                       }
                       contract = transaction.raw_data.contract[0];
-                      _context447.prev = 3;
-                      _context447.next = 6;
+                      _context448.prev = 3;
+                      _context448.next = 6;
                       return createTransaction(this.tronWeb, contract.type, contract.parameter.value, contract.Permission_id, {
                         fee_limit: transaction.raw_data.fee_limit,
                         data: transaction.raw_data.data,
@@ -148095,24 +148121,24 @@
                         timestamp: transaction.raw_data.timestamp
                       });
                     case 6:
-                      tx = _context447.sent;
+                      tx = _context448.sent;
                       tx.signature = transaction.signature;
                       tx.visible = transaction.visible;
-                      return _context447.abrupt("return", tx);
+                      return _context448.abrupt("return", tx);
                     case 12:
-                      _context447.prev = 12;
-                      _context447.t0 = _context447["catch"](3);
+                      _context448.prev = 12;
+                      _context448.t0 = _context448["catch"](3);
                       throw new Error('Error generating a new transaction id.');
                     case 15:
-                      _context447.prev = 15;
-                      _context447.next = 18;
+                      _context448.prev = 15;
+                      _context448.next = 18;
                       return this.tronWeb.fullNode.request('wallet/getsignweight', transaction, 'post');
                     case 18:
-                      res = _context447.sent;
+                      res = _context448.sent;
                       if (typeof transaction.visible === 'boolean') {
                         res.transaction.transaction.visible = transaction.visible;
                       }
-                      return _context447.abrupt("return", resultManager(res.transaction.transaction, _objectSpread2(_objectSpread2({}, transaction.raw_data.contract[0].parameter.value), {}, {
+                      return _context448.abrupt("return", resultManager(res.transaction.transaction, _objectSpread2(_objectSpread2({}, transaction.raw_data.contract[0].parameter.value), {}, {
                         Permission_id: transaction.raw_data.contract[0].Permission_id
                       }),
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -148122,14 +148148,14 @@
                         fee_limit: transaction.raw_data.fee_limit
                       }));
                     case 23:
-                      _context447.prev = 23;
-                      _context447.t1 = _context447["catch"](15);
+                      _context448.prev = 23;
+                      _context448.t1 = _context448["catch"](15);
                       throw new Error('Error generating a new transaction id.');
                     case 26:
                     case "end":
-                      return _context447.stop();
+                      return _context448.stop();
                   }
-                }, _callee444, this, [[3, 12], [15, 23]]);
+                }, _callee445, this, [[3, 12], [15, 23]]);
               }));
               function newTxID(_x402) {
                 return _newTxID.apply(this, arguments);
@@ -148139,27 +148165,27 @@
           }, {
             key: "alterTransaction",
             value: function () {
-              var _alterTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee445(transaction) {
+              var _alterTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee446(transaction) {
                 var options,
-                  _args448 = arguments;
-                return _regeneratorRuntime().wrap(function _callee445$(_context448) {
-                  while (1) switch (_context448.prev = _context448.next) {
+                  _args449 = arguments;
+                return _regeneratorRuntime().wrap(function _callee446$(_context449) {
+                  while (1) switch (_context449.prev = _context449.next) {
                     case 0:
-                      options = _args448.length > 1 && _args448[1] !== undefined ? _args448[1] : {};
+                      options = _args449.length > 1 && _args449[1] !== undefined ? _args449[1] : {};
                       if (!Reflect.has(transaction, 'signature')) {
-                        _context448.next = 3;
+                        _context449.next = 3;
                         break;
                       }
                       throw new Error('You can not extend the expiration of a signed transaction.');
                     case 3:
                       if (!options.data) {
-                        _context448.next = 9;
+                        _context449.next = 9;
                         break;
                       }
                       if (options.dataFormat !== 'hex') options.data = TronWeb.toHex(options.data);
                       options.data = options.data.replace(/^0x/, '');
                       if (!(options.data.length === 0)) {
-                        _context448.next = 8;
+                        _context449.next = 8;
                         break;
                       }
                       throw new Error('Invalid data provided');
@@ -148167,29 +148193,29 @@
                       transaction.raw_data.data = options.data;
                     case 9:
                       if (!options.extension) {
-                        _context448.next = 14;
+                        _context449.next = 14;
                         break;
                       }
                       options.extension = parseInt(options.extension * 1000);
                       if (!(isNaN(options.extension) || transaction.raw_data.expiration + options.extension <= Date.now() + 3000)) {
-                        _context448.next = 13;
+                        _context449.next = 13;
                         break;
                       }
                       throw new Error('Invalid extension provided');
                     case 13:
                       transaction.raw_data.expiration += options.extension;
                     case 14:
-                      _context448.next = 16;
+                      _context449.next = 16;
                       return this.newTxID(transaction, {
                         txLocal: options.txLocal
                       });
                     case 16:
-                      return _context448.abrupt("return", _context448.sent);
+                      return _context449.abrupt("return", _context449.sent);
                     case 17:
                     case "end":
-                      return _context448.stop();
+                      return _context449.stop();
                   }
-                }, _callee445, this);
+                }, _callee446, this);
               }));
               function alterTransaction(_x403) {
                 return _alterTransaction.apply(this, arguments);
@@ -148199,25 +148225,25 @@
           }, {
             key: "extendExpiration",
             value: function () {
-              var _extendExpiration = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee446(transaction, extension) {
+              var _extendExpiration = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee447(transaction, extension) {
                 var options,
-                  _args449 = arguments;
-                return _regeneratorRuntime().wrap(function _callee446$(_context449) {
-                  while (1) switch (_context449.prev = _context449.next) {
+                  _args450 = arguments;
+                return _regeneratorRuntime().wrap(function _callee447$(_context450) {
+                  while (1) switch (_context450.prev = _context450.next) {
                     case 0:
-                      options = _args449.length > 2 && _args449[2] !== undefined ? _args449[2] : {};
-                      _context449.next = 3;
+                      options = _args450.length > 2 && _args450[2] !== undefined ? _args450[2] : {};
+                      _context450.next = 3;
                       return this.alterTransaction(transaction, {
                         extension: extension,
                         txLocal: options === null || options === void 0 ? void 0 : options.txLocal
                       });
                     case 3:
-                      return _context449.abrupt("return", _context449.sent);
+                      return _context450.abrupt("return", _context450.sent);
                     case 4:
                     case "end":
-                      return _context449.stop();
+                      return _context450.stop();
                   }
-                }, _callee446, this);
+                }, _callee447, this);
               }));
               function extendExpiration(_x404, _x405) {
                 return _extendExpiration.apply(this, arguments);
@@ -148227,25 +148253,25 @@
           }, {
             key: "addUpdateData",
             value: function () {
-              var _addUpdateData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee447(transaction, data) {
+              var _addUpdateData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee448(transaction, data) {
                 var dataFormat,
                   options,
-                  _args450 = arguments;
-                return _regeneratorRuntime().wrap(function _callee447$(_context450) {
-                  while (1) switch (_context450.prev = _context450.next) {
+                  _args451 = arguments;
+                return _regeneratorRuntime().wrap(function _callee448$(_context451) {
+                  while (1) switch (_context451.prev = _context451.next) {
                     case 0:
-                      dataFormat = _args450.length > 2 && _args450[2] !== undefined ? _args450[2] : 'utf8';
-                      options = _args450.length > 3 && _args450[3] !== undefined ? _args450[3] : {};
-                      return _context450.abrupt("return", this.alterTransaction(transaction, {
+                      dataFormat = _args451.length > 2 && _args451[2] !== undefined ? _args451[2] : 'utf8';
+                      options = _args451.length > 3 && _args451[3] !== undefined ? _args451[3] : {};
+                      return _context451.abrupt("return", this.alterTransaction(transaction, {
                         data: data,
                         dataFormat: dataFormat,
                         txLocal: options === null || options === void 0 ? void 0 : options.txLocal
                       }));
                     case 3:
                     case "end":
-                      return _context450.stop();
+                      return _context451.stop();
                   }
-                }, _callee447, this);
+                }, _callee448, this);
               }));
               function addUpdateData(_x406, _x407) {
                 return _addUpdateData.apply(this, arguments);
@@ -148309,38 +148335,38 @@
           }, {
             key: "getBlock",
             value: function () {
-              var _getBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee448() {
+              var _getBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee449() {
                 var block,
-                  _args451 = arguments;
-                return _regeneratorRuntime().wrap(function _callee448$(_context451) {
-                  while (1) switch (_context451.prev = _context451.next) {
+                  _args452 = arguments;
+                return _regeneratorRuntime().wrap(function _callee449$(_context452) {
+                  while (1) switch (_context452.prev = _context452.next) {
                     case 0:
-                      block = _args451.length > 0 && _args451[0] !== undefined ? _args451[0] : this.tronWeb.defaultBlock;
+                      block = _args452.length > 0 && _args452[0] !== undefined ? _args452[0] : this.tronWeb.defaultBlock;
                       if (!(block === false)) {
-                        _context451.next = 3;
+                        _context452.next = 3;
                         break;
                       }
                       throw new Error('No block identifier provided');
                     case 3:
                       if (block == 'earliest') block = 0;
                       if (!(block == 'latest')) {
-                        _context451.next = 6;
+                        _context452.next = 6;
                         break;
                       }
-                      return _context451.abrupt("return", this.getCurrentBlock());
+                      return _context452.abrupt("return", this.getCurrentBlock());
                     case 6:
                       if (!(isNaN(+block) && utils.isHex(block.toString()))) {
-                        _context451.next = 8;
+                        _context452.next = 8;
                         break;
                       }
-                      return _context451.abrupt("return", this.getBlockByHash(block));
+                      return _context452.abrupt("return", this.getBlockByHash(block));
                     case 8:
-                      return _context451.abrupt("return", this.getBlockByNumber(block));
+                      return _context452.abrupt("return", this.getBlockByNumber(block));
                     case 9:
                     case "end":
-                      return _context451.stop();
+                      return _context452.stop();
                   }
-                }, _callee448, this);
+                }, _callee449, this);
               }));
               function getBlock() {
                 return _getBlock.apply(this, arguments);
@@ -148350,29 +148376,29 @@
           }, {
             key: "getBlockByHash",
             value: function () {
-              var _getBlockByHash = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee449(blockHash) {
+              var _getBlockByHash = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee450(blockHash) {
                 var block;
-                return _regeneratorRuntime().wrap(function _callee449$(_context452) {
-                  while (1) switch (_context452.prev = _context452.next) {
+                return _regeneratorRuntime().wrap(function _callee450$(_context453) {
+                  while (1) switch (_context453.prev = _context453.next) {
                     case 0:
-                      _context452.next = 2;
+                      _context453.next = 2;
                       return this.tronWeb.fullNode.request('wallet/getblockbyid', {
                         value: blockHash
                       }, 'post');
                     case 2:
-                      block = _context452.sent;
+                      block = _context453.sent;
                       if (Object.keys(block).length) {
-                        _context452.next = 5;
+                        _context453.next = 5;
                         break;
                       }
                       throw new Error('Block not found');
                     case 5:
-                      return _context452.abrupt("return", block);
+                      return _context453.abrupt("return", block);
                     case 6:
                     case "end":
-                      return _context452.stop();
+                      return _context453.stop();
                   }
-                }, _callee449, this);
+                }, _callee450, this);
               }));
               function getBlockByHash(_x408) {
                 return _getBlockByHash.apply(this, arguments);
@@ -148382,17 +148408,17 @@
           }, {
             key: "getBlockByNumber",
             value: function () {
-              var _getBlockByNumber = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee450(blockID) {
-                return _regeneratorRuntime().wrap(function _callee450$(_context453) {
-                  while (1) switch (_context453.prev = _context453.next) {
+              var _getBlockByNumber = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee451(blockID) {
+                return _regeneratorRuntime().wrap(function _callee451$(_context454) {
+                  while (1) switch (_context454.prev = _context454.next) {
                     case 0:
                       if (!(!utils.isInteger(blockID) || blockID < 0)) {
-                        _context453.next = 2;
+                        _context454.next = 2;
                         break;
                       }
                       throw new Error('Invalid block number provided');
                     case 2:
-                      return _context453.abrupt("return", this.tronWeb.fullNode.request('wallet/getblockbynum', {
+                      return _context454.abrupt("return", this.tronWeb.fullNode.request('wallet/getblockbynum', {
                         num: parseInt(blockID)
                       }, 'post').then(function (block) {
                         if (!Object.keys(block).length) {
@@ -148402,9 +148428,9 @@
                       }));
                     case 3:
                     case "end":
-                      return _context453.stop();
+                      return _context454.stop();
                   }
-                }, _callee450, this);
+                }, _callee451, this);
               }));
               function getBlockByNumber(_x409) {
                 return _getBlockByNumber.apply(this, arguments);
@@ -148414,28 +148440,28 @@
           }, {
             key: "getBlockTransactionCount",
             value: function () {
-              var _getBlockTransactionCount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee451() {
+              var _getBlockTransactionCount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee452() {
                 var block,
                   _yield$this$getBlock,
                   _yield$this$getBlock$,
                   transactions,
-                  _args454 = arguments;
-                return _regeneratorRuntime().wrap(function _callee451$(_context454) {
-                  while (1) switch (_context454.prev = _context454.next) {
+                  _args455 = arguments;
+                return _regeneratorRuntime().wrap(function _callee452$(_context455) {
+                  while (1) switch (_context455.prev = _context455.next) {
                     case 0:
-                      block = _args454.length > 0 && _args454[0] !== undefined ? _args454[0] : this.tronWeb.defaultBlock;
-                      _context454.next = 3;
+                      block = _args455.length > 0 && _args455[0] !== undefined ? _args455[0] : this.tronWeb.defaultBlock;
+                      _context455.next = 3;
                       return this.getBlock(block);
                     case 3:
-                      _yield$this$getBlock = _context454.sent;
+                      _yield$this$getBlock = _context455.sent;
                       _yield$this$getBlock$ = _yield$this$getBlock.transactions;
                       transactions = _yield$this$getBlock$ === void 0 ? [] : _yield$this$getBlock$;
-                      return _context454.abrupt("return", transactions.length);
+                      return _context455.abrupt("return", transactions.length);
                     case 7:
                     case "end":
-                      return _context454.stop();
+                      return _context455.stop();
                   }
-                }, _callee451, this);
+                }, _callee452, this);
               }));
               function getBlockTransactionCount() {
                 return _getBlockTransactionCount.apply(this, arguments);
@@ -148445,40 +148471,40 @@
           }, {
             key: "getTransactionFromBlock",
             value: function () {
-              var _getTransactionFromBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee452() {
+              var _getTransactionFromBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee453() {
                 var block,
                   index,
                   _yield$this$getBlock2,
                   transactions,
-                  _args455 = arguments;
-                return _regeneratorRuntime().wrap(function _callee452$(_context455) {
-                  while (1) switch (_context455.prev = _context455.next) {
+                  _args456 = arguments;
+                return _regeneratorRuntime().wrap(function _callee453$(_context456) {
+                  while (1) switch (_context456.prev = _context456.next) {
                     case 0:
-                      block = _args455.length > 0 && _args455[0] !== undefined ? _args455[0] : this.tronWeb.defaultBlock;
-                      index = _args455.length > 1 ? _args455[1] : undefined;
-                      _context455.next = 4;
+                      block = _args456.length > 0 && _args456[0] !== undefined ? _args456[0] : this.tronWeb.defaultBlock;
+                      index = _args456.length > 1 ? _args456[1] : undefined;
+                      _context456.next = 4;
                       return this.getBlock(block);
                     case 4:
-                      _yield$this$getBlock2 = _context455.sent;
+                      _yield$this$getBlock2 = _context456.sent;
                       transactions = _yield$this$getBlock2.transactions;
                       if (transactions) {
-                        _context455.next = 8;
+                        _context456.next = 8;
                         break;
                       }
                       throw new Error('Transaction not found in block');
                     case 8:
                       if (!(index >= 0 && index < transactions.length)) {
-                        _context455.next = 12;
+                        _context456.next = 12;
                         break;
                       }
-                      return _context455.abrupt("return", transactions[index]);
+                      return _context456.abrupt("return", transactions[index]);
                     case 12:
                       throw new Error('Invalid transaction index provided');
                     case 13:
                     case "end":
-                      return _context455.stop();
+                      return _context456.stop();
                   }
-                }, _callee452, this);
+                }, _callee453, this);
               }));
               function getTransactionFromBlock() {
                 return _getTransactionFromBlock.apply(this, arguments);
@@ -148488,32 +148514,32 @@
           }, {
             key: "getTransactionsFromBlock",
             value: function () {
-              var _getTransactionsFromBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee453() {
+              var _getTransactionsFromBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee454() {
                 var block,
                   _yield$this$getBlock3,
                   transactions,
-                  _args456 = arguments;
-                return _regeneratorRuntime().wrap(function _callee453$(_context456) {
-                  while (1) switch (_context456.prev = _context456.next) {
+                  _args457 = arguments;
+                return _regeneratorRuntime().wrap(function _callee454$(_context457) {
+                  while (1) switch (_context457.prev = _context457.next) {
                     case 0:
-                      block = _args456.length > 0 && _args456[0] !== undefined ? _args456[0] : this.tronWeb.defaultBlock;
-                      _context456.next = 3;
+                      block = _args457.length > 0 && _args457[0] !== undefined ? _args457[0] : this.tronWeb.defaultBlock;
+                      _context457.next = 3;
                       return this.getBlock(block);
                     case 3:
-                      _yield$this$getBlock3 = _context456.sent;
+                      _yield$this$getBlock3 = _context457.sent;
                       transactions = _yield$this$getBlock3.transactions;
                       if (transactions) {
-                        _context456.next = 7;
+                        _context457.next = 7;
                         break;
                       }
                       throw new Error('Transaction not found in block');
                     case 7:
-                      return _context456.abrupt("return", transactions);
+                      return _context457.abrupt("return", transactions);
                     case 8:
                     case "end":
-                      return _context456.stop();
+                      return _context457.stop();
                   }
-                }, _callee453, this);
+                }, _callee454, this);
               }));
               function getTransactionsFromBlock() {
                 return _getTransactionsFromBlock.apply(this, arguments);
@@ -148523,45 +148549,13 @@
           }, {
             key: "getTransaction",
             value: function () {
-              var _getTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee454(transactionID) {
-                var transaction;
-                return _regeneratorRuntime().wrap(function _callee454$(_context457) {
-                  while (1) switch (_context457.prev = _context457.next) {
-                    case 0:
-                      _context457.next = 2;
-                      return this.tronWeb.fullNode.request('wallet/gettransactionbyid', {
-                        value: transactionID
-                      }, 'post');
-                    case 2:
-                      transaction = _context457.sent;
-                      if (Object.keys(transaction).length) {
-                        _context457.next = 5;
-                        break;
-                      }
-                      throw new Error('Transaction not found');
-                    case 5:
-                      return _context457.abrupt("return", transaction);
-                    case 6:
-                    case "end":
-                      return _context457.stop();
-                  }
-                }, _callee454, this);
-              }));
-              function getTransaction(_x410) {
-                return _getTransaction.apply(this, arguments);
-              }
-              return getTransaction;
-            }()
-          }, {
-            key: "getConfirmedTransaction",
-            value: function () {
-              var _getConfirmedTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee455(transactionID) {
+              var _getTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee455(transactionID) {
                 var transaction;
                 return _regeneratorRuntime().wrap(function _callee455$(_context458) {
                   while (1) switch (_context458.prev = _context458.next) {
                     case 0:
                       _context458.next = 2;
-                      return this.tronWeb.solidityNode.request('walletsolidity/gettransactionbyid', {
+                      return this.tronWeb.fullNode.request('wallet/gettransactionbyid', {
                         value: transactionID
                       }, 'post');
                     case 2:
@@ -148578,6 +148572,38 @@
                       return _context458.stop();
                   }
                 }, _callee455, this);
+              }));
+              function getTransaction(_x410) {
+                return _getTransaction.apply(this, arguments);
+              }
+              return getTransaction;
+            }()
+          }, {
+            key: "getConfirmedTransaction",
+            value: function () {
+              var _getConfirmedTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee456(transactionID) {
+                var transaction;
+                return _regeneratorRuntime().wrap(function _callee456$(_context459) {
+                  while (1) switch (_context459.prev = _context459.next) {
+                    case 0:
+                      _context459.next = 2;
+                      return this.tronWeb.solidityNode.request('walletsolidity/gettransactionbyid', {
+                        value: transactionID
+                      }, 'post');
+                    case 2:
+                      transaction = _context459.sent;
+                      if (Object.keys(transaction).length) {
+                        _context459.next = 5;
+                        break;
+                      }
+                      throw new Error('Transaction not found');
+                    case 5:
+                      return _context459.abrupt("return", transaction);
+                    case 6:
+                    case "end":
+                      return _context459.stop();
+                  }
+                }, _callee456, this);
               }));
               function getConfirmedTransaction(_x411) {
                 return _getConfirmedTransaction.apply(this, arguments);
@@ -148617,7 +148643,7 @@
           }, {
             key: "getTransactionsRelated",
             value: function () {
-              var _getTransactionsRelated = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee456() {
+              var _getTransactionsRelated = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee457() {
                 var address,
                   direction,
                   limit,
@@ -148626,32 +148652,32 @@
                   _yield$Promise$all2,
                   _from,
                   _to3,
-                  _args459 = arguments;
-                return _regeneratorRuntime().wrap(function _callee456$(_context459) {
-                  while (1) switch (_context459.prev = _context459.next) {
+                  _args460 = arguments;
+                return _regeneratorRuntime().wrap(function _callee457$(_context460) {
+                  while (1) switch (_context460.prev = _context460.next) {
                     case 0:
-                      address = _args459.length > 0 && _args459[0] !== undefined ? _args459[0] : this.tronWeb.defaultAddress.hex;
-                      direction = _args459.length > 1 && _args459[1] !== undefined ? _args459[1] : 'all';
-                      limit = _args459.length > 2 && _args459[2] !== undefined ? _args459[2] : 30;
-                      offset = _args459.length > 3 && _args459[3] !== undefined ? _args459[3] : 0;
+                      address = _args460.length > 0 && _args460[0] !== undefined ? _args460[0] : this.tronWeb.defaultAddress.hex;
+                      direction = _args460.length > 1 && _args460[1] !== undefined ? _args460[1] : 'all';
+                      limit = _args460.length > 2 && _args460[2] !== undefined ? _args460[2] : 30;
+                      offset = _args460.length > 3 && _args460[3] !== undefined ? _args460[3] : 0;
                       if (['to', 'from', 'all'].includes(direction)) {
-                        _context459.next = 6;
+                        _context460.next = 6;
                         break;
                       }
                       throw new Error('Invalid direction provided: Expected "to", "from" or "all"');
                     case 6:
                       if (!(direction == 'all')) {
-                        _context459.next = 14;
+                        _context460.next = 14;
                         break;
                       }
-                      _context459.next = 9;
+                      _context460.next = 9;
                       return Promise.all([this.getTransactionsRelated(address, 'from', limit, offset), this.getTransactionsRelated(address, 'to', limit, offset)]);
                     case 9:
-                      _yield$Promise$all = _context459.sent;
+                      _yield$Promise$all = _context460.sent;
                       _yield$Promise$all2 = _slicedToArray2(_yield$Promise$all, 2);
                       _from = _yield$Promise$all2[0];
                       _to3 = _yield$Promise$all2[1];
-                      return _context459.abrupt("return", [].concat(_toConsumableArray2(_from.map(function (tx) {
+                      return _context460.abrupt("return", [].concat(_toConsumableArray2(_from.map(function (tx) {
                         return tx.direction = 'from', tx;
                       })), _toConsumableArray2(_to3.map(function (tx) {
                         return tx.direction = 'to', tx;
@@ -148660,39 +148686,39 @@
                       }));
                     case 14:
                       if (this.tronWeb.isAddress(address)) {
-                        _context459.next = 16;
+                        _context460.next = 16;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 16:
                       if (!(!utils.isInteger(limit) || limit < 0 || offset && limit < 1)) {
-                        _context459.next = 18;
+                        _context460.next = 18;
                         break;
                       }
                       throw new Error('Invalid limit provided');
                     case 18:
                       if (!(!utils.isInteger(offset) || offset < 0)) {
-                        _context459.next = 20;
+                        _context460.next = 20;
                         break;
                       }
                       throw new Error('Invalid offset provided');
                     case 20:
                       address = this.tronWeb.address.toHex(address);
-                      return _context459.abrupt("return", this.tronWeb.solidityNode.request("walletextension/gettransactions".concat(direction, "this"), {
+                      return _context460.abrupt("return", this.tronWeb.solidityNode.request("walletextension/gettransactions".concat(direction, "this"), {
                         account: {
                           address: address
                         },
                         offset: offset,
                         limit: limit
-                      }, 'post').then(function (_ref322) {
-                        var transaction = _ref322.transaction;
+                      }, 'post').then(function (_ref321) {
+                        var transaction = _ref321.transaction;
                         return transaction;
                       }));
                     case 22:
                     case "end":
-                      return _context459.stop();
+                      return _context460.stop();
                   }
-                }, _callee456, this);
+                }, _callee457, this);
               }));
               function getTransactionsRelated() {
                 return _getTransactionsRelated.apply(this, arguments);
@@ -148702,28 +148728,28 @@
           }, {
             key: "getAccount",
             value: function () {
-              var _getAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee457() {
+              var _getAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee458() {
                 var address,
-                  _args460 = arguments;
-                return _regeneratorRuntime().wrap(function _callee457$(_context460) {
-                  while (1) switch (_context460.prev = _context460.next) {
+                  _args461 = arguments;
+                return _regeneratorRuntime().wrap(function _callee458$(_context461) {
+                  while (1) switch (_context461.prev = _context461.next) {
                     case 0:
-                      address = _args460.length > 0 && _args460[0] !== undefined ? _args460[0] : this.tronWeb.defaultAddress.hex;
+                      address = _args461.length > 0 && _args461[0] !== undefined ? _args461[0] : this.tronWeb.defaultAddress.hex;
                       if (this.tronWeb.isAddress(address)) {
-                        _context460.next = 3;
+                        _context461.next = 3;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 3:
                       address = this.tronWeb.address.toHex(address);
-                      return _context460.abrupt("return", this.tronWeb.solidityNode.request('walletsolidity/getaccount', {
+                      return _context461.abrupt("return", this.tronWeb.solidityNode.request('walletsolidity/getaccount', {
                         address: address
                       }, 'post'));
                     case 5:
                     case "end":
-                      return _context460.stop();
+                      return _context461.stop();
                   }
-                }, _callee457, this);
+                }, _callee458, this);
               }));
               function getAccount() {
                 return _getAccount.apply(this, arguments);
@@ -148740,9 +148766,9 @@
           }, {
             key: "getAccountInfoById",
             value: function () {
-              var _getAccountInfoById = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee458(id, options) {
-                return _regeneratorRuntime().wrap(function _callee458$(_context461) {
-                  while (1) switch (_context461.prev = _context461.next) {
+              var _getAccountInfoById = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee459(id, options) {
+                return _regeneratorRuntime().wrap(function _callee459$(_context462) {
+                  while (1) switch (_context462.prev = _context462.next) {
                     case 0:
                       this.validator.notValid([{
                         name: 'accountId',
@@ -148758,14 +148784,14 @@
                       if (id.startsWith('0x')) {
                         id = id.slice(2);
                       }
-                      return _context461.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getaccountbyid"), {
+                      return _context462.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getaccountbyid"), {
                         account_id: id
                       }, 'post'));
                     case 3:
                     case "end":
-                      return _context461.stop();
+                      return _context462.stop();
                   }
-                }, _callee458, this);
+                }, _callee459, this);
               }));
               function getAccountInfoById(_x412, _x413) {
                 return _getAccountInfoById.apply(this, arguments);
@@ -148775,28 +148801,28 @@
           }, {
             key: "getBalance",
             value: function () {
-              var _getBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee459() {
+              var _getBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee460() {
                 var address,
                   _yield$this$getAccoun,
                   _yield$this$getAccoun2,
                   balance,
-                  _args462 = arguments;
-                return _regeneratorRuntime().wrap(function _callee459$(_context462) {
-                  while (1) switch (_context462.prev = _context462.next) {
+                  _args463 = arguments;
+                return _regeneratorRuntime().wrap(function _callee460$(_context463) {
+                  while (1) switch (_context463.prev = _context463.next) {
                     case 0:
-                      address = _args462.length > 0 && _args462[0] !== undefined ? _args462[0] : this.tronWeb.defaultAddress.hex;
-                      _context462.next = 3;
+                      address = _args463.length > 0 && _args463[0] !== undefined ? _args463[0] : this.tronWeb.defaultAddress.hex;
+                      _context463.next = 3;
                       return this.getAccount(address);
                     case 3:
-                      _yield$this$getAccoun = _context462.sent;
+                      _yield$this$getAccoun = _context463.sent;
                       _yield$this$getAccoun2 = _yield$this$getAccoun.balance;
                       balance = _yield$this$getAccoun2 === void 0 ? 0 : _yield$this$getAccoun2;
-                      return _context462.abrupt("return", balance);
+                      return _context463.abrupt("return", balance);
                     case 7:
                     case "end":
-                      return _context462.stop();
+                      return _context463.stop();
                   }
-                }, _callee459, this);
+                }, _callee460, this);
               }));
               function getBalance() {
                 return _getBalance.apply(this, arguments);
@@ -148806,28 +148832,28 @@
           }, {
             key: "getUnconfirmedAccount",
             value: function () {
-              var _getUnconfirmedAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee460() {
+              var _getUnconfirmedAccount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee461() {
                 var address,
-                  _args463 = arguments;
-                return _regeneratorRuntime().wrap(function _callee460$(_context463) {
-                  while (1) switch (_context463.prev = _context463.next) {
+                  _args464 = arguments;
+                return _regeneratorRuntime().wrap(function _callee461$(_context464) {
+                  while (1) switch (_context464.prev = _context464.next) {
                     case 0:
-                      address = _args463.length > 0 && _args463[0] !== undefined ? _args463[0] : this.tronWeb.defaultAddress.hex;
+                      address = _args464.length > 0 && _args464[0] !== undefined ? _args464[0] : this.tronWeb.defaultAddress.hex;
                       if (this.tronWeb.isAddress(address)) {
-                        _context463.next = 3;
+                        _context464.next = 3;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 3:
                       address = this.tronWeb.address.toHex(address);
-                      return _context463.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccount', {
+                      return _context464.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccount', {
                         address: address
                       }, 'post'));
                     case 5:
                     case "end":
-                      return _context463.stop();
+                      return _context464.stop();
                   }
-                }, _callee460, this);
+                }, _callee461, this);
               }));
               function getUnconfirmedAccount() {
                 return _getUnconfirmedAccount.apply(this, arguments);
@@ -148844,28 +148870,28 @@
           }, {
             key: "getUnconfirmedBalance",
             value: function () {
-              var _getUnconfirmedBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee461() {
+              var _getUnconfirmedBalance = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee462() {
                 var address,
                   _yield$this$getUnconf,
                   _yield$this$getUnconf2,
                   balance,
-                  _args464 = arguments;
-                return _regeneratorRuntime().wrap(function _callee461$(_context464) {
-                  while (1) switch (_context464.prev = _context464.next) {
+                  _args465 = arguments;
+                return _regeneratorRuntime().wrap(function _callee462$(_context465) {
+                  while (1) switch (_context465.prev = _context465.next) {
                     case 0:
-                      address = _args464.length > 0 && _args464[0] !== undefined ? _args464[0] : this.tronWeb.defaultAddress.hex;
-                      _context464.next = 3;
+                      address = _args465.length > 0 && _args465[0] !== undefined ? _args465[0] : this.tronWeb.defaultAddress.hex;
+                      _context465.next = 3;
                       return this.getUnconfirmedAccount(address);
                     case 3:
-                      _yield$this$getUnconf = _context464.sent;
+                      _yield$this$getUnconf = _context465.sent;
                       _yield$this$getUnconf2 = _yield$this$getUnconf.balance;
                       balance = _yield$this$getUnconf2 === void 0 ? 0 : _yield$this$getUnconf2;
-                      return _context464.abrupt("return", balance);
+                      return _context465.abrupt("return", balance);
                     case 7:
                     case "end":
-                      return _context464.stop();
+                      return _context465.stop();
                   }
-                }, _callee461, this);
+                }, _callee462, this);
               }));
               function getUnconfirmedBalance() {
                 return _getUnconfirmedBalance.apply(this, arguments);
@@ -148875,49 +148901,7 @@
           }, {
             key: "getBandwidth",
             value: function () {
-              var _getBandwidth = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee462() {
-                var address,
-                  _args465 = arguments;
-                return _regeneratorRuntime().wrap(function _callee462$(_context465) {
-                  while (1) switch (_context465.prev = _context465.next) {
-                    case 0:
-                      address = _args465.length > 0 && _args465[0] !== undefined ? _args465[0] : this.tronWeb.defaultAddress.hex;
-                      if (this.tronWeb.isAddress(address)) {
-                        _context465.next = 3;
-                        break;
-                      }
-                      throw new Error('Invalid address provided');
-                    case 3:
-                      address = this.tronWeb.address.toHex(address);
-                      return _context465.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccountnet', {
-                        address: address
-                      }, 'post').then(function (_ref323) {
-                        var _ref323$freeNetUsed = _ref323.freeNetUsed,
-                          freeNetUsed = _ref323$freeNetUsed === void 0 ? 0 : _ref323$freeNetUsed,
-                          _ref323$freeNetLimit = _ref323.freeNetLimit,
-                          freeNetLimit = _ref323$freeNetLimit === void 0 ? 0 : _ref323$freeNetLimit,
-                          _ref323$NetUsed = _ref323.NetUsed,
-                          NetUsed = _ref323$NetUsed === void 0 ? 0 : _ref323$NetUsed,
-                          _ref323$NetLimit = _ref323.NetLimit,
-                          NetLimit = _ref323$NetLimit === void 0 ? 0 : _ref323$NetLimit;
-                        return freeNetLimit - freeNetUsed + (NetLimit - NetUsed);
-                      }));
-                    case 5:
-                    case "end":
-                      return _context465.stop();
-                  }
-                }, _callee462, this);
-              }));
-              function getBandwidth() {
-                return _getBandwidth.apply(this, arguments);
-              }
-              return getBandwidth;
-            }()
-          }, {
-            key: "getTokensIssuedByAddress",
-            value: function () {
-              var _getTokensIssuedByAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee463() {
-                var _this161 = this;
+              var _getBandwidth = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee463() {
                 var address,
                   _args466 = arguments;
                 return _regeneratorRuntime().wrap(function _callee463$(_context466) {
@@ -148931,13 +148915,55 @@
                       throw new Error('Invalid address provided');
                     case 3:
                       address = this.tronWeb.address.toHex(address);
-                      return _context466.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuebyaccount', {
+                      return _context466.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccountnet', {
                         address: address
-                      }, 'post').then(function (_ref324) {
-                        var assetIssue = _ref324.assetIssue;
+                      }, 'post').then(function (_ref322) {
+                        var _ref322$freeNetUsed = _ref322.freeNetUsed,
+                          freeNetUsed = _ref322$freeNetUsed === void 0 ? 0 : _ref322$freeNetUsed,
+                          _ref322$freeNetLimit = _ref322.freeNetLimit,
+                          freeNetLimit = _ref322$freeNetLimit === void 0 ? 0 : _ref322$freeNetLimit,
+                          _ref322$NetUsed = _ref322.NetUsed,
+                          NetUsed = _ref322$NetUsed === void 0 ? 0 : _ref322$NetUsed,
+                          _ref322$NetLimit = _ref322.NetLimit,
+                          NetLimit = _ref322$NetLimit === void 0 ? 0 : _ref322$NetLimit;
+                        return freeNetLimit - freeNetUsed + (NetLimit - NetUsed);
+                      }));
+                    case 5:
+                    case "end":
+                      return _context466.stop();
+                  }
+                }, _callee463, this);
+              }));
+              function getBandwidth() {
+                return _getBandwidth.apply(this, arguments);
+              }
+              return getBandwidth;
+            }()
+          }, {
+            key: "getTokensIssuedByAddress",
+            value: function () {
+              var _getTokensIssuedByAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee464() {
+                var _this162 = this;
+                var address,
+                  _args467 = arguments;
+                return _regeneratorRuntime().wrap(function _callee464$(_context467) {
+                  while (1) switch (_context467.prev = _context467.next) {
+                    case 0:
+                      address = _args467.length > 0 && _args467[0] !== undefined ? _args467[0] : this.tronWeb.defaultAddress.hex;
+                      if (this.tronWeb.isAddress(address)) {
+                        _context467.next = 3;
+                        break;
+                      }
+                      throw new Error('Invalid address provided');
+                    case 3:
+                      address = this.tronWeb.address.toHex(address);
+                      return _context467.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuebyaccount', {
+                        address: address
+                      }, 'post').then(function (_ref323) {
+                        var assetIssue = _ref323.assetIssue;
                         if (!assetIssue) return {};
                         var tokens = assetIssue.map(function (token) {
-                          return _this161._parseToken(token);
+                          return _this162._parseToken(token);
                         }).reduce(function (tokens, token) {
                           return tokens[token.name] = token, tokens;
                         }, {});
@@ -148945,9 +148971,9 @@
                       }));
                     case 5:
                     case "end":
-                      return _context466.stop();
+                      return _context467.stop();
                   }
-                }, _callee463, this);
+                }, _callee464, this);
               }));
               function getTokensIssuedByAddress() {
                 return _getTokensIssuedByAddress.apply(this, arguments);
@@ -148957,31 +148983,31 @@
           }, {
             key: "getTokenFromID",
             value: function () {
-              var _getTokenFromID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee464(tokenID) {
-                var _this162 = this;
-                return _regeneratorRuntime().wrap(function _callee464$(_context467) {
-                  while (1) switch (_context467.prev = _context467.next) {
+              var _getTokenFromID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee465(tokenID) {
+                var _this163 = this;
+                return _regeneratorRuntime().wrap(function _callee465$(_context468) {
+                  while (1) switch (_context468.prev = _context468.next) {
                     case 0:
                       if (utils.isInteger(tokenID)) tokenID = tokenID.toString();
                       if (!(!utils.isString(tokenID) || !tokenID.length)) {
-                        _context467.next = 3;
+                        _context468.next = 3;
                         break;
                       }
                       throw new Error('Invalid token ID provided');
                     case 3:
-                      return _context467.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuebyname', {
+                      return _context468.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuebyname', {
                         value: this.tronWeb.fromUtf8(tokenID)
                       }, 'post').then(function (token) {
                         if (!token.name) {
                           throw new Error('Token does not exist');
                         }
-                        return _this162._parseToken(token);
+                        return _this163._parseToken(token);
                       }));
                     case 4:
                     case "end":
-                      return _context467.stop();
+                      return _context468.stop();
                   }
-                }, _callee464, this);
+                }, _callee465, this);
               }));
               function getTokenFromID(_x414) {
                 return _getTokenFromID.apply(this, arguments);
@@ -148991,29 +149017,29 @@
           }, {
             key: "listNodes",
             value: function () {
-              var _listNodes = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee465() {
-                var _this163 = this;
+              var _listNodes = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee466() {
+                var _this164 = this;
                 var _yield$this$tronWeb$f, _yield$this$tronWeb$f2, nodes;
-                return _regeneratorRuntime().wrap(function _callee465$(_context468) {
-                  while (1) switch (_context468.prev = _context468.next) {
+                return _regeneratorRuntime().wrap(function _callee466$(_context469) {
+                  while (1) switch (_context469.prev = _context469.next) {
                     case 0:
-                      _context468.next = 2;
+                      _context469.next = 2;
                       return this.tronWeb.fullNode.request('wallet/listnodes');
                     case 2:
-                      _yield$this$tronWeb$f = _context468.sent;
+                      _yield$this$tronWeb$f = _context469.sent;
                       _yield$this$tronWeb$f2 = _yield$this$tronWeb$f.nodes;
                       nodes = _yield$this$tronWeb$f2 === void 0 ? [] : _yield$this$tronWeb$f2;
-                      return _context468.abrupt("return", nodes.map(function (_ref325) {
-                        var _ref325$address = _ref325.address,
-                          host = _ref325$address.host,
-                          port = _ref325$address.port;
-                        return "".concat(_this163.tronWeb.toUtf8(host), ":").concat(port);
+                      return _context469.abrupt("return", nodes.map(function (_ref324) {
+                        var _ref324$address = _ref324.address,
+                          host = _ref324$address.host,
+                          port = _ref324$address.port;
+                        return "".concat(_this164.tronWeb.toUtf8(host), ":").concat(port);
                       }));
                     case 6:
                     case "end":
-                      return _context468.stop();
+                      return _context469.stop();
                   }
-                }, _callee465, this);
+                }, _callee466, this);
               }));
               function listNodes() {
                 return _listNodes.apply(this, arguments);
@@ -149023,46 +149049,46 @@
           }, {
             key: "getBlockRange",
             value: function () {
-              var _getBlockRange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee466() {
+              var _getBlockRange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee467() {
                 var start,
                   end,
-                  _args469 = arguments;
-                return _regeneratorRuntime().wrap(function _callee466$(_context469) {
-                  while (1) switch (_context469.prev = _context469.next) {
+                  _args470 = arguments;
+                return _regeneratorRuntime().wrap(function _callee467$(_context470) {
+                  while (1) switch (_context470.prev = _context470.next) {
                     case 0:
-                      start = _args469.length > 0 && _args469[0] !== undefined ? _args469[0] : 0;
-                      end = _args469.length > 1 && _args469[1] !== undefined ? _args469[1] : 30;
+                      start = _args470.length > 0 && _args470[0] !== undefined ? _args470[0] : 0;
+                      end = _args470.length > 1 && _args470[1] !== undefined ? _args470[1] : 30;
                       if (!(!utils.isInteger(start) || start < 0)) {
-                        _context469.next = 4;
+                        _context470.next = 4;
                         break;
                       }
                       throw new Error('Invalid start of range provided');
                     case 4:
                       if (!(!utils.isInteger(end) || end < start)) {
-                        _context469.next = 6;
+                        _context470.next = 6;
                         break;
                       }
                       throw new Error('Invalid end of range provided');
                     case 6:
                       if (!(end + 1 - start > 100)) {
-                        _context469.next = 8;
+                        _context470.next = 8;
                         break;
                       }
                       throw new Error('Invalid range size, which should be no more than 100.');
                     case 8:
-                      return _context469.abrupt("return", this.tronWeb.fullNode.request('wallet/getblockbylimitnext', {
+                      return _context470.abrupt("return", this.tronWeb.fullNode.request('wallet/getblockbylimitnext', {
                         startNum: parseInt(start),
                         endNum: parseInt(end) + 1
-                      }, 'post').then(function (_ref326) {
-                        var _ref326$block = _ref326.block,
-                          block = _ref326$block === void 0 ? [] : _ref326$block;
+                      }, 'post').then(function (_ref325) {
+                        var _ref325$block = _ref325.block,
+                          block = _ref325$block === void 0 ? [] : _ref325$block;
                         return block;
                       }));
                     case 9:
                     case "end":
-                      return _context469.stop();
+                      return _context470.stop();
                   }
-                }, _callee466, this);
+                }, _callee467, this);
               }));
               function getBlockRange() {
                 return _getBlockRange.apply(this, arguments);
@@ -149072,23 +149098,23 @@
           }, {
             key: "listSuperRepresentatives",
             value: function () {
-              var _listSuperRepresentatives = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee467() {
+              var _listSuperRepresentatives = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee468() {
                 var _yield$this$tronWeb$f3, _yield$this$tronWeb$f4, witnesses;
-                return _regeneratorRuntime().wrap(function _callee467$(_context470) {
-                  while (1) switch (_context470.prev = _context470.next) {
+                return _regeneratorRuntime().wrap(function _callee468$(_context471) {
+                  while (1) switch (_context471.prev = _context471.next) {
                     case 0:
-                      _context470.next = 2;
+                      _context471.next = 2;
                       return this.tronWeb.fullNode.request('wallet/listwitnesses');
                     case 2:
-                      _yield$this$tronWeb$f3 = _context470.sent;
+                      _yield$this$tronWeb$f3 = _context471.sent;
                       _yield$this$tronWeb$f4 = _yield$this$tronWeb$f3.witnesses;
                       witnesses = _yield$this$tronWeb$f4 === void 0 ? [] : _yield$this$tronWeb$f4;
-                      return _context470.abrupt("return", witnesses);
+                      return _context471.abrupt("return", witnesses);
                     case 6:
                     case "end":
-                      return _context470.stop();
+                      return _context471.stop();
                   }
-                }, _callee467, this);
+                }, _callee468, this);
               }));
               function listSuperRepresentatives() {
                 return _listSuperRepresentatives.apply(this, arguments);
@@ -149098,55 +149124,55 @@
           }, {
             key: "listTokens",
             value: function () {
-              var _listTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee468() {
-                var _this164 = this;
+              var _listTokens = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee469() {
+                var _this165 = this;
                 var limit,
                   offset,
-                  _args471 = arguments;
-                return _regeneratorRuntime().wrap(function _callee468$(_context471) {
-                  while (1) switch (_context471.prev = _context471.next) {
+                  _args472 = arguments;
+                return _regeneratorRuntime().wrap(function _callee469$(_context472) {
+                  while (1) switch (_context472.prev = _context472.next) {
                     case 0:
-                      limit = _args471.length > 0 && _args471[0] !== undefined ? _args471[0] : 0;
-                      offset = _args471.length > 1 && _args471[1] !== undefined ? _args471[1] : 0;
+                      limit = _args472.length > 0 && _args472[0] !== undefined ? _args472[0] : 0;
+                      offset = _args472.length > 1 && _args472[1] !== undefined ? _args472[1] : 0;
                       if (!(!utils.isInteger(limit) || limit < 0 || offset && limit < 1)) {
-                        _context471.next = 4;
+                        _context472.next = 4;
                         break;
                       }
                       throw new Error('Invalid limit provided');
                     case 4:
                       if (!(!utils.isInteger(offset) || offset < 0)) {
-                        _context471.next = 6;
+                        _context472.next = 6;
                         break;
                       }
                       throw new Error('Invalid offset provided');
                     case 6:
                       if (limit) {
-                        _context471.next = 8;
+                        _context472.next = 8;
                         break;
                       }
-                      return _context471.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuelist').then(function (_ref327) {
-                        var _ref327$assetIssue = _ref327.assetIssue,
-                          assetIssue = _ref327$assetIssue === void 0 ? [] : _ref327$assetIssue;
+                      return _context472.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuelist').then(function (_ref326) {
+                        var _ref326$assetIssue = _ref326.assetIssue,
+                          assetIssue = _ref326$assetIssue === void 0 ? [] : _ref326$assetIssue;
                         return assetIssue.map(function (token) {
-                          return _this164._parseToken(token);
+                          return _this165._parseToken(token);
                         });
                       }));
                     case 8:
-                      return _context471.abrupt("return", this.tronWeb.fullNode.request('wallet/getpaginatedassetissuelist', {
+                      return _context472.abrupt("return", this.tronWeb.fullNode.request('wallet/getpaginatedassetissuelist', {
                         offset: parseInt(offset),
                         limit: parseInt(limit)
-                      }, 'post').then(function (_ref328) {
-                        var _ref328$assetIssue = _ref328.assetIssue,
-                          assetIssue = _ref328$assetIssue === void 0 ? [] : _ref328$assetIssue;
+                      }, 'post').then(function (_ref327) {
+                        var _ref327$assetIssue = _ref327.assetIssue,
+                          assetIssue = _ref327$assetIssue === void 0 ? [] : _ref327$assetIssue;
                         return assetIssue.map(function (token) {
-                          return _this164._parseToken(token);
+                          return _this165._parseToken(token);
                         });
                       }));
                     case 9:
                     case "end":
-                      return _context471.stop();
+                      return _context472.stop();
                   }
-                }, _callee468, this);
+                }, _callee469, this);
               }));
               function listTokens() {
                 return _listTokens.apply(this, arguments);
@@ -149156,29 +149182,29 @@
           }, {
             key: "timeUntilNextVoteCycle",
             value: function () {
-              var _timeUntilNextVoteCycle = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee469() {
+              var _timeUntilNextVoteCycle = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee470() {
                 var _yield$this$tronWeb$f5, _yield$this$tronWeb$f6, num;
-                return _regeneratorRuntime().wrap(function _callee469$(_context472) {
-                  while (1) switch (_context472.prev = _context472.next) {
+                return _regeneratorRuntime().wrap(function _callee470$(_context473) {
+                  while (1) switch (_context473.prev = _context473.next) {
                     case 0:
-                      _context472.next = 2;
+                      _context473.next = 2;
                       return this.tronWeb.fullNode.request('wallet/getnextmaintenancetime');
                     case 2:
-                      _yield$this$tronWeb$f5 = _context472.sent;
+                      _yield$this$tronWeb$f5 = _context473.sent;
                       _yield$this$tronWeb$f6 = _yield$this$tronWeb$f5.num;
                       num = _yield$this$tronWeb$f6 === void 0 ? -1 : _yield$this$tronWeb$f6;
                       if (!(num == -1)) {
-                        _context472.next = 7;
+                        _context473.next = 7;
                         break;
                       }
                       throw new Error('Failed to get time until next vote cycle');
                     case 7:
-                      return _context472.abrupt("return", Math.floor(num / 1000));
+                      return _context473.abrupt("return", Math.floor(num / 1000));
                     case 8:
                     case "end":
-                      return _context472.stop();
+                      return _context473.stop();
                   }
-                }, _callee469, this);
+                }, _callee470, this);
               }));
               function timeUntilNextVoteCycle() {
                 return _timeUntilNextVoteCycle.apply(this, arguments);
@@ -149188,43 +149214,43 @@
           }, {
             key: "getContract",
             value: function () {
-              var _getContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee470(contractAddress) {
+              var _getContract = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee471(contractAddress) {
                 var contract;
-                return _regeneratorRuntime().wrap(function _callee470$(_context473) {
-                  while (1) switch (_context473.prev = _context473.next) {
+                return _regeneratorRuntime().wrap(function _callee471$(_context474) {
+                  while (1) switch (_context474.prev = _context474.next) {
                     case 0:
                       if (this.tronWeb.isAddress(contractAddress)) {
-                        _context473.next = 2;
+                        _context474.next = 2;
                         break;
                       }
                       throw new Error('Invalid contract address provided');
                     case 2:
                       if (!this.cache.contracts[contractAddress]) {
-                        _context473.next = 4;
+                        _context474.next = 4;
                         break;
                       }
-                      return _context473.abrupt("return", this.cache.contracts[contractAddress]);
+                      return _context474.abrupt("return", this.cache.contracts[contractAddress]);
                     case 4:
                       contractAddress = this.tronWeb.address.toHex(contractAddress);
-                      _context473.next = 7;
+                      _context474.next = 7;
                       return this.tronWeb.fullNode.request('wallet/getcontract', {
                         value: contractAddress
                       });
                     case 7:
-                      contract = _context473.sent;
+                      contract = _context474.sent;
                       if (!contract.Error) {
-                        _context473.next = 10;
+                        _context474.next = 10;
                         break;
                       }
                       throw new Error('Contract does not exist');
                     case 10:
                       this.cache.contracts[contractAddress] = contract;
-                      return _context473.abrupt("return", contract);
+                      return _context474.abrupt("return", contract);
                     case 12:
                     case "end":
-                      return _context473.stop();
+                      return _context474.stop();
                   }
-                }, _callee470, this);
+                }, _callee471, this);
               }));
               function getContract(_x415) {
                 return _getContract.apply(this, arguments);
@@ -149239,33 +149265,33 @@
           }, {
             key: "verifyMessage",
             value: function () {
-              var _verifyMessage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee471(message, signature) {
+              var _verifyMessage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee472(message, signature) {
                 var address,
                   useTronHeader,
-                  _args474 = arguments;
-                return _regeneratorRuntime().wrap(function _callee471$(_context474) {
-                  while (1) switch (_context474.prev = _context474.next) {
+                  _args475 = arguments;
+                return _regeneratorRuntime().wrap(function _callee472$(_context475) {
+                  while (1) switch (_context475.prev = _context475.next) {
                     case 0:
-                      address = _args474.length > 2 && _args474[2] !== undefined ? _args474[2] : this.tronWeb.defaultAddress.base58;
-                      useTronHeader = _args474.length > 3 && _args474[3] !== undefined ? _args474[3] : true;
+                      address = _args475.length > 2 && _args475[2] !== undefined ? _args475[2] : this.tronWeb.defaultAddress.base58;
+                      useTronHeader = _args475.length > 3 && _args475[3] !== undefined ? _args475[3] : true;
                       if (utils.isHex(message)) {
-                        _context474.next = 4;
+                        _context475.next = 4;
                         break;
                       }
                       throw new Error('Expected hex message input');
                     case 4:
                       if (!Trx.verifySignature(message, address, signature, useTronHeader)) {
-                        _context474.next = 6;
+                        _context475.next = 6;
                         break;
                       }
-                      return _context474.abrupt("return", true);
+                      return _context475.abrupt("return", true);
                     case 6:
                       throw new Error('Signature does not match');
                     case 7:
                     case "end":
-                      return _context474.stop();
+                      return _context475.stop();
                   }
-                }, _callee471, this);
+                }, _callee472, this);
               }));
               function verifyMessage(_x416, _x417) {
                 return _verifyMessage.apply(this, arguments);
@@ -149275,16 +149301,16 @@
           }, {
             key: "verifyMessageV2",
             value: function () {
-              var _verifyMessageV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee472(message, signature) {
-                return _regeneratorRuntime().wrap(function _callee472$(_context475) {
-                  while (1) switch (_context475.prev = _context475.next) {
+              var _verifyMessageV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee473(message, signature) {
+                return _regeneratorRuntime().wrap(function _callee473$(_context476) {
+                  while (1) switch (_context476.prev = _context476.next) {
                     case 0:
-                      return _context475.abrupt("return", Trx.verifyMessageV2(message, signature));
+                      return _context476.abrupt("return", Trx.verifyMessageV2(message, signature));
                     case 1:
                     case "end":
-                      return _context475.stop();
+                      return _context476.stop();
                   }
-                }, _callee472);
+                }, _callee473);
               }));
               function verifyMessageV2(_x418, _x419) {
                 return _verifyMessageV.apply(this, arguments);
@@ -149301,65 +149327,65 @@
           }, {
             key: "sign",
             value: function () {
-              var _sign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee473(transaction) {
+              var _sign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee474(transaction) {
                 var privateKey,
                   useTronHeader,
                   multisig,
                   _address21,
-                  _args476 = arguments;
-                return _regeneratorRuntime().wrap(function _callee473$(_context476) {
-                  while (1) switch (_context476.prev = _context476.next) {
+                  _args477 = arguments;
+                return _regeneratorRuntime().wrap(function _callee474$(_context477) {
+                  while (1) switch (_context477.prev = _context477.next) {
                     case 0:
-                      privateKey = _args476.length > 1 && _args476[1] !== undefined ? _args476[1] : this.tronWeb.defaultPrivateKey;
-                      useTronHeader = _args476.length > 2 && _args476[2] !== undefined ? _args476[2] : true;
-                      multisig = _args476.length > 3 && _args476[3] !== undefined ? _args476[3] : false;
+                      privateKey = _args477.length > 1 && _args477[1] !== undefined ? _args477[1] : this.tronWeb.defaultPrivateKey;
+                      useTronHeader = _args477.length > 2 && _args477[2] !== undefined ? _args477[2] : true;
+                      multisig = _args477.length > 3 && _args477[3] !== undefined ? _args477[3] : false;
                       if (!utils.isString(transaction)) {
-                        _context476.next = 7;
+                        _context477.next = 7;
                         break;
                       }
                       if (utils.isHex(transaction)) {
-                        _context476.next = 6;
+                        _context477.next = 6;
                         break;
                       }
                       throw new Error('Expected hex message input');
                     case 6:
-                      return _context476.abrupt("return", Trx.signString(transaction, privateKey, useTronHeader));
+                      return _context477.abrupt("return", Trx.signString(transaction, privateKey, useTronHeader));
                     case 7:
                       if (utils.isObject(transaction)) {
-                        _context476.next = 9;
+                        _context477.next = 9;
                         break;
                       }
                       throw new Error('Invalid transaction provided');
                     case 9:
                       if (!(!multisig && transaction.signature)) {
-                        _context476.next = 11;
+                        _context477.next = 11;
                         break;
                       }
                       throw new Error('Transaction is already signed');
                     case 11:
                       if (multisig) {
-                        _context476.next = 17;
+                        _context477.next = 17;
                         break;
                       }
                       _address21 = this.tronWeb.address.toHex(this.tronWeb.address.fromPrivateKey(privateKey)).toLowerCase();
                       if (!(_address21 !== this.tronWeb.address.toHex(transaction.raw_data.contract[0].parameter.value.owner_address))) {
-                        _context476.next = 15;
+                        _context477.next = 15;
                         break;
                       }
                       throw new Error('Private key does not match address in transaction');
                     case 15:
                       if (txCheck(transaction)) {
-                        _context476.next = 17;
+                        _context477.next = 17;
                         break;
                       }
                       throw new Error('Invalid transaction');
                     case 17:
-                      return _context476.abrupt("return", utils.crypto.signTransaction(privateKey, transaction));
+                      return _context477.abrupt("return", utils.crypto.signTransaction(privateKey, transaction));
                     case 18:
                     case "end":
-                      return _context476.stop();
+                      return _context477.stop();
                   }
-                }, _callee473, this);
+                }, _callee474, this);
               }));
               function sign(_x420) {
                 return _sign.apply(this, arguments);
@@ -149389,38 +149415,38 @@
           }, {
             key: "multiSign",
             value: function () {
-              var _multiSign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee474(transaction) {
+              var _multiSign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee475(transaction) {
                 var privateKey,
                   permissionId,
                   _address22,
                   signWeight,
                   foundKey,
-                  _args477 = arguments;
-                return _regeneratorRuntime().wrap(function _callee474$(_context477) {
-                  while (1) switch (_context477.prev = _context477.next) {
+                  _args478 = arguments;
+                return _regeneratorRuntime().wrap(function _callee475$(_context478) {
+                  while (1) switch (_context478.prev = _context478.next) {
                     case 0:
-                      privateKey = _args477.length > 1 && _args477[1] !== undefined ? _args477[1] : this.tronWeb.defaultPrivateKey;
-                      permissionId = _args477.length > 2 && _args477[2] !== undefined ? _args477[2] : 0;
+                      privateKey = _args478.length > 1 && _args478[1] !== undefined ? _args478[1] : this.tronWeb.defaultPrivateKey;
+                      permissionId = _args478.length > 2 && _args478[2] !== undefined ? _args478[2] : 0;
                       if (!(!utils.isObject(transaction) || !transaction.raw_data || !transaction.raw_data.contract)) {
-                        _context477.next = 4;
+                        _context478.next = 4;
                         break;
                       }
                       throw new Error('Invalid transaction provided');
                     case 4:
                       if (!(!transaction.raw_data.contract[0].Permission_id && permissionId > 0)) {
-                        _context477.next = 24;
+                        _context478.next = 24;
                         break;
                       }
                       // set permission id
                       transaction.raw_data.contract[0].Permission_id = permissionId;
                       // check if private key insides permission list
                       _address22 = this.tronWeb.address.toHex(this.tronWeb.address.fromPrivateKey(privateKey)).toLowerCase();
-                      _context477.next = 9;
+                      _context478.next = 9;
                       return this.getSignWeight(transaction, permissionId);
                     case 9:
-                      signWeight = _context477.sent;
+                      signWeight = _context478.sent;
                       if (!(signWeight.result.code === 'PERMISSION_ERROR')) {
-                        _context477.next = 12;
+                        _context478.next = 12;
                         break;
                       }
                       throw new Error(signWeight.result.message);
@@ -149430,42 +149456,42 @@
                         if (key.address === _address22) foundKey = true;
                       });
                       if (foundKey) {
-                        _context477.next = 16;
+                        _context478.next = 16;
                         break;
                       }
                       throw new Error(privateKey + ' has no permission to sign');
                     case 16:
                       if (!(signWeight.approved_list && signWeight.approved_list.indexOf(_address22) != -1)) {
-                        _context477.next = 18;
+                        _context478.next = 18;
                         break;
                       }
                       throw new Error(privateKey + ' already sign transaction');
                     case 18:
                       if (!(signWeight.transaction && signWeight.transaction.transaction)) {
-                        _context477.next = 23;
+                        _context478.next = 23;
                         break;
                       }
                       transaction = signWeight.transaction.transaction;
                       if (permissionId > 0) {
                         transaction.raw_data.contract[0].Permission_id = permissionId;
                       }
-                      _context477.next = 24;
+                      _context478.next = 24;
                       break;
                     case 23:
                       throw new Error('Invalid transaction provided');
                     case 24:
                       if (txCheck(transaction)) {
-                        _context477.next = 26;
+                        _context478.next = 26;
                         break;
                       }
                       throw new Error('Invalid transaction');
                     case 26:
-                      return _context477.abrupt("return", utils.crypto.signTransaction(privateKey, transaction));
+                      return _context478.abrupt("return", utils.crypto.signTransaction(privateKey, transaction));
                     case 27:
                     case "end":
-                      return _context477.stop();
+                      return _context478.stop();
                   }
-                }, _callee474, this);
+                }, _callee475, this);
               }));
               function multiSign(_x421) {
                 return _multiSign.apply(this, arguments);
@@ -149475,22 +149501,22 @@
           }, {
             key: "getApprovedList",
             value: function () {
-              var _getApprovedList = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee475(transaction) {
-                return _regeneratorRuntime().wrap(function _callee475$(_context478) {
-                  while (1) switch (_context478.prev = _context478.next) {
+              var _getApprovedList = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee476(transaction) {
+                return _regeneratorRuntime().wrap(function _callee476$(_context479) {
+                  while (1) switch (_context479.prev = _context479.next) {
                     case 0:
                       if (utils.isObject(transaction)) {
-                        _context478.next = 2;
+                        _context479.next = 2;
                         break;
                       }
                       throw new Error('Invalid transaction provided');
                     case 2:
-                      return _context478.abrupt("return", this.tronWeb.fullNode.request('wallet/getapprovedlist', transaction, 'post'));
+                      return _context479.abrupt("return", this.tronWeb.fullNode.request('wallet/getapprovedlist', transaction, 'post'));
                     case 3:
                     case "end":
-                      return _context478.stop();
+                      return _context479.stop();
                   }
-                }, _callee475, this);
+                }, _callee476, this);
               }));
               function getApprovedList(_x422) {
                 return _getApprovedList.apply(this, arguments);
@@ -149500,12 +149526,12 @@
           }, {
             key: "getSignWeight",
             value: function () {
-              var _getSignWeight = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee476(transaction, permissionId) {
-                return _regeneratorRuntime().wrap(function _callee476$(_context479) {
-                  while (1) switch (_context479.prev = _context479.next) {
+              var _getSignWeight = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee477(transaction, permissionId) {
+                return _regeneratorRuntime().wrap(function _callee477$(_context480) {
+                  while (1) switch (_context480.prev = _context480.next) {
                     case 0:
                       if (!(!utils.isObject(transaction) || !transaction.raw_data || !transaction.raw_data.contract)) {
-                        _context479.next = 2;
+                        _context480.next = 2;
                         break;
                       }
                       throw new Error('Invalid transaction provided');
@@ -149515,12 +149541,12 @@
                       } else if (typeof transaction.raw_data.contract[0].Permission_id !== 'number') {
                         transaction.raw_data.contract[0].Permission_id = 0;
                       }
-                      return _context479.abrupt("return", this.tronWeb.fullNode.request('wallet/getsignweight', transaction, 'post'));
+                      return _context480.abrupt("return", this.tronWeb.fullNode.request('wallet/getsignweight', transaction, 'post'));
                     case 4:
                     case "end":
-                      return _context479.stop();
+                      return _context480.stop();
                   }
-                }, _callee476, this);
+                }, _callee477, this);
               }));
               function getSignWeight(_x423, _x424) {
                 return _getSignWeight.apply(this, arguments);
@@ -149530,35 +149556,35 @@
           }, {
             key: "sendRawTransaction",
             value: function () {
-              var _sendRawTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee477(signedTransaction) {
+              var _sendRawTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee478(signedTransaction) {
                 var result;
-                return _regeneratorRuntime().wrap(function _callee477$(_context480) {
-                  while (1) switch (_context480.prev = _context480.next) {
+                return _regeneratorRuntime().wrap(function _callee478$(_context481) {
+                  while (1) switch (_context481.prev = _context481.next) {
                     case 0:
                       if (utils.isObject(signedTransaction)) {
-                        _context480.next = 2;
+                        _context481.next = 2;
                         break;
                       }
                       throw new Error('Invalid transaction provided');
                     case 2:
                       if (!(!signedTransaction.signature || !utils.isArray(signedTransaction.signature))) {
-                        _context480.next = 4;
+                        _context481.next = 4;
                         break;
                       }
                       throw new Error('Transaction is not signed');
                     case 4:
-                      _context480.next = 6;
+                      _context481.next = 6;
                       return this.tronWeb.fullNode.request('wallet/broadcasttransaction', signedTransaction, 'post');
                     case 6:
-                      result = _context480.sent;
-                      return _context480.abrupt("return", _objectSpread2(_objectSpread2({}, result), {}, {
+                      result = _context481.sent;
+                      return _context481.abrupt("return", _objectSpread2(_objectSpread2({}, result), {}, {
                         transaction: signedTransaction
                       }));
                     case 8:
                     case "end":
-                      return _context480.stop();
+                      return _context481.stop();
                   }
-                }, _callee477, this);
+                }, _callee478, this);
               }));
               function sendRawTransaction(_x425) {
                 return _sendRawTransaction.apply(this, arguments);
@@ -149568,13 +149594,13 @@
           }, {
             key: "sendHexTransaction",
             value: function () {
-              var _sendHexTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee478(signedHexTransaction) {
+              var _sendHexTransaction = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee479(signedHexTransaction) {
                 var params, result;
-                return _regeneratorRuntime().wrap(function _callee478$(_context481) {
-                  while (1) switch (_context481.prev = _context481.next) {
+                return _regeneratorRuntime().wrap(function _callee479$(_context482) {
+                  while (1) switch (_context482.prev = _context482.next) {
                     case 0:
                       if (utils.isHex(signedHexTransaction)) {
-                        _context481.next = 2;
+                        _context482.next = 2;
                         break;
                       }
                       throw new Error('Invalid hex transaction provided');
@@ -149582,25 +149608,25 @@
                       params = {
                         transaction: signedHexTransaction
                       };
-                      _context481.next = 5;
+                      _context482.next = 5;
                       return this.tronWeb.fullNode.request('wallet/broadcasthex', params, 'post');
                     case 5:
-                      result = _context481.sent;
+                      result = _context482.sent;
                       if (!result.result) {
-                        _context481.next = 8;
+                        _context482.next = 8;
                         break;
                       }
-                      return _context481.abrupt("return", _objectSpread2(_objectSpread2({}, result), {}, {
+                      return _context482.abrupt("return", _objectSpread2(_objectSpread2({}, result), {}, {
                         transaction: JSON.parse(result.transaction),
                         hexTransaction: signedHexTransaction
                       }));
                     case 8:
-                      return _context481.abrupt("return", result);
+                      return _context482.abrupt("return", result);
                     case 9:
                     case "end":
-                      return _context481.stop();
+                      return _context482.stop();
                   }
-                }, _callee478, this);
+                }, _callee479, this);
               }));
               function sendHexTransaction(_x426) {
                 return _sendHexTransaction.apply(this, arguments);
@@ -149610,71 +149636,7 @@
           }, {
             key: "sendTransaction",
             value: function () {
-              var _sendTransaction2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee479(to, amount) {
-                var options,
-                  address,
-                  transaction,
-                  signedTransaction,
-                  result,
-                  _args482 = arguments;
-                return _regeneratorRuntime().wrap(function _callee479$(_context482) {
-                  while (1) switch (_context482.prev = _context482.next) {
-                    case 0:
-                      options = _args482.length > 2 && _args482[2] !== undefined ? _args482[2] : {};
-                      if (typeof options === 'string') options = {
-                        privateKey: options
-                      };
-                      if (this.tronWeb.isAddress(to)) {
-                        _context482.next = 4;
-                        break;
-                      }
-                      throw new Error('Invalid recipient provided');
-                    case 4:
-                      if (!(!utils.isInteger(amount) || amount <= 0)) {
-                        _context482.next = 6;
-                        break;
-                      }
-                      throw new Error('Invalid amount provided');
-                    case 6:
-                      options = _objectSpread2({
-                        privateKey: this.tronWeb.defaultPrivateKey,
-                        address: this.tronWeb.defaultAddress.hex
-                      }, options);
-                      if (!(!options.privateKey && !options.address)) {
-                        _context482.next = 9;
-                        break;
-                      }
-                      throw new Error('Function requires either a private key or address to be set');
-                    case 9:
-                      address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-                      _context482.next = 12;
-                      return this.tronWeb.transactionBuilder.sendTrx(to, amount, address);
-                    case 12:
-                      transaction = _context482.sent;
-                      _context482.next = 15;
-                      return this.sign(transaction, options.privateKey);
-                    case 15:
-                      signedTransaction = _context482.sent;
-                      _context482.next = 18;
-                      return this.sendRawTransaction(signedTransaction);
-                    case 18:
-                      result = _context482.sent;
-                      return _context482.abrupt("return", result);
-                    case 20:
-                    case "end":
-                      return _context482.stop();
-                  }
-                }, _callee479, this);
-              }));
-              function sendTransaction(_x427, _x428) {
-                return _sendTransaction2.apply(this, arguments);
-              }
-              return sendTransaction;
-            }()
-          }, {
-            key: "sendToken",
-            value: function () {
-              var _sendToken2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee480(to, amount, tokenID) {
+              var _sendTransaction2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee480(to, amount) {
                 var options,
                   address,
                   transaction,
@@ -149684,7 +149646,7 @@
                 return _regeneratorRuntime().wrap(function _callee480$(_context483) {
                   while (1) switch (_context483.prev = _context483.next) {
                     case 0:
-                      options = _args483.length > 3 && _args483[3] !== undefined ? _args483[3] : {};
+                      options = _args483.length > 2 && _args483[2] !== undefined ? _args483[2] : {};
                       if (typeof options === 'string') options = {
                         privateKey: options
                       };
@@ -149700,9 +149662,73 @@
                       }
                       throw new Error('Invalid amount provided');
                     case 6:
+                      options = _objectSpread2({
+                        privateKey: this.tronWeb.defaultPrivateKey,
+                        address: this.tronWeb.defaultAddress.hex
+                      }, options);
+                      if (!(!options.privateKey && !options.address)) {
+                        _context483.next = 9;
+                        break;
+                      }
+                      throw new Error('Function requires either a private key or address to be set');
+                    case 9:
+                      address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
+                      _context483.next = 12;
+                      return this.tronWeb.transactionBuilder.sendTrx(to, amount, address);
+                    case 12:
+                      transaction = _context483.sent;
+                      _context483.next = 15;
+                      return this.sign(transaction, options.privateKey);
+                    case 15:
+                      signedTransaction = _context483.sent;
+                      _context483.next = 18;
+                      return this.sendRawTransaction(signedTransaction);
+                    case 18:
+                      result = _context483.sent;
+                      return _context483.abrupt("return", result);
+                    case 20:
+                    case "end":
+                      return _context483.stop();
+                  }
+                }, _callee480, this);
+              }));
+              function sendTransaction(_x427, _x428) {
+                return _sendTransaction2.apply(this, arguments);
+              }
+              return sendTransaction;
+            }()
+          }, {
+            key: "sendToken",
+            value: function () {
+              var _sendToken2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee481(to, amount, tokenID) {
+                var options,
+                  address,
+                  transaction,
+                  signedTransaction,
+                  result,
+                  _args484 = arguments;
+                return _regeneratorRuntime().wrap(function _callee481$(_context484) {
+                  while (1) switch (_context484.prev = _context484.next) {
+                    case 0:
+                      options = _args484.length > 3 && _args484[3] !== undefined ? _args484[3] : {};
+                      if (typeof options === 'string') options = {
+                        privateKey: options
+                      };
+                      if (this.tronWeb.isAddress(to)) {
+                        _context484.next = 4;
+                        break;
+                      }
+                      throw new Error('Invalid recipient provided');
+                    case 4:
+                      if (!(!utils.isInteger(amount) || amount <= 0)) {
+                        _context484.next = 6;
+                        break;
+                      }
+                      throw new Error('Invalid amount provided');
+                    case 6:
                       if (utils.isInteger(tokenID)) tokenID = tokenID.toString();
                       if (utils.isString(tokenID)) {
-                        _context483.next = 9;
+                        _context484.next = 9;
                         break;
                       }
                       throw new Error('Invalid token ID provided');
@@ -149712,30 +149738,30 @@
                         address: this.tronWeb.defaultAddress.hex
                       }, options);
                       if (!(!options.privateKey && !options.address)) {
-                        _context483.next = 12;
+                        _context484.next = 12;
                         break;
                       }
                       throw new Error('Function requires either a private key or address to be set');
                     case 12:
                       address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-                      _context483.next = 15;
+                      _context484.next = 15;
                       return this.tronWeb.transactionBuilder.sendToken(to, amount, tokenID, address);
                     case 15:
-                      transaction = _context483.sent;
-                      _context483.next = 18;
+                      transaction = _context484.sent;
+                      _context484.next = 18;
                       return this.sign(transaction, options.privateKey);
                     case 18:
-                      signedTransaction = _context483.sent;
-                      _context483.next = 21;
+                      signedTransaction = _context484.sent;
+                      _context484.next = 21;
                       return this.sendRawTransaction(signedTransaction);
                     case 21:
-                      result = _context483.sent;
-                      return _context483.abrupt("return", result);
+                      result = _context484.sent;
+                      return _context484.abrupt("return", result);
                     case 23:
                     case "end":
-                      return _context483.stop();
+                      return _context484.stop();
                   }
-                }, _callee480, this);
+                }, _callee481, this);
               }));
               function sendToken(_x429, _x430, _x431) {
                 return _sendToken2.apply(this, arguments);
@@ -149755,7 +149781,7 @@
           }, {
             key: "freezeBalance",
             value: (function () {
-              var _freezeBalance2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee481() {
+              var _freezeBalance2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee482() {
                 var amount,
                   duration,
                   resource,
@@ -149765,32 +149791,32 @@
                   freezeBalance,
                   signedTransaction,
                   result,
-                  _args484 = arguments;
-                return _regeneratorRuntime().wrap(function _callee481$(_context484) {
-                  while (1) switch (_context484.prev = _context484.next) {
+                  _args485 = arguments;
+                return _regeneratorRuntime().wrap(function _callee482$(_context485) {
+                  while (1) switch (_context485.prev = _context485.next) {
                     case 0:
-                      amount = _args484.length > 0 && _args484[0] !== undefined ? _args484[0] : 0;
-                      duration = _args484.length > 1 && _args484[1] !== undefined ? _args484[1] : 3;
-                      resource = _args484.length > 2 && _args484[2] !== undefined ? _args484[2] : 'BANDWIDTH';
-                      options = _args484.length > 3 && _args484[3] !== undefined ? _args484[3] : {};
-                      receiverAddress = _args484.length > 4 ? _args484[4] : undefined;
+                      amount = _args485.length > 0 && _args485[0] !== undefined ? _args485[0] : 0;
+                      duration = _args485.length > 1 && _args485[1] !== undefined ? _args485[1] : 3;
+                      resource = _args485.length > 2 && _args485[2] !== undefined ? _args485[2] : 'BANDWIDTH';
+                      options = _args485.length > 3 && _args485[3] !== undefined ? _args485[3] : {};
+                      receiverAddress = _args485.length > 4 ? _args485[4] : undefined;
                       if (typeof options === 'string') options = {
                         privateKey: options
                       };
                       if (['BANDWIDTH', 'ENERGY'].includes(resource)) {
-                        _context484.next = 8;
+                        _context485.next = 8;
                         break;
                       }
                       throw new Error('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
                     case 8:
                       if (!(!utils.isInteger(amount) || amount <= 0)) {
-                        _context484.next = 10;
+                        _context485.next = 10;
                         break;
                       }
                       throw new Error('Invalid amount provided');
                     case 10:
                       if (!(!utils.isInteger(duration) || duration < 3)) {
-                        _context484.next = 12;
+                        _context485.next = 12;
                         break;
                       }
                       throw new Error('Invalid duration provided, minimum of 3 days');
@@ -149800,30 +149826,30 @@
                         address: this.tronWeb.defaultAddress.hex
                       }, options);
                       if (!(!options.privateKey && !options.address)) {
-                        _context484.next = 15;
+                        _context485.next = 15;
                         break;
                       }
                       throw new Error('Function requires either a private key or address to be set');
                     case 15:
                       address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-                      _context484.next = 18;
+                      _context485.next = 18;
                       return this.tronWeb.transactionBuilder.freezeBalance(amount, duration, resource, address, receiverAddress);
                     case 18:
-                      freezeBalance = _context484.sent;
-                      _context484.next = 21;
+                      freezeBalance = _context485.sent;
+                      _context485.next = 21;
                       return this.sign(freezeBalance, options.privateKey);
                     case 21:
-                      signedTransaction = _context484.sent;
-                      _context484.next = 24;
+                      signedTransaction = _context485.sent;
+                      _context485.next = 24;
                       return this.sendRawTransaction(signedTransaction);
                     case 24:
-                      result = _context484.sent;
-                      return _context484.abrupt("return", result);
+                      result = _context485.sent;
+                      return _context485.abrupt("return", result);
                     case 26:
                     case "end":
-                      return _context484.stop();
+                      return _context485.stop();
                   }
-                }, _callee481, this);
+                }, _callee482, this);
               }));
               function freezeBalance() {
                 return _freezeBalance2.apply(this, arguments);
@@ -149841,7 +149867,7 @@
           }, {
             key: "unfreezeBalance",
             value: (function () {
-              var _unfreezeBalance2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee482() {
+              var _unfreezeBalance2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee483() {
                 var resource,
                   options,
                   receiverAddress,
@@ -149849,18 +149875,18 @@
                   unfreezeBalance,
                   signedTransaction,
                   result,
-                  _args485 = arguments;
-                return _regeneratorRuntime().wrap(function _callee482$(_context485) {
-                  while (1) switch (_context485.prev = _context485.next) {
+                  _args486 = arguments;
+                return _regeneratorRuntime().wrap(function _callee483$(_context486) {
+                  while (1) switch (_context486.prev = _context486.next) {
                     case 0:
-                      resource = _args485.length > 0 && _args485[0] !== undefined ? _args485[0] : 'BANDWIDTH';
-                      options = _args485.length > 1 && _args485[1] !== undefined ? _args485[1] : {};
-                      receiverAddress = _args485.length > 2 ? _args485[2] : undefined;
+                      resource = _args486.length > 0 && _args486[0] !== undefined ? _args486[0] : 'BANDWIDTH';
+                      options = _args486.length > 1 && _args486[1] !== undefined ? _args486[1] : {};
+                      receiverAddress = _args486.length > 2 ? _args486[2] : undefined;
                       if (typeof options === 'string') options = {
                         privateKey: options
                       };
                       if (['BANDWIDTH', 'ENERGY'].includes(resource)) {
-                        _context485.next = 6;
+                        _context486.next = 6;
                         break;
                       }
                       throw new Error('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
@@ -149870,30 +149896,30 @@
                         address: this.tronWeb.defaultAddress.hex
                       }, options);
                       if (!(!options.privateKey && !options.address)) {
-                        _context485.next = 9;
+                        _context486.next = 9;
                         break;
                       }
                       throw new Error('Function requires either a private key or address to be set');
                     case 9:
                       address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-                      _context485.next = 12;
+                      _context486.next = 12;
                       return this.tronWeb.transactionBuilder.unfreezeBalance(resource, address, receiverAddress);
                     case 12:
-                      unfreezeBalance = _context485.sent;
-                      _context485.next = 15;
+                      unfreezeBalance = _context486.sent;
+                      _context486.next = 15;
                       return this.sign(unfreezeBalance, options.privateKey);
                     case 15:
-                      signedTransaction = _context485.sent;
-                      _context485.next = 18;
+                      signedTransaction = _context486.sent;
+                      _context486.next = 18;
                       return this.sendRawTransaction(signedTransaction);
                     case 18:
-                      result = _context485.sent;
-                      return _context485.abrupt("return", result);
+                      result = _context486.sent;
+                      return _context486.abrupt("return", result);
                     case 20:
                     case "end":
-                      return _context485.stop();
+                      return _context486.stop();
                   }
-                }, _callee482, this);
+                }, _callee483, this);
               }));
               function unfreezeBalance() {
                 return _unfreezeBalance2.apply(this, arguments);
@@ -149913,22 +149939,22 @@
           }, {
             key: "updateAccount",
             value: (function () {
-              var _updateAccount2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee483(accountName) {
+              var _updateAccount2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee484(accountName) {
                 var options,
                   address,
                   updateAccount,
                   signedTransaction,
                   result,
-                  _args486 = arguments;
-                return _regeneratorRuntime().wrap(function _callee483$(_context486) {
-                  while (1) switch (_context486.prev = _context486.next) {
+                  _args487 = arguments;
+                return _regeneratorRuntime().wrap(function _callee484$(_context487) {
+                  while (1) switch (_context487.prev = _context487.next) {
                     case 0:
-                      options = _args486.length > 1 && _args486[1] !== undefined ? _args486[1] : {};
+                      options = _args487.length > 1 && _args487[1] !== undefined ? _args487[1] : {};
                       if (typeof options === 'string') options = {
                         privateKey: options
                       };
                       if (!(!utils.isString(accountName) || !accountName.length)) {
-                        _context486.next = 4;
+                        _context487.next = 4;
                         break;
                       }
                       throw new Error('Name must be a string');
@@ -149938,30 +149964,30 @@
                         address: this.tronWeb.defaultAddress.hex
                       }, options);
                       if (!(!options.privateKey && !options.address)) {
-                        _context486.next = 7;
+                        _context487.next = 7;
                         break;
                       }
                       throw Error('Function requires either a private key or address to be set');
                     case 7:
                       address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-                      _context486.next = 10;
+                      _context487.next = 10;
                       return this.tronWeb.transactionBuilder.updateAccount(accountName, address);
                     case 10:
-                      updateAccount = _context486.sent;
-                      _context486.next = 13;
+                      updateAccount = _context487.sent;
+                      _context487.next = 13;
                       return this.sign(updateAccount, options.privateKey);
                     case 13:
-                      signedTransaction = _context486.sent;
-                      _context486.next = 16;
+                      signedTransaction = _context487.sent;
+                      _context487.next = 16;
                       return this.sendRawTransaction(signedTransaction);
                     case 16:
-                      result = _context486.sent;
-                      return _context486.abrupt("return", result);
+                      result = _context487.sent;
+                      return _context487.abrupt("return", result);
                     case 18:
                     case "end":
-                      return _context486.stop();
+                      return _context487.stop();
                   }
-                }, _callee483, this);
+                }, _callee484, this);
               }));
               function updateAccount(_x432) {
                 return _updateAccount2.apply(this, arguments);
@@ -149975,24 +150001,24 @@
           }, {
             key: "getProposal",
             value: (function () {
-              var _getProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee484(proposalID) {
-                return _regeneratorRuntime().wrap(function _callee484$(_context487) {
-                  while (1) switch (_context487.prev = _context487.next) {
+              var _getProposal = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee485(proposalID) {
+                return _regeneratorRuntime().wrap(function _callee485$(_context488) {
+                  while (1) switch (_context488.prev = _context488.next) {
                     case 0:
                       if (!(!utils.isInteger(proposalID) || proposalID < 0)) {
-                        _context487.next = 2;
+                        _context488.next = 2;
                         break;
                       }
                       throw new Error('Invalid proposalID provided');
                     case 2:
-                      return _context487.abrupt("return", this.tronWeb.fullNode.request('wallet/getproposalbyid', {
+                      return _context488.abrupt("return", this.tronWeb.fullNode.request('wallet/getproposalbyid', {
                         id: parseInt(proposalID)
                       }, 'post'));
                     case 3:
                     case "end":
-                      return _context487.stop();
+                      return _context488.stop();
                   }
-                }, _callee484, this);
+                }, _callee485, this);
               }));
               function getProposal(_x433) {
                 return _getProposal.apply(this, arguments);
@@ -150006,23 +150032,23 @@
           }, {
             key: "listProposals",
             value: (function () {
-              var _listProposals = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee485() {
+              var _listProposals = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee486() {
                 var _yield$this$tronWeb$f7, _yield$this$tronWeb$f8, proposals;
-                return _regeneratorRuntime().wrap(function _callee485$(_context488) {
-                  while (1) switch (_context488.prev = _context488.next) {
+                return _regeneratorRuntime().wrap(function _callee486$(_context489) {
+                  while (1) switch (_context489.prev = _context489.next) {
                     case 0:
-                      _context488.next = 2;
+                      _context489.next = 2;
                       return this.tronWeb.fullNode.request('wallet/listproposals', {}, 'post');
                     case 2:
-                      _yield$this$tronWeb$f7 = _context488.sent;
+                      _yield$this$tronWeb$f7 = _context489.sent;
                       _yield$this$tronWeb$f8 = _yield$this$tronWeb$f7.proposals;
                       proposals = _yield$this$tronWeb$f8 === void 0 ? [] : _yield$this$tronWeb$f8;
-                      return _context488.abrupt("return", proposals);
+                      return _context489.abrupt("return", proposals);
                     case 6:
                     case "end":
-                      return _context488.stop();
+                      return _context489.stop();
                   }
-                }, _callee485, this);
+                }, _callee486, this);
               }));
               function listProposals() {
                 return _listProposals.apply(this, arguments);
@@ -150036,23 +150062,23 @@
           }, {
             key: "getChainParameters",
             value: (function () {
-              var _getChainParameters = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee486() {
+              var _getChainParameters = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee487() {
                 var _yield$this$tronWeb$f9, _yield$this$tronWeb$f10, chainParameter;
-                return _regeneratorRuntime().wrap(function _callee486$(_context489) {
-                  while (1) switch (_context489.prev = _context489.next) {
+                return _regeneratorRuntime().wrap(function _callee487$(_context490) {
+                  while (1) switch (_context490.prev = _context490.next) {
                     case 0:
-                      _context489.next = 2;
+                      _context490.next = 2;
                       return this.tronWeb.fullNode.request('wallet/getchainparameters', {}, 'post');
                     case 2:
-                      _yield$this$tronWeb$f9 = _context489.sent;
+                      _yield$this$tronWeb$f9 = _context490.sent;
                       _yield$this$tronWeb$f10 = _yield$this$tronWeb$f9.chainParameter;
                       chainParameter = _yield$this$tronWeb$f10 === void 0 ? [] : _yield$this$tronWeb$f10;
-                      return _context489.abrupt("return", chainParameter);
+                      return _context490.abrupt("return", chainParameter);
                     case 6:
                     case "end":
-                      return _context489.stop();
+                      return _context490.stop();
                   }
-                }, _callee486, this);
+                }, _callee487, this);
               }));
               function getChainParameters() {
                 return _getChainParameters.apply(this, arguments);
@@ -150066,27 +150092,27 @@
           }, {
             key: "getAccountResources",
             value: (function () {
-              var _getAccountResources = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee487() {
+              var _getAccountResources = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee488() {
                 var address,
-                  _args490 = arguments;
-                return _regeneratorRuntime().wrap(function _callee487$(_context490) {
-                  while (1) switch (_context490.prev = _context490.next) {
+                  _args491 = arguments;
+                return _regeneratorRuntime().wrap(function _callee488$(_context491) {
+                  while (1) switch (_context491.prev = _context491.next) {
                     case 0:
-                      address = _args490.length > 0 && _args490[0] !== undefined ? _args490[0] : this.tronWeb.defaultAddress.hex;
+                      address = _args491.length > 0 && _args491[0] !== undefined ? _args491[0] : this.tronWeb.defaultAddress.hex;
                       if (this.tronWeb.isAddress(address)) {
-                        _context490.next = 3;
+                        _context491.next = 3;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 3:
-                      return _context490.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccountresource', {
+                      return _context491.abrupt("return", this.tronWeb.fullNode.request('wallet/getaccountresource', {
                         address: this.tronWeb.address.toHex(address)
                       }, 'post'));
                     case 4:
                     case "end":
-                      return _context490.stop();
+                      return _context491.stop();
                   }
-                }, _callee487, this);
+                }, _callee488, this);
               }));
               function getAccountResources() {
                 return _getAccountResources.apply(this, arguments);
@@ -150100,40 +150126,40 @@
           }, {
             key: "getDelegatedResourceV2",
             value: (function () {
-              var _getDelegatedResourceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee488() {
+              var _getDelegatedResourceV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee489() {
                 var fromAddress,
                   toAddress,
                   options,
-                  _args491 = arguments;
-                return _regeneratorRuntime().wrap(function _callee488$(_context491) {
-                  while (1) switch (_context491.prev = _context491.next) {
+                  _args492 = arguments;
+                return _regeneratorRuntime().wrap(function _callee489$(_context492) {
+                  while (1) switch (_context492.prev = _context492.next) {
                     case 0:
-                      fromAddress = _args491.length > 0 && _args491[0] !== undefined ? _args491[0] : this.tronWeb.defaultAddress.hex;
-                      toAddress = _args491.length > 1 && _args491[1] !== undefined ? _args491[1] : this.tronWeb.defaultAddress.hex;
-                      options = _args491.length > 2 && _args491[2] !== undefined ? _args491[2] : {
+                      fromAddress = _args492.length > 0 && _args492[0] !== undefined ? _args492[0] : this.tronWeb.defaultAddress.hex;
+                      toAddress = _args492.length > 1 && _args492[1] !== undefined ? _args492[1] : this.tronWeb.defaultAddress.hex;
+                      options = _args492.length > 2 && _args492[2] !== undefined ? _args492[2] : {
                         confirmed: true
                       };
                       if (this.tronWeb.isAddress(fromAddress)) {
-                        _context491.next = 5;
+                        _context492.next = 5;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 5:
                       if (this.tronWeb.isAddress(toAddress)) {
-                        _context491.next = 7;
+                        _context492.next = 7;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 7:
-                      return _context491.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getdelegatedresourcev2"), {
+                      return _context492.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getdelegatedresourcev2"), {
                         fromAddress: toHex(fromAddress),
                         toAddress: toHex(toAddress)
                       }, 'post'));
                     case 8:
                     case "end":
-                      return _context491.stop();
+                      return _context492.stop();
                   }
-                }, _callee488, this);
+                }, _callee489, this);
               }));
               function getDelegatedResourceV2() {
                 return _getDelegatedResourceV.apply(this, arguments);
@@ -150147,31 +150173,31 @@
           }, {
             key: "getDelegatedResourceAccountIndexV2",
             value: (function () {
-              var _getDelegatedResourceAccountIndexV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee489() {
+              var _getDelegatedResourceAccountIndexV = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee490() {
                 var address,
                   options,
-                  _args492 = arguments;
-                return _regeneratorRuntime().wrap(function _callee489$(_context492) {
-                  while (1) switch (_context492.prev = _context492.next) {
+                  _args493 = arguments;
+                return _regeneratorRuntime().wrap(function _callee490$(_context493) {
+                  while (1) switch (_context493.prev = _context493.next) {
                     case 0:
-                      address = _args492.length > 0 && _args492[0] !== undefined ? _args492[0] : this.tronWeb.defaultAddress.hex;
-                      options = _args492.length > 1 && _args492[1] !== undefined ? _args492[1] : {
+                      address = _args493.length > 0 && _args493[0] !== undefined ? _args493[0] : this.tronWeb.defaultAddress.hex;
+                      options = _args493.length > 1 && _args493[1] !== undefined ? _args493[1] : {
                         confirmed: true
                       };
                       if (this.tronWeb.isAddress(address)) {
-                        _context492.next = 4;
+                        _context493.next = 4;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 4:
-                      return _context492.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getdelegatedresourceaccountindexv2"), {
+                      return _context493.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getdelegatedresourceaccountindexv2"), {
                         value: toHex(address)
                       }, 'post'));
                     case 5:
                     case "end":
-                      return _context492.stop();
+                      return _context493.stop();
                   }
-                }, _callee489, this);
+                }, _callee490, this);
               }));
               function getDelegatedResourceAccountIndexV2() {
                 return _getDelegatedResourceAccountIndexV.apply(this, arguments);
@@ -150185,21 +150211,21 @@
           }, {
             key: "getCanDelegatedMaxSize",
             value: (function () {
-              var _getCanDelegatedMaxSize = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee490() {
+              var _getCanDelegatedMaxSize = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee491() {
                 var address,
                   resource,
                   options,
-                  _args493 = arguments;
-                return _regeneratorRuntime().wrap(function _callee490$(_context493) {
-                  while (1) switch (_context493.prev = _context493.next) {
+                  _args494 = arguments;
+                return _regeneratorRuntime().wrap(function _callee491$(_context494) {
+                  while (1) switch (_context494.prev = _context494.next) {
                     case 0:
-                      address = _args493.length > 0 && _args493[0] !== undefined ? _args493[0] : this.tronWeb.defaultAddress.hex;
-                      resource = _args493.length > 1 && _args493[1] !== undefined ? _args493[1] : 'BANDWIDTH';
-                      options = _args493.length > 2 && _args493[2] !== undefined ? _args493[2] : {
+                      address = _args494.length > 0 && _args494[0] !== undefined ? _args494[0] : this.tronWeb.defaultAddress.hex;
+                      resource = _args494.length > 1 && _args494[1] !== undefined ? _args494[1] : 'BANDWIDTH';
+                      options = _args494.length > 2 && _args494[2] !== undefined ? _args494[2] : {
                         confirmed: true
                       };
                       if (this.tronWeb.isAddress(address)) {
-                        _context493.next = 5;
+                        _context494.next = 5;
                         break;
                       }
                       throw new Error('Invalid address provided');
@@ -150210,15 +150236,15 @@
                         value: resource,
                         msg: 'Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"'
                       }]);
-                      return _context493.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getcandelegatedmaxsize"), {
+                      return _context494.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getcandelegatedmaxsize"), {
                         owner_address: toHex(address),
                         type: resource === 'ENERGY' ? 1 : 0
                       }, 'post'));
                     case 7:
                     case "end":
-                      return _context493.stop();
+                      return _context494.stop();
                   }
-                }, _callee490, this);
+                }, _callee491, this);
               }));
               function getCanDelegatedMaxSize() {
                 return _getCanDelegatedMaxSize.apply(this, arguments);
@@ -150232,31 +150258,31 @@
           }, {
             key: "getAvailableUnfreezeCount",
             value: (function () {
-              var _getAvailableUnfreezeCount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee491() {
+              var _getAvailableUnfreezeCount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee492() {
                 var address,
                   options,
-                  _args494 = arguments;
-                return _regeneratorRuntime().wrap(function _callee491$(_context494) {
-                  while (1) switch (_context494.prev = _context494.next) {
+                  _args495 = arguments;
+                return _regeneratorRuntime().wrap(function _callee492$(_context495) {
+                  while (1) switch (_context495.prev = _context495.next) {
                     case 0:
-                      address = _args494.length > 0 && _args494[0] !== undefined ? _args494[0] : this.tronWeb.defaultAddress.hex;
-                      options = _args494.length > 1 && _args494[1] !== undefined ? _args494[1] : {
+                      address = _args495.length > 0 && _args495[0] !== undefined ? _args495[0] : this.tronWeb.defaultAddress.hex;
+                      options = _args495.length > 1 && _args495[1] !== undefined ? _args495[1] : {
                         confirmed: true
                       };
                       if (this.tronWeb.isAddress(address)) {
-                        _context494.next = 4;
+                        _context495.next = 4;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 4:
-                      return _context494.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getavailableunfreezecount"), {
+                      return _context495.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getavailableunfreezecount"), {
                         owner_address: toHex(address)
                       }, 'post'));
                     case 5:
                     case "end":
-                      return _context494.stop();
+                      return _context495.stop();
                   }
-                }, _callee491, this);
+                }, _callee492, this);
               }));
               function getAvailableUnfreezeCount() {
                 return _getAvailableUnfreezeCount.apply(this, arguments);
@@ -150270,40 +150296,40 @@
           }, {
             key: "getCanWithdrawUnfreezeAmount",
             value: (function () {
-              var _getCanWithdrawUnfreezeAmount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee492() {
+              var _getCanWithdrawUnfreezeAmount = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee493() {
                 var address,
                   timestamp,
                   options,
-                  _args495 = arguments;
-                return _regeneratorRuntime().wrap(function _callee492$(_context495) {
-                  while (1) switch (_context495.prev = _context495.next) {
+                  _args496 = arguments;
+                return _regeneratorRuntime().wrap(function _callee493$(_context496) {
+                  while (1) switch (_context496.prev = _context496.next) {
                     case 0:
-                      address = _args495.length > 0 && _args495[0] !== undefined ? _args495[0] : this.tronWeb.defaultAddress.hex;
-                      timestamp = _args495.length > 1 && _args495[1] !== undefined ? _args495[1] : Date.now();
-                      options = _args495.length > 2 && _args495[2] !== undefined ? _args495[2] : {
+                      address = _args496.length > 0 && _args496[0] !== undefined ? _args496[0] : this.tronWeb.defaultAddress.hex;
+                      timestamp = _args496.length > 1 && _args496[1] !== undefined ? _args496[1] : Date.now();
+                      options = _args496.length > 2 && _args496[2] !== undefined ? _args496[2] : {
                         confirmed: true
                       };
                       if (this.tronWeb.isAddress(address)) {
-                        _context495.next = 5;
+                        _context496.next = 5;
                         break;
                       }
                       throw new Error('Invalid address provided');
                     case 5:
                       if (!(!utils.isInteger(timestamp) || timestamp < 0)) {
-                        _context495.next = 7;
+                        _context496.next = 7;
                         break;
                       }
                       throw new Error('Invalid timestamp provided');
                     case 7:
-                      return _context495.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getcanwithdrawunfreezeamount"), {
+                      return _context496.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getcanwithdrawunfreezeamount"), {
                         owner_address: toHex(address),
                         timestamp: timestamp
                       }, 'post'));
                     case 8:
                     case "end":
-                      return _context495.stop();
+                      return _context496.stop();
                   }
-                }, _callee492, this);
+                }, _callee493, this);
               }));
               function getCanWithdrawUnfreezeAmount() {
                 return _getCanWithdrawUnfreezeAmount.apply(this, arguments);
@@ -150317,24 +150343,24 @@
           }, {
             key: "getExchangeByID",
             value: (function () {
-              var _getExchangeByID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee493(exchangeID) {
-                return _regeneratorRuntime().wrap(function _callee493$(_context496) {
-                  while (1) switch (_context496.prev = _context496.next) {
+              var _getExchangeByID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee494(exchangeID) {
+                return _regeneratorRuntime().wrap(function _callee494$(_context497) {
+                  while (1) switch (_context497.prev = _context497.next) {
                     case 0:
                       if (!(!utils.isInteger(exchangeID) || exchangeID < 0)) {
-                        _context496.next = 2;
+                        _context497.next = 2;
                         break;
                       }
                       throw new Error('Invalid exchangeID provided');
                     case 2:
-                      return _context496.abrupt("return", this.tronWeb.fullNode.request('wallet/getexchangebyid', {
+                      return _context497.abrupt("return", this.tronWeb.fullNode.request('wallet/getexchangebyid', {
                         id: exchangeID
                       }, 'post'));
                     case 3:
                     case "end":
-                      return _context496.stop();
+                      return _context497.stop();
                   }
-                }, _callee493, this);
+                }, _callee494, this);
               }));
               function getExchangeByID(_x434) {
                 return _getExchangeByID.apply(this, arguments);
@@ -150348,20 +150374,20 @@
           }, {
             key: "listExchanges",
             value: (function () {
-              var _listExchanges = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee494() {
-                return _regeneratorRuntime().wrap(function _callee494$(_context497) {
-                  while (1) switch (_context497.prev = _context497.next) {
+              var _listExchanges = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee495() {
+                return _regeneratorRuntime().wrap(function _callee495$(_context498) {
+                  while (1) switch (_context498.prev = _context498.next) {
                     case 0:
-                      return _context497.abrupt("return", this.tronWeb.fullNode.request('wallet/listexchanges', {}, 'post').then(function (_ref329) {
-                        var _ref329$exchanges = _ref329.exchanges,
-                          exchanges = _ref329$exchanges === void 0 ? [] : _ref329$exchanges;
+                      return _context498.abrupt("return", this.tronWeb.fullNode.request('wallet/listexchanges', {}, 'post').then(function (_ref328) {
+                        var _ref328$exchanges = _ref328.exchanges,
+                          exchanges = _ref328$exchanges === void 0 ? [] : _ref328$exchanges;
                         return exchanges;
                       }));
                     case 1:
                     case "end":
-                      return _context497.stop();
+                      return _context498.stop();
                   }
-                }, _callee494, this);
+                }, _callee495, this);
               }));
               function listExchanges() {
                 return _listExchanges.apply(this, arguments);
@@ -150375,28 +150401,28 @@
           }, {
             key: "listExchangesPaginated",
             value: (function () {
-              var _listExchangesPaginated = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee495() {
+              var _listExchangesPaginated = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee496() {
                 var limit,
                   offset,
-                  _args498 = arguments;
-                return _regeneratorRuntime().wrap(function _callee495$(_context498) {
-                  while (1) switch (_context498.prev = _context498.next) {
+                  _args499 = arguments;
+                return _regeneratorRuntime().wrap(function _callee496$(_context499) {
+                  while (1) switch (_context499.prev = _context499.next) {
                     case 0:
-                      limit = _args498.length > 0 && _args498[0] !== undefined ? _args498[0] : 10;
-                      offset = _args498.length > 1 && _args498[1] !== undefined ? _args498[1] : 0;
-                      return _context498.abrupt("return", this.tronWeb.fullNode.request('wallet/getpaginatedexchangelist', {
+                      limit = _args499.length > 0 && _args499[0] !== undefined ? _args499[0] : 10;
+                      offset = _args499.length > 1 && _args499[1] !== undefined ? _args499[1] : 0;
+                      return _context499.abrupt("return", this.tronWeb.fullNode.request('wallet/getpaginatedexchangelist', {
                         limit: limit,
                         offset: offset
-                      }, 'post').then(function (_ref330) {
-                        var _ref330$exchanges = _ref330.exchanges,
-                          exchanges = _ref330$exchanges === void 0 ? [] : _ref330$exchanges;
+                      }, 'post').then(function (_ref329) {
+                        var _ref329$exchanges = _ref329.exchanges,
+                          exchanges = _ref329$exchanges === void 0 ? [] : _ref329$exchanges;
                         return exchanges;
                       }));
                     case 3:
                     case "end":
-                      return _context498.stop();
+                      return _context499.stop();
                   }
-                }, _callee495, this);
+                }, _callee496, this);
               }));
               function listExchangesPaginated() {
                 return _listExchangesPaginated.apply(this, arguments);
@@ -150410,16 +150436,16 @@
           }, {
             key: "getNodeInfo",
             value: (function () {
-              var _getNodeInfo = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee496() {
-                return _regeneratorRuntime().wrap(function _callee496$(_context499) {
-                  while (1) switch (_context499.prev = _context499.next) {
+              var _getNodeInfo = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee497() {
+                return _regeneratorRuntime().wrap(function _callee497$(_context500) {
+                  while (1) switch (_context500.prev = _context500.next) {
                     case 0:
-                      return _context499.abrupt("return", this.tronWeb.fullNode.request('wallet/getnodeinfo', {}, 'post'));
+                      return _context500.abrupt("return", this.tronWeb.fullNode.request('wallet/getnodeinfo', {}, 'post'));
                     case 1:
                     case "end":
-                      return _context499.stop();
+                      return _context500.stop();
                   }
-                }, _callee496, this);
+                }, _callee497, this);
               }));
               function getNodeInfo() {
                 return _getNodeInfo.apply(this, arguments);
@@ -150429,35 +150455,35 @@
           }, {
             key: "getTokenListByName",
             value: function () {
-              var _getTokenListByName = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee497(tokenID) {
-                var _this165 = this;
-                return _regeneratorRuntime().wrap(function _callee497$(_context500) {
-                  while (1) switch (_context500.prev = _context500.next) {
+              var _getTokenListByName = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee498(tokenID) {
+                var _this166 = this;
+                return _regeneratorRuntime().wrap(function _callee498$(_context501) {
+                  while (1) switch (_context501.prev = _context501.next) {
                     case 0:
                       if (utils.isInteger(tokenID)) tokenID = tokenID.toString();
                       if (!(!utils.isString(tokenID) || !tokenID.length)) {
-                        _context500.next = 3;
+                        _context501.next = 3;
                         break;
                       }
                       throw new Error('Invalid token ID provided');
                     case 3:
-                      return _context500.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuelistbyname', {
+                      return _context501.abrupt("return", this.tronWeb.fullNode.request('wallet/getassetissuelistbyname', {
                         value: this.tronWeb.fromUtf8(tokenID)
                       }, 'post').then(function (token) {
                         if (Array.isArray(token.assetIssue)) {
                           return token.assetIssue.map(function (t) {
-                            return _this165._parseToken(t);
+                            return _this166._parseToken(t);
                           });
                         } else if (!token.name) {
                           throw new Error('Token does not exist');
                         }
-                        return _this165._parseToken(token);
+                        return _this166._parseToken(token);
                       }));
                     case 4:
                     case "end":
-                      return _context500.stop();
+                      return _context501.stop();
                   }
-                }, _callee497, this);
+                }, _callee498, this);
               }));
               function getTokenListByName(_x435) {
                 return _getTokenListByName.apply(this, arguments);
@@ -150467,7 +150493,7 @@
           }, {
             key: "getTokenByID",
             value: function getTokenByID(tokenID) {
-              var _this166 = this;
+              var _this167 = this;
               if (utils.isInteger(tokenID)) tokenID = tokenID.toString();
               if (!utils.isString(tokenID) || !tokenID.length) {
                 throw new Error('Invalid token ID provided');
@@ -150478,26 +150504,26 @@
                 if (!token.name) {
                   throw new Error('Token does not exist');
                 }
-                return _this166._parseToken(token);
+                return _this167._parseToken(token);
               });
             }
           }, {
             key: "getReward",
             value: function () {
-              var _getReward2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee498(address) {
+              var _getReward2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee499(address) {
                 var options,
-                  _args501 = arguments;
-                return _regeneratorRuntime().wrap(function _callee498$(_context501) {
-                  while (1) switch (_context501.prev = _context501.next) {
+                  _args502 = arguments;
+                return _regeneratorRuntime().wrap(function _callee499$(_context502) {
+                  while (1) switch (_context502.prev = _context502.next) {
                     case 0:
-                      options = _args501.length > 1 && _args501[1] !== undefined ? _args501[1] : {};
+                      options = _args502.length > 1 && _args502[1] !== undefined ? _args502[1] : {};
                       options.confirmed = true;
-                      return _context501.abrupt("return", this._getReward(address, options));
+                      return _context502.abrupt("return", this._getReward(address, options));
                     case 3:
                     case "end":
-                      return _context501.stop();
+                      return _context502.stop();
                   }
-                }, _callee498, this);
+                }, _callee499, this);
               }));
               function getReward(_x436) {
                 return _getReward2.apply(this, arguments);
@@ -150507,20 +150533,20 @@
           }, {
             key: "getUnconfirmedReward",
             value: function () {
-              var _getUnconfirmedReward = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee499(address) {
+              var _getUnconfirmedReward = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee500(address) {
                 var options,
-                  _args502 = arguments;
-                return _regeneratorRuntime().wrap(function _callee499$(_context502) {
-                  while (1) switch (_context502.prev = _context502.next) {
+                  _args503 = arguments;
+                return _regeneratorRuntime().wrap(function _callee500$(_context503) {
+                  while (1) switch (_context503.prev = _context503.next) {
                     case 0:
-                      options = _args502.length > 1 && _args502[1] !== undefined ? _args502[1] : {};
+                      options = _args503.length > 1 && _args503[1] !== undefined ? _args503[1] : {};
                       options.confirmed = false;
-                      return _context502.abrupt("return", this._getReward(address, options));
+                      return _context503.abrupt("return", this._getReward(address, options));
                     case 3:
                     case "end":
-                      return _context502.stop();
+                      return _context503.stop();
                   }
-                }, _callee499, this);
+                }, _callee500, this);
               }));
               function getUnconfirmedReward(_x437) {
                 return _getUnconfirmedReward.apply(this, arguments);
@@ -150530,20 +150556,20 @@
           }, {
             key: "getBrokerage",
             value: function () {
-              var _getBrokerage2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee500(address) {
+              var _getBrokerage2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee501(address) {
                 var options,
-                  _args503 = arguments;
-                return _regeneratorRuntime().wrap(function _callee500$(_context503) {
-                  while (1) switch (_context503.prev = _context503.next) {
+                  _args504 = arguments;
+                return _regeneratorRuntime().wrap(function _callee501$(_context504) {
+                  while (1) switch (_context504.prev = _context504.next) {
                     case 0:
-                      options = _args503.length > 1 && _args503[1] !== undefined ? _args503[1] : {};
+                      options = _args504.length > 1 && _args504[1] !== undefined ? _args504[1] : {};
                       options.confirmed = true;
-                      return _context503.abrupt("return", this._getBrokerage(address, options));
+                      return _context504.abrupt("return", this._getBrokerage(address, options));
                     case 3:
                     case "end":
-                      return _context503.stop();
+                      return _context504.stop();
                   }
-                }, _callee500, this);
+                }, _callee501, this);
               }));
               function getBrokerage(_x438) {
                 return _getBrokerage2.apply(this, arguments);
@@ -150553,20 +150579,20 @@
           }, {
             key: "getUnconfirmedBrokerage",
             value: function () {
-              var _getUnconfirmedBrokerage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee501(address) {
+              var _getUnconfirmedBrokerage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee502(address) {
                 var options,
-                  _args504 = arguments;
-                return _regeneratorRuntime().wrap(function _callee501$(_context504) {
-                  while (1) switch (_context504.prev = _context504.next) {
+                  _args505 = arguments;
+                return _regeneratorRuntime().wrap(function _callee502$(_context505) {
+                  while (1) switch (_context505.prev = _context505.next) {
                     case 0:
-                      options = _args504.length > 1 && _args504[1] !== undefined ? _args504[1] : {};
+                      options = _args505.length > 1 && _args505[1] !== undefined ? _args505[1] : {};
                       options.confirmed = false;
-                      return _context504.abrupt("return", this._getBrokerage(address, options));
+                      return _context505.abrupt("return", this._getBrokerage(address, options));
                     case 3:
                     case "end":
-                      return _context504.stop();
+                      return _context505.stop();
                   }
-                }, _callee501, this);
+                }, _callee502, this);
               }));
               function getUnconfirmedBrokerage(_x439) {
                 return _getUnconfirmedBrokerage.apply(this, arguments);
@@ -150576,48 +150602,7 @@
           }, {
             key: "_getReward",
             value: function () {
-              var _getReward3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee502() {
-                var address,
-                  options,
-                  data,
-                  _args505 = arguments;
-                return _regeneratorRuntime().wrap(function _callee502$(_context505) {
-                  while (1) switch (_context505.prev = _context505.next) {
-                    case 0:
-                      address = _args505.length > 0 && _args505[0] !== undefined ? _args505[0] : this.tronWeb.defaultAddress.hex;
-                      options = _args505.length > 1 ? _args505[1] : undefined;
-                      this.validator.notValid([{
-                        name: 'origin',
-                        type: 'address',
-                        value: address
-                      }]);
-                      data = {
-                        address: toHex(address)
-                      };
-                      return _context505.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getReward"), data, 'post').then(function () {
-                        var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-                          reward: undefined
-                        };
-                        if (typeof result.reward === 'undefined') {
-                          throw new Error('Not found.');
-                        }
-                        return result.reward;
-                      }));
-                    case 5:
-                    case "end":
-                      return _context505.stop();
-                  }
-                }, _callee502, this);
-              }));
-              function _getReward() {
-                return _getReward3.apply(this, arguments);
-              }
-              return _getReward;
-            }()
-          }, {
-            key: "_getBrokerage",
-            value: function () {
-              var _getBrokerage3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee503() {
+              var _getReward3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee503() {
                 var address,
                   options,
                   data,
@@ -150635,7 +150620,48 @@
                       data = {
                         address: toHex(address)
                       };
-                      return _context506.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getBrokerage"), data, 'post').then(function () {
+                      return _context506.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getReward"), data, 'post').then(function () {
+                        var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+                          reward: undefined
+                        };
+                        if (typeof result.reward === 'undefined') {
+                          throw new Error('Not found.');
+                        }
+                        return result.reward;
+                      }));
+                    case 5:
+                    case "end":
+                      return _context506.stop();
+                  }
+                }, _callee503, this);
+              }));
+              function _getReward() {
+                return _getReward3.apply(this, arguments);
+              }
+              return _getReward;
+            }()
+          }, {
+            key: "_getBrokerage",
+            value: function () {
+              var _getBrokerage3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee504() {
+                var address,
+                  options,
+                  data,
+                  _args507 = arguments;
+                return _regeneratorRuntime().wrap(function _callee504$(_context507) {
+                  while (1) switch (_context507.prev = _context507.next) {
+                    case 0:
+                      address = _args507.length > 0 && _args507[0] !== undefined ? _args507[0] : this.tronWeb.defaultAddress.hex;
+                      options = _args507.length > 1 ? _args507[1] : undefined;
+                      this.validator.notValid([{
+                        name: 'origin',
+                        type: 'address',
+                        value: address
+                      }]);
+                      data = {
+                        address: toHex(address)
+                      };
+                      return _context507.abrupt("return", this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request("wallet".concat(options.confirmed ? 'solidity' : '', "/getBrokerage"), data, 'post').then(function () {
                         var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                         if (typeof result.brokerage === 'undefined') {
                           throw new Error('Not found.');
@@ -150644,9 +150670,9 @@
                       }));
                     case 5:
                     case "end":
-                      return _context506.stop();
+                      return _context507.stop();
                   }
-                }, _callee503, this);
+                }, _callee504, this);
               }));
               function _getBrokerage() {
                 return _getBrokerage3.apply(this, arguments);
@@ -150656,36 +150682,11 @@
           }, {
             key: "getBandwidthPrices",
             value: function () {
-              var _getBandwidthPrices = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee504() {
-                return _regeneratorRuntime().wrap(function _callee504$(_context507) {
-                  while (1) switch (_context507.prev = _context507.next) {
-                    case 0:
-                      return _context507.abrupt("return", this.tronWeb.fullNode.request('wallet/getbandwidthprices', {}, 'post').then(function () {
-                        var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-                        if (typeof result.prices === 'undefined') {
-                          throw new Error('Not found.');
-                        }
-                        return result.prices;
-                      }));
-                    case 1:
-                    case "end":
-                      return _context507.stop();
-                  }
-                }, _callee504, this);
-              }));
-              function getBandwidthPrices() {
-                return _getBandwidthPrices.apply(this, arguments);
-              }
-              return getBandwidthPrices;
-            }()
-          }, {
-            key: "getEnergyPrices",
-            value: function () {
-              var _getEnergyPrices = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee505() {
+              var _getBandwidthPrices = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee505() {
                 return _regeneratorRuntime().wrap(function _callee505$(_context508) {
                   while (1) switch (_context508.prev = _context508.next) {
                     case 0:
-                      return _context508.abrupt("return", this.tronWeb.fullNode.request('wallet/getenergyprices', {}, 'post').then(function () {
+                      return _context508.abrupt("return", this.tronWeb.fullNode.request('wallet/getbandwidthprices', {}, 'post').then(function () {
                         var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
                         if (typeof result.prices === 'undefined') {
                           throw new Error('Not found.');
@@ -150697,6 +150698,31 @@
                       return _context508.stop();
                   }
                 }, _callee505, this);
+              }));
+              function getBandwidthPrices() {
+                return _getBandwidthPrices.apply(this, arguments);
+              }
+              return getBandwidthPrices;
+            }()
+          }, {
+            key: "getEnergyPrices",
+            value: function () {
+              var _getEnergyPrices = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee506() {
+                return _regeneratorRuntime().wrap(function _callee506$(_context509) {
+                  while (1) switch (_context509.prev = _context509.next) {
+                    case 0:
+                      return _context509.abrupt("return", this.tronWeb.fullNode.request('wallet/getenergyprices', {}, 'post').then(function () {
+                        var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+                        if (typeof result.prices === 'undefined') {
+                          throw new Error('Not found.');
+                        }
+                        return result.prices;
+                      }));
+                    case 1:
+                    case "end":
+                      return _context509.stop();
+                  }
+                }, _callee506, this);
               }));
               function getEnergyPrices() {
                 return _getEnergyPrices.apply(this, arguments);
@@ -150835,7 +150861,7 @@
           }, {
             key: "onMethod",
             value: function onMethod() {
-              var _this167 = this;
+              var _this168 = this;
               var rawParameter = '';
               if (this.abi && !/event/i.test(this.abi.type)) {
                 for (var _len36 = arguments.length, args = new Array(_len36), _key56 = 0; _key56 < _len36; _key56++) {
@@ -150845,25 +150871,25 @@
               }
               return {
                 call: function () {
-                  var _call2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee506() {
+                  var _call2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee507() {
                     var options,
-                      _args509 = arguments;
-                    return _regeneratorRuntime().wrap(function _callee506$(_context509) {
-                      while (1) switch (_context509.prev = _context509.next) {
+                      _args510 = arguments;
+                    return _regeneratorRuntime().wrap(function _callee507$(_context510) {
+                      while (1) switch (_context510.prev = _context510.next) {
                         case 0:
-                          options = _args509.length > 0 && _args509[0] !== undefined ? _args509[0] : {};
+                          options = _args510.length > 0 && _args510[0] !== undefined ? _args510[0] : {};
                           options = _objectSpread2(_objectSpread2({}, options), {}, {
                             rawParameter: rawParameter
                           });
-                          _context509.next = 4;
-                          return _this167._call([], [], options);
+                          _context510.next = 4;
+                          return _this168._call([], [], options);
                         case 4:
-                          return _context509.abrupt("return", _context509.sent);
+                          return _context510.abrupt("return", _context510.sent);
                         case 5:
                         case "end":
-                          return _context509.stop();
+                          return _context510.stop();
                       }
-                    }, _callee506);
+                    }, _callee507);
                   }));
                   function call() {
                     return _call2.apply(this, arguments);
@@ -150871,27 +150897,27 @@
                   return call;
                 }(),
                 send: function () {
-                  var _send2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee507() {
+                  var _send2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee508() {
                     var options,
                       privateKey,
-                      _args510 = arguments;
-                    return _regeneratorRuntime().wrap(function _callee507$(_context510) {
-                      while (1) switch (_context510.prev = _context510.next) {
+                      _args511 = arguments;
+                    return _regeneratorRuntime().wrap(function _callee508$(_context511) {
+                      while (1) switch (_context511.prev = _context511.next) {
                         case 0:
-                          options = _args510.length > 0 && _args510[0] !== undefined ? _args510[0] : {};
-                          privateKey = _args510.length > 1 && _args510[1] !== undefined ? _args510[1] : _this167.tronWeb.defaultPrivateKey;
+                          options = _args511.length > 0 && _args511[0] !== undefined ? _args511[0] : {};
+                          privateKey = _args511.length > 1 && _args511[1] !== undefined ? _args511[1] : _this168.tronWeb.defaultPrivateKey;
                           options = _objectSpread2(_objectSpread2({}, options), {}, {
                             rawParameter: rawParameter
                           });
-                          _context510.next = 5;
-                          return _this167._send([], [], options, privateKey);
+                          _context511.next = 5;
+                          return _this168._send([], [], options, privateKey);
                         case 5:
-                          return _context510.abrupt("return", _context510.sent);
+                          return _context511.abrupt("return", _context511.sent);
                         case 6:
                         case "end":
-                          return _context510.stop();
+                          return _context511.stop();
                       }
-                    }, _callee507);
+                    }, _callee508);
                   }));
                   function send() {
                     return _send2.apply(this, arguments);
@@ -150903,7 +150929,7 @@
           }, {
             key: "_call",
             value: function () {
-              var _call3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee508(types, args) {
+              var _call3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee509(types, args) {
                 var options,
                   stateMutability,
                   parameters,
@@ -150914,36 +150940,36 @@
                   chunk,
                   _i234,
                   output,
-                  _args511 = arguments;
-                return _regeneratorRuntime().wrap(function _callee508$(_context511) {
-                  while (1) switch (_context511.prev = _context511.next) {
+                  _args512 = arguments;
+                return _regeneratorRuntime().wrap(function _callee509$(_context512) {
+                  while (1) switch (_context512.prev = _context512.next) {
                     case 0:
-                      options = _args511.length > 2 && _args511[2] !== undefined ? _args511[2] : {};
+                      options = _args512.length > 2 && _args512[2] !== undefined ? _args512[2] : {};
                       if (!(types.length !== args.length)) {
-                        _context511.next = 3;
+                        _context512.next = 3;
                         break;
                       }
                       throw new Error('Invalid argument count provided');
                     case 3:
                       if (this.contract.address) {
-                        _context511.next = 5;
+                        _context512.next = 5;
                         break;
                       }
                       throw new Error('Smart contract is missing address');
                     case 5:
                       if (this.contract.deployed) {
-                        _context511.next = 7;
+                        _context512.next = 7;
                         break;
                       }
                       throw new Error('Calling smart contracts requires you to load the contract first');
                     case 7:
                       if (!('stateMutability' in this.abi)) {
-                        _context511.next = 11;
+                        _context512.next = 11;
                         break;
                       }
                       stateMutability = this.abi.stateMutability;
                       if (!(stateMutability && !['pure', 'view'].includes(stateMutability.toLowerCase()))) {
-                        _context511.next = 11;
+                        _context512.next = 11;
                         break;
                       }
                       throw new Error("Methods with state mutability \"".concat(stateMutability, "\" must use send()"));
@@ -150959,19 +150985,19 @@
                           value: value
                         };
                       });
-                      _context511.next = 15;
+                      _context512.next = 15;
                       return this.tronWeb.transactionBuilder.triggerSmartContract(this.contract.address, this.functionSelector, options, parameters, options.from ? this.tronWeb.address.toHex(options.from) : undefined);
                     case 15:
-                      transaction = _context511.sent;
+                      transaction = _context512.sent;
                       if (utils.hasProperty(transaction, 'constant_result')) {
-                        _context511.next = 18;
+                        _context512.next = 18;
                         break;
                       }
                       throw new Error('Failed to execute');
                     case 18:
                       len = transaction.constant_result[0].length;
                       if (!(len === 0 || len % 64 === 8)) {
-                        _context511.next = 23;
+                        _context512.next = 23;
                         break;
                       }
                       msg = 'The call has been reverted or has thrown an error.';
@@ -150990,12 +151016,12 @@
                       if (output.length === 1 && Object.keys(output).length === 1) {
                         output = output[0];
                       }
-                      return _context511.abrupt("return", output);
+                      return _context512.abrupt("return", output);
                     case 26:
                     case "end":
-                      return _context511.stop();
+                      return _context512.stop();
                   }
-                }, _callee508, this);
+                }, _callee509, this);
               }));
               function _call(_x440, _x441) {
                 return _call3.apply(this, arguments);
@@ -151005,8 +151031,8 @@
           }, {
             key: "_send",
             value: function () {
-              var _send3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee510(types, args) {
-                var _this168 = this;
+              var _send3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee511(types, args) {
+                var _this169 = this;
                 var options,
                   privateKey,
                   stateMutability,
@@ -151018,33 +151044,33 @@
                   err,
                   error,
                   checkResult,
-                  _args513 = arguments;
-                return _regeneratorRuntime().wrap(function _callee510$(_context513) {
-                  while (1) switch (_context513.prev = _context513.next) {
+                  _args514 = arguments;
+                return _regeneratorRuntime().wrap(function _callee511$(_context514) {
+                  while (1) switch (_context514.prev = _context514.next) {
                     case 0:
-                      options = _args513.length > 2 && _args513[2] !== undefined ? _args513[2] : {};
-                      privateKey = _args513.length > 3 && _args513[3] !== undefined ? _args513[3] : this.tronWeb.defaultPrivateKey;
+                      options = _args514.length > 2 && _args514[2] !== undefined ? _args514[2] : {};
+                      privateKey = _args514.length > 3 && _args514[3] !== undefined ? _args514[3] : this.tronWeb.defaultPrivateKey;
                       if (!(types.length !== args.length)) {
-                        _context513.next = 4;
+                        _context514.next = 4;
                         break;
                       }
                       throw new Error('Invalid argument count provided');
                     case 4:
                       if (this.contract.address) {
-                        _context513.next = 6;
+                        _context514.next = 6;
                         break;
                       }
                       throw new Error('Smart contract is missing address');
                     case 6:
                       if (this.contract.deployed) {
-                        _context513.next = 8;
+                        _context514.next = 8;
                         break;
                       }
                       throw new Error('Calling smart contracts requires you to load the contract first');
                     case 8:
                       stateMutability = this.abi.stateMutability;
                       if (!['pure', 'view'].includes(stateMutability.toLowerCase())) {
-                        _context513.next = 11;
+                        _context514.next = 11;
                         break;
                       }
                       throw new Error("Methods with state mutability \"".concat(stateMutability, "\" must use call()"));
@@ -151063,38 +151089,38 @@
                         };
                       });
                       address = privateKey ? this.tronWeb.address.fromPrivateKey(privateKey) : this.tronWeb.defaultAddress.base58;
-                      _context513.next = 17;
+                      _context514.next = 17;
                       return this.tronWeb.transactionBuilder.triggerSmartContract(this.contract.address, this.functionSelector, options, parameters, this.tronWeb.address.toHex(address));
                     case 17:
-                      transaction = _context513.sent;
+                      transaction = _context514.sent;
                       if (!(!transaction.result || !transaction.result.result)) {
-                        _context513.next = 20;
+                        _context514.next = 20;
                         break;
                       }
                       throw new Error('Unknown error: ' + JSON.stringify(transaction, null, 2));
                     case 20:
-                      _context513.next = 22;
+                      _context514.next = 22;
                       return this.tronWeb.trx.sign(transaction.transaction, privateKey);
                     case 22:
-                      signedTransaction = _context513.sent;
+                      signedTransaction = _context514.sent;
                       if (signedTransaction.signature) {
-                        _context513.next = 27;
+                        _context514.next = 27;
                         break;
                       }
                       if (privateKey) {
-                        _context513.next = 26;
+                        _context514.next = 26;
                         break;
                       }
                       throw new Error('Transaction was not signed properly');
                     case 26:
                       throw new Error('Invalid private key provided');
                     case 27:
-                      _context513.next = 29;
+                      _context514.next = 29;
                       return this.tronWeb.trx.sendRawTransaction(signedTransaction);
                     case 29:
-                      broadcast = _context513.sent;
+                      broadcast = _context514.sent;
                       if (!broadcast.code) {
-                        _context513.next = 36;
+                        _context514.next = 36;
                         break;
                       }
                       err = {
@@ -151107,19 +151133,19 @@
                       throw error;
                     case 36:
                       if (options.shouldPollResponse) {
-                        _context513.next = 38;
+                        _context514.next = 38;
                         break;
                       }
-                      return _context513.abrupt("return", signedTransaction.txID);
+                      return _context514.abrupt("return", signedTransaction.txID);
                     case 38:
                       checkResult = /*#__PURE__*/function () {
-                        var _ref331 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee509(index) {
+                        var _ref330 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee510(index) {
                           var _error, output, _error2, _error3, decoded;
-                          return _regeneratorRuntime().wrap(function _callee509$(_context512) {
-                            while (1) switch (_context512.prev = _context512.next) {
+                          return _regeneratorRuntime().wrap(function _callee510$(_context513) {
+                            while (1) switch (_context513.prev = _context513.next) {
                               case 0:
                                 if (!(index === (options.pollTimes || 20))) {
-                                  _context512.next = 5;
+                                  _context513.next = 5;
                                   break;
                                 }
                                 _error = new Error('Cannot find result in solidity node');
@@ -151127,33 +151153,33 @@
                                 _error.transaction = signedTransaction;
                                 throw _error;
                               case 5:
-                                _context512.next = 7;
-                                return _this168.tronWeb.trx.getTransactionInfo(signedTransaction.txID);
+                                _context513.next = 7;
+                                return _this169.tronWeb.trx.getTransactionInfo(signedTransaction.txID);
                               case 7:
-                                output = _context512.sent;
+                                output = _context513.sent;
                                 if (Object.keys(output).length) {
-                                  _context512.next = 12;
+                                  _context513.next = 12;
                                   break;
                                 }
-                                _context512.next = 11;
+                                _context513.next = 11;
                                 return new Promise(function (r) {
                                   return setTimeout(r, 3000);
                                 });
                               case 11:
-                                return _context512.abrupt("return", checkResult(index + 1));
+                                return _context513.abrupt("return", checkResult(index + 1));
                               case 12:
                                 if (!(output.result && output.result === 'FAILED')) {
-                                  _context512.next = 18;
+                                  _context513.next = 18;
                                   break;
                                 }
-                                _error2 = new Error(_this168.tronWeb.toUtf8(output.resMessage));
-                                _error2.error = _this168.tronWeb.toUtf8(output.resMessage);
+                                _error2 = new Error(_this169.tronWeb.toUtf8(output.resMessage));
+                                _error2.error = _this169.tronWeb.toUtf8(output.resMessage);
                                 _error2.transaction = signedTransaction;
                                 _error2.output = output;
                                 throw _error2;
                               case 18:
                                 if (utils.hasProperty(output, 'contractResult')) {
-                                  _context512.next = 24;
+                                  _context513.next = 24;
                                   break;
                                 }
                                 _error3 = new Error('Failed to execute: ' + JSON.stringify(output, null, 2));
@@ -151163,38 +151189,38 @@
                                 throw _error3;
                               case 24:
                                 if (!options.rawResponse) {
-                                  _context512.next = 26;
+                                  _context513.next = 26;
                                   break;
                                 }
-                                return _context512.abrupt("return", output);
+                                return _context513.abrupt("return", output);
                               case 26:
-                                decoded = decodeOutput(_this168.abi, '0x' + output.contractResult[0]);
+                                decoded = decodeOutput(_this169.abi, '0x' + output.contractResult[0]);
                                 if (decoded.length === 1 && Object.keys(decoded).length === 1) {
                                   decoded = decoded[0];
                                 }
                                 if (!options.keepTxID) {
-                                  _context512.next = 30;
+                                  _context513.next = 30;
                                   break;
                                 }
-                                return _context512.abrupt("return", [signedTransaction.txID, decoded]);
+                                return _context513.abrupt("return", [signedTransaction.txID, decoded]);
                               case 30:
-                                return _context512.abrupt("return", decoded);
+                                return _context513.abrupt("return", decoded);
                               case 31:
                               case "end":
-                                return _context512.stop();
+                                return _context513.stop();
                             }
-                          }, _callee509);
+                          }, _callee510);
                         }));
                         return function checkResult(_x444) {
-                          return _ref331.apply(this, arguments);
+                          return _ref330.apply(this, arguments);
                         };
                       }();
-                      return _context513.abrupt("return", checkResult(0));
+                      return _context514.abrupt("return", checkResult(0));
                     case 40:
                     case "end":
-                      return _context513.stop();
+                      return _context514.stop();
                   }
-                }, _callee510, this);
+                }, _callee511, this);
               }));
               function _send(_x442, _x443) {
                 return _send3.apply(this, arguments);
@@ -151245,38 +151271,38 @@
           }, {
             key: "loadAbi",
             value: function loadAbi(abi) {
-              var _this169 = this;
+              var _this170 = this;
               this.abi = abi;
               this.methods = {};
               this.props.forEach(function (prop) {
-                return delete _this169[prop];
+                return delete _this170[prop];
               });
               abi.forEach(function (func) {
                 // Don't build a method for constructor function. That's handled through contract create.
                 // Don't build a method for error function.
                 if (!func.type || /constructor|error/i.test(func.type)) return;
-                var method = new Method(_this169, func);
+                var method = new Method(_this170, func);
                 var methodCall = method.onMethod.bind(method);
                 var name = method.name,
                   functionSelector = method.functionSelector,
                   signature = method.signature;
-                _this169.methods[name] = methodCall;
-                _this169.methods[functionSelector] = methodCall;
-                _this169.methods[signature] = methodCall;
-                _this169.methodInstances[name] = method;
-                _this169.methodInstances[functionSelector] = method;
-                _this169.methodInstances[signature] = method;
-                if (!_this169.hasProperty(name)) {
-                  _this169[name] = methodCall;
-                  _this169.props.push(name);
+                _this170.methods[name] = methodCall;
+                _this170.methods[functionSelector] = methodCall;
+                _this170.methods[signature] = methodCall;
+                _this170.methodInstances[name] = method;
+                _this170.methodInstances[functionSelector] = method;
+                _this170.methodInstances[signature] = method;
+                if (!_this170.hasProperty(name)) {
+                  _this170[name] = methodCall;
+                  _this170.props.push(name);
                 }
-                if (!_this169.hasProperty(functionSelector)) {
-                  _this169[functionSelector] = methodCall;
-                  _this169.props.push(functionSelector);
+                if (!_this170.hasProperty(functionSelector)) {
+                  _this170[functionSelector] = methodCall;
+                  _this170.props.push(functionSelector);
                 }
-                if (!_this169.hasProperty(signature)) {
-                  _this169[signature] = methodCall;
-                  _this169.props.push(signature);
+                if (!_this170.hasProperty(signature)) {
+                  _this170[signature] = methodCall;
+                  _this170.props.push(signature);
                 }
               });
             }
@@ -151295,32 +151321,32 @@
           }, {
             key: "new",
             value: function () {
-              var _new2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee511(options) {
+              var _new2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee512(options) {
                 var privateKey,
                   address,
                   transaction,
                   signedTransaction,
                   contract,
-                  _args514 = arguments;
-                return _regeneratorRuntime().wrap(function _callee511$(_context514) {
-                  while (1) switch (_context514.prev = _context514.next) {
+                  _args515 = arguments;
+                return _regeneratorRuntime().wrap(function _callee512$(_context515) {
+                  while (1) switch (_context515.prev = _context515.next) {
                     case 0:
-                      privateKey = _args514.length > 1 && _args514[1] !== undefined ? _args514[1] : this.tronWeb.defaultPrivateKey;
+                      privateKey = _args515.length > 1 && _args515[1] !== undefined ? _args515[1] : this.tronWeb.defaultPrivateKey;
                       address = this.tronWeb.address.fromPrivateKey(privateKey);
-                      _context514.next = 4;
+                      _context515.next = 4;
                       return this.tronWeb.transactionBuilder.createSmartContract(options, address);
                     case 4:
-                      transaction = _context514.sent;
-                      _context514.next = 7;
+                      transaction = _context515.sent;
+                      _context515.next = 7;
                       return this.tronWeb.trx.sign(transaction, privateKey);
                     case 7:
-                      signedTransaction = _context514.sent;
-                      _context514.next = 10;
+                      signedTransaction = _context515.sent;
+                      _context515.next = 10;
                       return this.tronWeb.trx.sendRawTransaction(signedTransaction);
                     case 10:
-                      contract = _context514.sent;
+                      contract = _context515.sent;
                       if (!contract.code) {
-                        _context514.next = 13;
+                        _context515.next = 13;
                         break;
                       }
                       throw {
@@ -151328,15 +151354,15 @@
                         message: this.tronWeb.toUtf8(contract.message)
                       };
                     case 13:
-                      _context514.next = 15;
+                      _context515.next = 15;
                       return utils.sleep(3000);
                     case 15:
-                      return _context514.abrupt("return", this.at(signedTransaction.contract_address));
+                      return _context515.abrupt("return", this.at(signedTransaction.contract_address));
                     case 16:
                     case "end":
-                      return _context514.stop();
+                      return _context515.stop();
                   }
-                }, _callee511, this);
+                }, _callee512, this);
               }));
               function _new(_x445) {
                 return _new2.apply(this, arguments);
@@ -151346,18 +151372,18 @@
           }, {
             key: "at",
             value: function () {
-              var _at = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee512(contractAddress) {
+              var _at = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee513(contractAddress) {
                 var contract;
-                return _regeneratorRuntime().wrap(function _callee512$(_context515) {
-                  while (1) switch (_context515.prev = _context515.next) {
+                return _regeneratorRuntime().wrap(function _callee513$(_context516) {
+                  while (1) switch (_context516.prev = _context516.next) {
                     case 0:
-                      _context515.prev = 0;
-                      _context515.next = 3;
+                      _context516.prev = 0;
+                      _context516.next = 3;
                       return this.tronWeb.trx.getContract(contractAddress);
                     case 3:
-                      contract = _context515.sent;
+                      contract = _context516.sent;
                       if (contract.contract_address) {
-                        _context515.next = 6;
+                        _context516.next = 6;
                         break;
                       }
                       throw new Error('Unknown error: ' + JSON.stringify(contract, null, 2));
@@ -151366,22 +151392,22 @@
                       this.bytecode = contract.bytecode;
                       this.deployed = true;
                       this.loadAbi(contract.abi ? contract.abi.entrys ? contract.abi.entrys : [] : []);
-                      return _context515.abrupt("return", this);
+                      return _context516.abrupt("return", this);
                     case 13:
-                      _context515.prev = 13;
-                      _context515.t0 = _context515["catch"](0);
-                      if (!_context515.t0.toString().includes('does not exist')) {
-                        _context515.next = 17;
+                      _context516.prev = 13;
+                      _context516.t0 = _context516["catch"](0);
+                      if (!_context516.t0.toString().includes('does not exist')) {
+                        _context516.next = 17;
                         break;
                       }
                       throw new Error('Contract has not been deployed on the network');
                     case 17:
-                      throw new Error(_context515.t0);
+                      throw new Error(_context516.t0);
                     case 18:
                     case "end":
-                      return _context515.stop();
+                      return _context516.stop();
                   }
-                }, _callee512, this, [[0, 13]]);
+                }, _callee513, this, [[0, 13]]);
               }));
               function at(_x446) {
                 return _at.apply(this, arguments);
@@ -151472,14 +151498,14 @@
           return _createClass2(Event, [{
             key: "setServer",
             value: function setServer(eventServer) {
-              var _this170 = this;
+              var _this171 = this;
               var healthcheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'healthcheck';
               if (!eventServer) return this.tronWeb.eventServer = undefined;
               if (utils.isString(eventServer)) eventServer = new HttpProvider(eventServer);
               if (!this.tronWeb.isValidProvider(eventServer)) throw new Error('Invalid event server provided');
               this.tronWeb.eventServer = eventServer;
               this.tronWeb.eventServer.isConnected = function () {
-                return _this170.tronWeb.eventServer.request(healthcheck).then(function () {
+                return _this171.tronWeb.eventServer.request(healthcheck).then(function () {
                   return true;
                 }).catch(function () {
                   return false;
@@ -151489,7 +151515,7 @@
           }, {
             key: "getEventsByContractAddress",
             value: function () {
-              var _getEventsByContractAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee513(contractAddress) {
+              var _getEventsByContractAddress = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee514(contractAddress) {
                 var options,
                   newOptions,
                   eventName,
@@ -151503,36 +151529,36 @@
                   limit,
                   qs,
                   res,
-                  _args516 = arguments;
-                return _regeneratorRuntime().wrap(function _callee513$(_context516) {
-                  while (1) switch (_context516.prev = _context516.next) {
+                  _args517 = arguments;
+                return _regeneratorRuntime().wrap(function _callee514$(_context517) {
+                  while (1) switch (_context517.prev = _context517.next) {
                     case 0:
-                      options = _args516.length > 1 && _args516[1] !== undefined ? _args516[1] : {};
+                      options = _args517.length > 1 && _args517[1] !== undefined ? _args517[1] : {};
                       newOptions = Object.assign({
                         limit: 20
                       }, options);
                       eventName = newOptions.eventName, blockNumber = newOptions.blockNumber, onlyUnconfirmed = newOptions.onlyUnconfirmed, onlyConfirmed = newOptions.onlyConfirmed, minBlockTimestamp = newOptions.minBlockTimestamp, maxBlockTimestamp = newOptions.maxBlockTimestamp, orderBy = newOptions.orderBy, fingerprint = newOptions.fingerprint;
                       limit = newOptions.limit;
                       if (this.tronWeb.eventServer) {
-                        _context516.next = 6;
+                        _context517.next = 6;
                         break;
                       }
                       throw new Error('No event server configured');
                     case 6:
                       if (this.tronWeb.isAddress(contractAddress)) {
-                        _context516.next = 8;
+                        _context517.next = 8;
                         break;
                       }
                       throw new Error('Invalid contract address provided');
                     case 8:
                       if (!(typeof minBlockTimestamp !== 'undefined' && !utils.isInteger(minBlockTimestamp))) {
-                        _context516.next = 10;
+                        _context517.next = 10;
                         break;
                       }
                       throw new Error('Invalid minBlockTimestamp provided');
                     case 10:
                       if (!(typeof maxBlockTimestamp !== 'undefined' && !utils.isInteger(maxBlockTimestamp))) {
-                        _context516.next = 12;
+                        _context517.next = 12;
                         break;
                       }
                       throw new Error('Invalid maxBlockTimestamp provided');
@@ -151551,22 +151577,22 @@
                       if (orderBy) qs.order_by = orderBy;
                       if (fingerprint) qs.fingerprint = fingerprint;
                       if (utils.isInteger(limit)) qs.limit = limit;
-                      _context516.next = 25;
+                      _context517.next = 25;
                       return this.tronWeb.eventServer.request("v1/contracts/".concat(this.tronWeb.address.fromHex(contractAddress), "/events?").concat(new URLSearchParams(qs).toString()));
                     case 25:
-                      res = _context516.sent;
+                      res = _context517.sent;
                       if (!res.success) {
-                        _context516.next = 28;
+                        _context517.next = 28;
                         break;
                       }
-                      return _context516.abrupt("return", res);
+                      return _context517.abrupt("return", res);
                     case 28:
                       throw new Error(res.error);
                     case 29:
                     case "end":
-                      return _context516.stop();
+                      return _context517.stop();
                   }
-                }, _callee513, this);
+                }, _callee514, this);
               }));
               function getEventsByContractAddress(_x447) {
                 return _getEventsByContractAddress.apply(this, arguments);
@@ -151576,48 +151602,7 @@
           }, {
             key: "getEventsByTransactionID",
             value: function () {
-              var _getEventsByTransactionID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee514(transactionID) {
-                var options,
-                  qs,
-                  _args517 = arguments;
-                return _regeneratorRuntime().wrap(function _callee514$(_context517) {
-                  while (1) switch (_context517.prev = _context517.next) {
-                    case 0:
-                      options = _args517.length > 1 && _args517[1] !== undefined ? _args517[1] : {};
-                      if (this.tronWeb.eventServer) {
-                        _context517.next = 3;
-                        break;
-                      }
-                      throw new Error('No event server configured');
-                    case 3:
-                      qs = {};
-                      if (typeof options.only_unconfirmed === 'boolean') {
-                        qs.only_unconfirmed = options.only_unconfirmed;
-                      }
-                      if (typeof options.only_confirmed === 'boolean') {
-                        qs.only_confirmed = options.only_confirmed;
-                      }
-                      return _context517.abrupt("return", this.tronWeb.eventServer.request("v1/transactions/".concat(transactionID, "/events?").concat(new URLSearchParams(qs).toString())).then(function (res) {
-                        if (res.success) {
-                          return res;
-                        }
-                        throw new Error(JSON.parse(res.error).message);
-                      }));
-                    case 7:
-                    case "end":
-                      return _context517.stop();
-                  }
-                }, _callee514, this);
-              }));
-              function getEventsByTransactionID(_x448) {
-                return _getEventsByTransactionID.apply(this, arguments);
-              }
-              return getEventsByTransactionID;
-            }()
-          }, {
-            key: "getEventsByBlockNumber",
-            value: function () {
-              var _getEventsByBlockNumber = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee515(blockNumber) {
+              var _getEventsByTransactionID = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee515(transactionID) {
                 var options,
                   qs,
                   _args518 = arguments;
@@ -151632,43 +151617,40 @@
                       throw new Error('No event server configured');
                     case 3:
                       qs = {};
+                      if (typeof options.only_unconfirmed === 'boolean') {
+                        qs.only_unconfirmed = options.only_unconfirmed;
+                      }
                       if (typeof options.only_confirmed === 'boolean') {
                         qs.only_confirmed = options.only_confirmed;
                       }
-                      if (options.limit) {
-                        qs.limit = options.limit;
-                      }
-                      if (options.fingerprint) {
-                        qs.fingerprint = options.fingerprint;
-                      }
-                      return _context518.abrupt("return", this.tronWeb.eventServer.request("v1/blocks/".concat(blockNumber, "/events?").concat(new URLSearchParams(qs).toString())).then(function (res) {
+                      return _context518.abrupt("return", this.tronWeb.eventServer.request("v1/transactions/".concat(transactionID, "/events?").concat(new URLSearchParams(qs).toString())).then(function (res) {
                         if (res.success) {
                           return res;
                         }
-                        throw new Error(res.error);
+                        throw new Error(JSON.parse(res.error).message);
                       }));
-                    case 8:
+                    case 7:
                     case "end":
                       return _context518.stop();
                   }
                 }, _callee515, this);
               }));
-              function getEventsByBlockNumber(_x449) {
-                return _getEventsByBlockNumber.apply(this, arguments);
+              function getEventsByTransactionID(_x448) {
+                return _getEventsByTransactionID.apply(this, arguments);
               }
-              return getEventsByBlockNumber;
+              return getEventsByTransactionID;
             }()
           }, {
-            key: "getEventsOfLatestBlock",
+            key: "getEventsByBlockNumber",
             value: function () {
-              var _getEventsOfLatestBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee516() {
+              var _getEventsByBlockNumber = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee516(blockNumber) {
                 var options,
                   qs,
                   _args519 = arguments;
                 return _regeneratorRuntime().wrap(function _callee516$(_context519) {
                   while (1) switch (_context519.prev = _context519.next) {
                     case 0:
-                      options = _args519.length > 0 && _args519[0] !== undefined ? _args519[0] : {};
+                      options = _args519.length > 1 && _args519[1] !== undefined ? _args519[1] : {};
                       if (this.tronWeb.eventServer) {
                         _context519.next = 3;
                         break;
@@ -151679,7 +151661,51 @@
                       if (typeof options.only_confirmed === 'boolean') {
                         qs.only_confirmed = options.only_confirmed;
                       }
-                      return _context519.abrupt("return", this.tronWeb.eventServer.request("v1/blocks/latest/events?".concat(new URLSearchParams(qs).toString())).then(function (res) {
+                      if (options.limit) {
+                        qs.limit = options.limit;
+                      }
+                      if (options.fingerprint) {
+                        qs.fingerprint = options.fingerprint;
+                      }
+                      return _context519.abrupt("return", this.tronWeb.eventServer.request("v1/blocks/".concat(blockNumber, "/events?").concat(new URLSearchParams(qs).toString())).then(function (res) {
+                        if (res.success) {
+                          return res;
+                        }
+                        throw new Error(res.error);
+                      }));
+                    case 8:
+                    case "end":
+                      return _context519.stop();
+                  }
+                }, _callee516, this);
+              }));
+              function getEventsByBlockNumber(_x449) {
+                return _getEventsByBlockNumber.apply(this, arguments);
+              }
+              return getEventsByBlockNumber;
+            }()
+          }, {
+            key: "getEventsOfLatestBlock",
+            value: function () {
+              var _getEventsOfLatestBlock = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee517() {
+                var options,
+                  qs,
+                  _args520 = arguments;
+                return _regeneratorRuntime().wrap(function _callee517$(_context520) {
+                  while (1) switch (_context520.prev = _context520.next) {
+                    case 0:
+                      options = _args520.length > 0 && _args520[0] !== undefined ? _args520[0] : {};
+                      if (this.tronWeb.eventServer) {
+                        _context520.next = 3;
+                        break;
+                      }
+                      throw new Error('No event server configured');
+                    case 3:
+                      qs = {};
+                      if (typeof options.only_confirmed === 'boolean') {
+                        qs.only_confirmed = options.only_confirmed;
+                      }
+                      return _context520.abrupt("return", this.tronWeb.eventServer.request("v1/blocks/latest/events?".concat(new URLSearchParams(qs).toString())).then(function (res) {
                         if (res.success) {
                           return res;
                         }
@@ -151687,9 +151713,9 @@
                       }));
                     case 6:
                     case "end":
-                      return _context519.stop();
+                      return _context520.stop();
                   }
-                }, _callee516, this);
+                }, _callee517, this);
               }));
               function getEventsOfLatestBlock() {
                 return _getEventsOfLatestBlock.apply(this, arguments);
@@ -151706,44 +151732,44 @@
         }
         var TronWeb = /*#__PURE__*/function (_EventEmitter) {
           function TronWeb(options) {
-            var _this171;
+            var _this172;
             var solidityNode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
             var eventServer = arguments.length > 2 ? arguments[2] : undefined;
             var privateKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
             _classCallCheck2(this, TronWeb);
-            _this171 = _callSuper(this, TronWeb);
-            _defineProperty2(_this171, "providers", void 0);
-            _defineProperty2(_this171, "BigNumber", void 0);
-            _defineProperty2(_this171, "transactionBuilder", void 0);
-            _defineProperty2(_this171, "trx", void 0);
-            _defineProperty2(_this171, "plugin", void 0);
-            _defineProperty2(_this171, "event", void 0);
-            _defineProperty2(_this171, "version", void 0);
-            _defineProperty2(_this171, "utils", void 0);
-            _defineProperty2(_this171, "defaultBlock", void 0);
-            _defineProperty2(_this171, "defaultPrivateKey", void 0);
-            _defineProperty2(_this171, "defaultAddress", void 0);
-            _defineProperty2(_this171, "fullnodeVersion", void 0);
-            _defineProperty2(_this171, "feeLimit", void 0);
-            _defineProperty2(_this171, "fullNode", void 0);
-            _defineProperty2(_this171, "solidityNode", void 0);
-            _defineProperty2(_this171, "eventServer", void 0);
-            _defineProperty2(_this171, "address", void 0);
-            _defineProperty2(_this171, "sha3", void 0);
-            _defineProperty2(_this171, "toHex", void 0);
-            _defineProperty2(_this171, "toUtf8", void 0);
-            _defineProperty2(_this171, "fromUtf8", void 0);
-            _defineProperty2(_this171, "toAscii", void 0);
-            _defineProperty2(_this171, "fromAscii", void 0);
-            _defineProperty2(_this171, "toDecimal", void 0);
-            _defineProperty2(_this171, "fromDecimal", void 0);
-            _defineProperty2(_this171, "fromSun", void 0);
-            _defineProperty2(_this171, "toSun", void 0);
-            _defineProperty2(_this171, "toBigNumber", void 0);
-            _defineProperty2(_this171, "isAddress", void 0);
-            _defineProperty2(_this171, "createAccount", void 0);
-            _defineProperty2(_this171, "createRandom", void 0);
-            _defineProperty2(_this171, "fromMnemonic", void 0);
+            _this172 = _callSuper(this, TronWeb);
+            _defineProperty2(_this172, "providers", void 0);
+            _defineProperty2(_this172, "BigNumber", void 0);
+            _defineProperty2(_this172, "transactionBuilder", void 0);
+            _defineProperty2(_this172, "trx", void 0);
+            _defineProperty2(_this172, "plugin", void 0);
+            _defineProperty2(_this172, "event", void 0);
+            _defineProperty2(_this172, "version", void 0);
+            _defineProperty2(_this172, "utils", void 0);
+            _defineProperty2(_this172, "defaultBlock", void 0);
+            _defineProperty2(_this172, "defaultPrivateKey", void 0);
+            _defineProperty2(_this172, "defaultAddress", void 0);
+            _defineProperty2(_this172, "fullnodeVersion", void 0);
+            _defineProperty2(_this172, "feeLimit", void 0);
+            _defineProperty2(_this172, "fullNode", void 0);
+            _defineProperty2(_this172, "solidityNode", void 0);
+            _defineProperty2(_this172, "eventServer", void 0);
+            _defineProperty2(_this172, "address", void 0);
+            _defineProperty2(_this172, "sha3", void 0);
+            _defineProperty2(_this172, "toHex", void 0);
+            _defineProperty2(_this172, "toUtf8", void 0);
+            _defineProperty2(_this172, "fromUtf8", void 0);
+            _defineProperty2(_this172, "toAscii", void 0);
+            _defineProperty2(_this172, "fromAscii", void 0);
+            _defineProperty2(_this172, "toDecimal", void 0);
+            _defineProperty2(_this172, "fromDecimal", void 0);
+            _defineProperty2(_this172, "fromSun", void 0);
+            _defineProperty2(_this172, "toSun", void 0);
+            _defineProperty2(_this172, "toBigNumber", void 0);
+            _defineProperty2(_this172, "isAddress", void 0);
+            _defineProperty2(_this172, "createAccount", void 0);
+            _defineProperty2(_this172, "createRandom", void 0);
+            _defineProperty2(_this172, "fromMnemonic", void 0);
             var fullNode;
             var headers = false;
             var eventHeaders = false;
@@ -151760,81 +151786,81 @@
             if (utils.isString(fullNode)) fullNode = new providers.HttpProvider(fullNode);
             if (utils.isString(solidityNode)) solidityNode = new providers.HttpProvider(solidityNode);
             if (utils.isString(eventServer)) eventServer = new providers.HttpProvider(eventServer);
-            _this171.event = new Event$1(_this171);
-            _this171.transactionBuilder = new TransactionBuilder(_this171);
-            _this171.trx = new Trx(_this171);
-            _this171.plugin = new Plugin(_this171, {
+            _this172.event = new Event$1(_this172);
+            _this172.transactionBuilder = new TransactionBuilder(_this172);
+            _this172.trx = new Trx(_this172);
+            _this172.plugin = new Plugin(_this172, {
               disablePlugins: isValidOptions(options) ? options.disablePlugins : false
             });
-            _this171.utils = utils;
-            _this171.setFullNode(fullNode);
-            _this171.setSolidityNode(solidityNode);
-            _this171.setEventServer(eventServer);
-            _this171.providers = providers;
-            _this171.BigNumber = BigNumber;
-            _this171.defaultBlock = false;
-            _this171.defaultPrivateKey = false;
-            _this171.defaultAddress = {
+            _this172.utils = utils;
+            _this172.setFullNode(fullNode);
+            _this172.setSolidityNode(solidityNode);
+            _this172.setEventServer(eventServer);
+            _this172.providers = providers;
+            _this172.BigNumber = BigNumber;
+            _this172.defaultBlock = false;
+            _this172.defaultPrivateKey = false;
+            _this172.defaultAddress = {
               hex: false,
               base58: false
             };
-            _this171.version = TronWeb.version;
-            _this171.sha3 = TronWeb.sha3;
-            _this171.fromUtf8 = TronWeb.fromUtf8;
-            _this171.address = TronWeb.address;
-            _this171.toAscii = TronWeb.toAscii;
-            _this171.toUtf8 = TronWeb.toUtf8;
-            _this171.isAddress = TronWeb.isAddress;
-            _this171.fromAscii = TronWeb.fromAscii;
-            _this171.toHex = TronWeb.toHex;
-            _this171.toBigNumber = TronWeb.toBigNumber;
-            _this171.toDecimal = TronWeb.toDecimal;
-            _this171.fromDecimal = TronWeb.fromDecimal;
-            _this171.toSun = TronWeb.toSun;
-            _this171.fromSun = TronWeb.fromSun;
-            _this171.createAccount = TronWeb.createAccount;
-            _this171.createRandom = TronWeb.createRandom;
-            _this171.fromMnemonic = TronWeb.fromMnemonic;
-            if (privateKey) _this171.setPrivateKey(privateKey);
-            _this171.fullnodeVersion = DEFAULT_VERSION;
-            _this171.feeLimit = FEE_LIMIT;
+            _this172.version = TronWeb.version;
+            _this172.sha3 = TronWeb.sha3;
+            _this172.fromUtf8 = TronWeb.fromUtf8;
+            _this172.address = TronWeb.address;
+            _this172.toAscii = TronWeb.toAscii;
+            _this172.toUtf8 = TronWeb.toUtf8;
+            _this172.isAddress = TronWeb.isAddress;
+            _this172.fromAscii = TronWeb.fromAscii;
+            _this172.toHex = TronWeb.toHex;
+            _this172.toBigNumber = TronWeb.toBigNumber;
+            _this172.toDecimal = TronWeb.toDecimal;
+            _this172.fromDecimal = TronWeb.fromDecimal;
+            _this172.toSun = TronWeb.toSun;
+            _this172.fromSun = TronWeb.fromSun;
+            _this172.createAccount = TronWeb.createAccount;
+            _this172.createRandom = TronWeb.createRandom;
+            _this172.fromMnemonic = TronWeb.fromMnemonic;
+            if (privateKey) _this172.setPrivateKey(privateKey);
+            _this172.fullnodeVersion = DEFAULT_VERSION;
+            _this172.feeLimit = FEE_LIMIT;
             if (headers) {
-              _this171.setFullNodeHeader(headers);
+              _this172.setFullNodeHeader(headers);
             }
             if (eventHeaders) {
-              _this171.setEventHeader(eventHeaders);
+              _this172.setEventHeader(eventHeaders);
             }
-            return _this171;
+            return _this172;
           }
           _inherits(TronWeb, _EventEmitter);
           return _createClass2(TronWeb, [{
             key: "getFullnodeVersion",
             value: function () {
-              var _getFullnodeVersion = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee517() {
+              var _getFullnodeVersion = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee518() {
                 var nodeInfo;
-                return _regeneratorRuntime().wrap(function _callee517$(_context520) {
-                  while (1) switch (_context520.prev = _context520.next) {
+                return _regeneratorRuntime().wrap(function _callee518$(_context521) {
+                  while (1) switch (_context521.prev = _context521.next) {
                     case 0:
-                      _context520.prev = 0;
-                      _context520.next = 3;
+                      _context521.prev = 0;
+                      _context521.next = 3;
                       return this.trx.getNodeInfo();
                     case 3:
-                      nodeInfo = _context520.sent;
+                      nodeInfo = _context521.sent;
                       this.fullnodeVersion = nodeInfo.configNodeInfo.codeVersion;
                       if (this.fullnodeVersion.split('.').length === 2) {
                         this.fullnodeVersion += '.0';
                       }
-                      _context520.next = 11;
+                      _context521.next = 11;
                       break;
                     case 8:
-                      _context520.prev = 8;
-                      _context520.t0 = _context520["catch"](0);
+                      _context521.prev = 8;
+                      _context521.t0 = _context521["catch"](0);
                       this.fullnodeVersion = DEFAULT_VERSION;
                     case 11:
                     case "end":
-                      return _context520.stop();
+                      return _context521.stop();
                   }
-                }, _callee517, this, [[0, 8]]);
+                }, _callee518, this, [[0, 8]]);
               }));
               function getFullnodeVersion() {
                 return _getFullnodeVersion.apply(this, arguments);
@@ -151974,39 +152000,39 @@
           }, {
             key: "isConnected",
             value: function () {
-              var _isConnected2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee518() {
-                return _regeneratorRuntime().wrap(function _callee518$(_context521) {
-                  while (1) switch (_context521.prev = _context521.next) {
+              var _isConnected2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee519() {
+                return _regeneratorRuntime().wrap(function _callee519$(_context522) {
+                  while (1) switch (_context522.prev = _context522.next) {
                     case 0:
-                      _context521.next = 2;
+                      _context522.next = 2;
                       return this.fullNode.isConnected();
                     case 2:
-                      _context521.t0 = _context521.sent;
-                      _context521.next = 5;
+                      _context522.t0 = _context522.sent;
+                      _context522.next = 5;
                       return this.solidityNode.isConnected();
                     case 5:
-                      _context521.t1 = _context521.sent;
-                      _context521.t2 = this.eventServer;
-                      if (!_context521.t2) {
-                        _context521.next = 11;
+                      _context522.t1 = _context522.sent;
+                      _context522.t2 = this.eventServer;
+                      if (!_context522.t2) {
+                        _context522.next = 11;
                         break;
                       }
-                      _context521.next = 10;
+                      _context522.next = 10;
                       return this.eventServer.isConnected();
                     case 10:
-                      _context521.t2 = _context521.sent;
+                      _context522.t2 = _context522.sent;
                     case 11:
-                      _context521.t3 = _context521.t2;
-                      return _context521.abrupt("return", {
-                        fullNode: _context521.t0,
-                        solidityNode: _context521.t1,
-                        eventServer: _context521.t3
+                      _context522.t3 = _context522.t2;
+                      return _context522.abrupt("return", {
+                        fullNode: _context522.t0,
+                        solidityNode: _context522.t1,
+                        eventServer: _context522.t3
                       });
                     case 13:
                     case "end":
-                      return _context521.stop();
+                      return _context522.stop();
                   }
-                }, _callee518, this);
+                }, _callee519, this);
               }));
               function isConnected() {
                 return _isConnected2.apply(this, arguments);
@@ -152146,18 +152172,18 @@
           }, {
             key: "createAccount",
             value: function () {
-              var _createAccount2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee519() {
+              var _createAccount2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee520() {
                 var account;
-                return _regeneratorRuntime().wrap(function _callee519$(_context522) {
-                  while (1) switch (_context522.prev = _context522.next) {
+                return _regeneratorRuntime().wrap(function _callee520$(_context523) {
+                  while (1) switch (_context523.prev = _context523.next) {
                     case 0:
                       account = utils.accounts.generateAccount();
-                      return _context522.abrupt("return", account);
+                      return _context523.abrupt("return", account);
                     case 2:
                     case "end":
-                      return _context522.stop();
+                      return _context523.stop();
                   }
-                }, _callee519);
+                }, _callee520);
               }));
               function createAccount() {
                 return _createAccount2.apply(this, arguments);
@@ -152295,9 +152321,9 @@
           return null;
         }
         function encodeType(name, fields) {
-          return "".concat(name, "(").concat(fields.map(function (_ref332) {
-            var name = _ref332.name,
-              type = _ref332.type;
+          return "".concat(name, "(").concat(fields.map(function (_ref331) {
+            var name = _ref331.name,
+              type = _ref331.type;
             return type + ' ' + name;
           }).join(','), ")");
         }
@@ -152517,7 +152543,7 @@
           }, {
             key: "_visit",
             value: function _visit(type, value, callback) {
-              var _this172 = this;
+              var _this173 = this;
               // Basic encoder type (address, bool, uint256, etc)
               {
                 var encoder = getBaseEncoder(type);
@@ -152530,16 +152556,16 @@
               if (match) {
                 assertArgument(!match[3] || parseInt(match[3]) === value.length, "array length mismatch; expected length ".concat(parseInt(match[3])), 'value', value);
                 return value.map(function (v) {
-                  return _this172._visit(match[1], v, callback);
+                  return _this173._visit(match[1], v, callback);
                 });
               }
               // Struct
               var fields = this.types[type];
               if (fields) {
-                return fields.reduce(function (accum, _ref333) {
-                  var name = _ref333.name,
-                    type = _ref333.type;
-                  accum[name] = _this172._visit(type, value[name], callback);
+                return fields.reduce(function (accum, _ref332) {
+                  var name = _ref332.name,
+                    type = _ref332.type;
+                  accum[name] = _this173._visit(type, value[name], callback);
                   return accum;
                 }, {});
               }
@@ -152630,10 +152656,10 @@
           }, {
             key: "resolveNames",
             value: function () {
-              var _resolveNames2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee520(domain, types, value, resolveName) {
+              var _resolveNames2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee521(domain, types, value, resolveName) {
                 var _key57, ensCache, encoder, name;
-                return _regeneratorRuntime().wrap(function _callee520$(_context523) {
-                  while (1) switch (_context523.prev = _context523.next) {
+                return _regeneratorRuntime().wrap(function _callee521$(_context524) {
+                  while (1) switch (_context524.prev = _context524.next) {
                     case 0:
                       // Make a copy to isolate it from the object passed in
                       domain = Object.assign({}, domain);
@@ -152657,18 +152683,18 @@
                         return value;
                       });
                       // Lookup each name
-                      _context523.t0 = _regeneratorRuntime().keys(ensCache);
+                      _context524.t0 = _regeneratorRuntime().keys(ensCache);
                     case 7:
-                      if ((_context523.t1 = _context523.t0()).done) {
-                        _context523.next = 14;
+                      if ((_context524.t1 = _context524.t0()).done) {
+                        _context524.next = 14;
                         break;
                       }
-                      name = _context523.t1.value;
-                      _context523.next = 11;
+                      name = _context524.t1.value;
+                      _context524.next = 11;
                       return resolveName(name);
                     case 11:
-                      ensCache[name] = _context523.sent;
-                      _context523.next = 7;
+                      ensCache[name] = _context524.sent;
+                      _context524.next = 7;
                       break;
                     case 14:
                       // Replace the domain verifyingContract if needed
@@ -152682,15 +152708,15 @@
                         }
                         return value;
                       });
-                      return _context523.abrupt("return", {
+                      return _context524.abrupt("return", {
                         domain: domain,
                         value: value
                       });
                     case 17:
                     case "end":
-                      return _context523.stop();
+                      return _context524.stop();
                   }
-                }, _callee520);
+                }, _callee521);
               }));
               function resolveNames(_x450, _x451, _x452, _x453) {
                 return _resolveNames2.apply(this, arguments);
@@ -152757,7 +152783,7 @@
           }]);
         }();
         function _getEncoder3(type) {
-          var _this178 = this;
+          var _this179 = this;
           // Basic encoder type (address, bool, uint256, etc)
           {
             var encoder = getBaseEncoder(type);
@@ -152773,7 +152799,7 @@
             return function (value) {
               assertArgument(!match[3] || parseInt(match[3]) === value.length, "array length mismatch; expected length ".concat(parseInt(match[3])), 'value', value);
               var result = value.map(subEncoder);
-              if (_classPrivateFieldGet(_fullTypes2, _this178).has(subtype)) {
+              if (_classPrivateFieldGet(_fullTypes2, _this179).has(subtype)) {
                 result = result.map(keccak256);
               }
               return keccak256(concat(result));
@@ -152784,11 +152810,11 @@
           if (fields) {
             var encodedType = id(_classPrivateFieldGet(_fullTypes2, this).get(type));
             return function (value) {
-              var values = fields.map(function (_ref347) {
-                var name = _ref347.name,
-                  type = _ref347.type;
-                var result = _this178.getEncoder(type)(value[name]);
-                if (_classPrivateFieldGet(_fullTypes2, _this178).has(type)) {
+              var values = fields.map(function (_ref346) {
+                var name = _ref346.name,
+                  type = _ref346.type;
+                var result = _this179.getEncoder(type)(value[name]);
+                if (_classPrivateFieldGet(_fullTypes2, _this179).has(type)) {
                   return keccak256(result);
                 }
                 return result;
@@ -152946,20 +152972,20 @@
          */
         var HashMD = /*#__PURE__*/function (_Hash) {
           function HashMD(blockLen, outputLen, padOffset, isLE) {
-            var _this173;
+            var _this174;
             _classCallCheck2(this, HashMD);
-            _this173 = _callSuper(this, HashMD);
-            _this173.blockLen = blockLen;
-            _this173.outputLen = outputLen;
-            _this173.padOffset = padOffset;
-            _this173.isLE = isLE;
-            _this173.finished = false;
-            _this173.length = 0;
-            _this173.pos = 0;
-            _this173.destroyed = false;
-            _this173.buffer = new Uint8Array(blockLen);
-            _this173.view = createView(_this173.buffer);
-            return _this173;
+            _this174 = _callSuper(this, HashMD);
+            _this174.blockLen = blockLen;
+            _this174.outputLen = outputLen;
+            _this174.padOffset = padOffset;
+            _this174.isLE = isLE;
+            _this174.finished = false;
+            _this174.length = 0;
+            _this174.pos = 0;
+            _this174.destroyed = false;
+            _this174.buffer = new Uint8Array(blockLen);
+            _this174.view = createView(_this174.buffer);
+            return _this174;
           }
           _inherits(HashMD, _Hash);
           return _createClass2(HashMD, [{
@@ -153075,20 +153101,20 @@
         var SHA256_W = /* @__PURE__ */new Uint32Array(64);
         var SHA256$1 = /*#__PURE__*/function (_HashMD) {
           function SHA256() {
-            var _this174;
+            var _this175;
             _classCallCheck2(this, SHA256);
-            _this174 = _callSuper(this, SHA256, [64, 32, 8, false]);
+            _this175 = _callSuper(this, SHA256, [64, 32, 8, false]);
             // We cannot use array here since array allows indexing by variable
             // which means optimizer/compiler cannot use registers.
-            _this174.A = SHA256_IV[0] | 0;
-            _this174.B = SHA256_IV[1] | 0;
-            _this174.C = SHA256_IV[2] | 0;
-            _this174.D = SHA256_IV[3] | 0;
-            _this174.E = SHA256_IV[4] | 0;
-            _this174.F = SHA256_IV[5] | 0;
-            _this174.G = SHA256_IV[6] | 0;
-            _this174.H = SHA256_IV[7] | 0;
-            return _this174;
+            _this175.A = SHA256_IV[0] | 0;
+            _this175.B = SHA256_IV[1] | 0;
+            _this175.C = SHA256_IV[2] | 0;
+            _this175.D = SHA256_IV[3] | 0;
+            _this175.E = SHA256_IV[4] | 0;
+            _this175.F = SHA256_IV[5] | 0;
+            _this175.G = SHA256_IV[6] | 0;
+            _this175.H = SHA256_IV[7] | 0;
+            return _this175;
           }
           _inherits(SHA256, _HashMD);
           return _createClass2(SHA256, [{
@@ -153187,30 +153213,30 @@
         // HMAC (RFC 2104)
         var HMAC = /*#__PURE__*/function (_Hash2) {
           function HMAC(hash$1, _key) {
-            var _this175;
+            var _this176;
             _classCallCheck2(this, HMAC);
-            _this175 = _callSuper(this, HMAC);
-            _this175.finished = false;
-            _this175.destroyed = false;
+            _this176 = _callSuper(this, HMAC);
+            _this176.finished = false;
+            _this176.destroyed = false;
             hash(hash$1);
             var key = toBytes(_key);
-            _this175.iHash = hash$1.create();
-            if (typeof _this175.iHash.update !== 'function') throw new Error('Expected instance of class which extends utils.Hash');
-            _this175.blockLen = _this175.iHash.blockLen;
-            _this175.outputLen = _this175.iHash.outputLen;
-            var blockLen = _this175.blockLen;
+            _this176.iHash = hash$1.create();
+            if (typeof _this176.iHash.update !== 'function') throw new Error('Expected instance of class which extends utils.Hash');
+            _this176.blockLen = _this176.iHash.blockLen;
+            _this176.outputLen = _this176.iHash.outputLen;
+            var blockLen = _this176.blockLen;
             var pad = new Uint8Array(blockLen);
             // blockLen can be bigger than outputLen
             pad.set(key.length > blockLen ? hash$1.create().update(key).digest() : key);
             for (var _i243 = 0; _i243 < pad.length; _i243++) pad[_i243] ^= 0x36;
-            _this175.iHash.update(pad);
+            _this176.iHash.update(pad);
             // By doing update (processing of first block) of outer hash here we can re-use it between multiple calls via clone
-            _this175.oHash = hash$1.create();
+            _this176.oHash = hash$1.create();
             // Undo internal XOR && apply outer XOR
             for (var _i244 = 0; _i244 < pad.length; _i244++) pad[_i244] ^= 0x36 ^ 0x5c;
-            _this175.oHash.update(pad);
+            _this176.oHash.update(pad);
             pad.fill(0);
-            return _this175;
+            return _this176;
           }
           _inherits(HMAC, _Hash2);
           return _createClass2(HMAC, [{
@@ -154717,9 +154743,9 @@
             }], [{
               key: "fromAffine",
               value: function fromAffine(p) {
-                var _ref334 = p || {},
-                  x = _ref334.x,
-                  y = _ref334.y;
+                var _ref333 = p || {},
+                  x = _ref333.x,
+                  y = _ref333.y;
                 if (!p || !Fp.isValid(x) || !Fp.isValid(y)) throw new Error('invalid affine point');
                 if (p instanceof Point) throw new Error('projective point not allowed');
                 var is0 = function is0(i) {
@@ -155693,8 +155719,8 @@
         var CloseRoundedIcon = createSvgIcon( /*#__PURE__*/jsxRuntimeExports.jsx("path", {
           d: "M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7a.996.996 0 0 0-1.41 0c-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4"
         }), 'CloseRounded');
-        var UsageBox = styled(Box)(function (_ref335) {
-          var background = _ref335.background;
+        var UsageBox = styled(Box)(function (_ref334) {
+          var background = _ref334.background;
           return {
             width: "280px",
             borderRadius: 10,
@@ -155786,38 +155812,8 @@
             title = _reactExports$useStat42[0],
             setTitle = _reactExports$useStat42[1];
           var onSignMessage = /*#__PURE__*/function () {
-            var _ref336 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee521() {
+            var _ref335 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee522() {
               var res;
-              return _regeneratorRuntime().wrap(function _callee521$(_context524) {
-                while (1) switch (_context524.prev = _context524.next) {
-                  case 0:
-                    if (adapter) {
-                      _context524.next = 2;
-                      break;
-                    }
-                    return _context524.abrupt("return");
-                  case 2:
-                    _context524.next = 4;
-                    return adapter.signMessage(message);
-                  case 4:
-                    res = _context524.sent;
-                    setSignature(res);
-                    setSuccess(true);
-                    setOpen(true);
-                    setTitle("Sign Message");
-                  case 9:
-                  case "end":
-                    return _context524.stop();
-                }
-              }, _callee521);
-            }));
-            return function onSignMessage() {
-              return _ref336.apply(this, arguments);
-            };
-          }();
-          var onVerifySignedMessage = /*#__PURE__*/function () {
-            var _ref337 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee522() {
-              var recoveredAddress;
               return _regeneratorRuntime().wrap(function _callee522$(_context525) {
                 while (1) switch (_context525.prev = _context525.next) {
                   case 0:
@@ -155828,25 +155824,26 @@
                     return _context525.abrupt("return");
                   case 2:
                     _context525.next = 4;
-                    return tronWeb.trx.verifyMessageV2(message, signature);
+                    return adapter.signMessage(message);
                   case 4:
-                    recoveredAddress = _context525.sent;
-                    setSuccess(recoveredAddress === adapter.address);
+                    res = _context525.sent;
+                    setSignature(res);
+                    setSuccess(true);
                     setOpen(true);
-                    setTitle("Verify Message");
-                  case 8:
+                    setTitle("Sign Message");
+                  case 9:
                   case "end":
                     return _context525.stop();
                 }
               }, _callee522);
             }));
-            return function onVerifySignedMessage() {
-              return _ref337.apply(this, arguments);
+            return function onSignMessage() {
+              return _ref335.apply(this, arguments);
             };
           }();
-          var onTransfer = /*#__PURE__*/function () {
-            var _ref338 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee523() {
-              var transaction, signedTransaction;
+          var onVerifySignedMessage = /*#__PURE__*/function () {
+            var _ref336 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee523() {
+              var recoveredAddress;
               return _regeneratorRuntime().wrap(function _callee523$(_context526) {
                 while (1) switch (_context526.prev = _context526.next) {
                   case 0:
@@ -155857,14 +155854,43 @@
                     return _context526.abrupt("return");
                   case 2:
                     _context526.next = 4;
+                    return tronWeb.trx.verifyMessageV2(message, signature);
+                  case 4:
+                    recoveredAddress = _context526.sent;
+                    setSuccess(recoveredAddress === adapter.address);
+                    setOpen(true);
+                    setTitle("Verify Message");
+                  case 8:
+                  case "end":
+                    return _context526.stop();
+                }
+              }, _callee523);
+            }));
+            return function onVerifySignedMessage() {
+              return _ref336.apply(this, arguments);
+            };
+          }();
+          var onTransfer = /*#__PURE__*/function () {
+            var _ref337 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee524() {
+              var transaction, signedTransaction;
+              return _regeneratorRuntime().wrap(function _callee524$(_context527) {
+                while (1) switch (_context527.prev = _context527.next) {
+                  case 0:
+                    if (adapter) {
+                      _context527.next = 2;
+                      break;
+                    }
+                    return _context527.abrupt("return");
+                  case 2:
+                    _context527.next = 4;
                     return tronWeb.transactionBuilder.sendTrx(receiver, tronWeb.toSun(1e-6), adapter.address || "");
                   case 4:
-                    transaction = _context526.sent;
-                    _context526.next = 7;
+                    transaction = _context527.sent;
+                    _context527.next = 7;
                     return adapter.signTransaction(transaction);
                   case 7:
-                    signedTransaction = _context526.sent;
-                    _context526.next = 10;
+                    signedTransaction = _context527.sent;
+                    _context527.next = 10;
                     return tronWeb.trx.sendRawTransaction(signedTransaction);
                   case 10:
                     setSuccess(true);
@@ -155872,12 +155898,12 @@
                     setTitle("Transfer");
                   case 13:
                   case "end":
-                    return _context526.stop();
+                    return _context527.stop();
                 }
-              }, _callee523);
+              }, _callee524);
             }));
             return function onTransfer() {
-              return _ref338.apply(this, arguments);
+              return _ref337.apply(this, arguments);
             };
           }();
           var InformAlertContent = reactExports.useMemo(function () {
@@ -156068,23 +156094,23 @@
             return _handleSwitchChain.apply(this, arguments);
           }
           function _handleSwitchChain() {
-            _handleSwitchChain = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee524() {
-              return _regeneratorRuntime().wrap(function _callee524$(_context527) {
-                while (1) switch (_context527.prev = _context527.next) {
+            _handleSwitchChain = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee525() {
+              return _regeneratorRuntime().wrap(function _callee525$(_context528) {
+                while (1) switch (_context528.prev = _context528.next) {
                   case 0:
                     if (adapter) {
-                      _context527.next = 2;
+                      _context528.next = 2;
                       break;
                     }
-                    return _context527.abrupt("return");
+                    return _context528.abrupt("return");
                   case 2:
-                    _context527.next = 4;
+                    _context528.next = 4;
                     return adapter.switchChain(chainId);
                   case 4:
                   case "end":
-                    return _context527.stop();
+                    return _context528.stop();
                 }
-              }, _callee524);
+              }, _callee525);
             }));
             return _handleSwitchChain.apply(this, arguments);
           }
@@ -156143,11 +156169,11 @@
             alignItems: "center"
           }
         });
-        var BasicInfoWrap = styled("div")(function (_ref339) {
-          var _ref339$width = _ref339.width,
-            width = _ref339$width === void 0 ? "610px" : _ref339$width,
-            _ref339$marginLeft = _ref339.marginLeft,
-            marginLeft = _ref339$marginLeft === void 0 ? "0px" : _ref339$marginLeft;
+        var BasicInfoWrap = styled("div")(function (_ref338) {
+          var _ref338$width = _ref338.width,
+            width = _ref338$width === void 0 ? "610px" : _ref338$width,
+            _ref338$marginLeft = _ref338.marginLeft,
+            marginLeft = _ref338$marginLeft === void 0 ? "0px" : _ref338$marginLeft;
           return {
             width: width,
             marginLeft: marginLeft,
