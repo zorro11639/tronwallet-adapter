@@ -19983,7 +19983,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-VxbNkHdG.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-Dah3zjGd.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -91757,7 +91757,7 @@ const resolveConfig = (config2) => {
   const newConfig = mergeConfig$1({}, config2);
   let { data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth } = newConfig;
   newConfig.headers = headers = AxiosHeaders$1.from(headers);
-  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config2.params, config2.paramsSerializer);
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url, newConfig.allowAbsoluteUrls), config2.params, config2.paramsSerializer);
   if (auth) {
     headers.set(
       "Authorization",
@@ -92274,7 +92274,7 @@ function dispatchRequest(config2) {
     return Promise.reject(reason);
   });
 }
-const VERSION$1 = "1.8.2";
+const VERSION$1 = "1.8.3";
 const validators$1 = {};
 ["object", "boolean", "number", "function", "string", "symbol"].forEach((type2, i3) => {
   validators$1[type2] = function validator2(thing) {

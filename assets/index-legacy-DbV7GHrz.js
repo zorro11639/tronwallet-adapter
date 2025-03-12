@@ -23209,7 +23209,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-BnwOpXy3.js');
+                        return module.import('./index-legacy-DWpTUkw6.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -119180,7 +119180,7 @@
             headers = newConfig.headers,
             auth = newConfig.auth;
           newConfig.headers = headers = AxiosHeaders$1.from(headers);
-          newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
+          newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url, newConfig.allowAbsoluteUrls), config.params, config.paramsSerializer);
 
           // HTTP basic authentication
           if (auth) {
@@ -120009,7 +120009,7 @@
             return Promise.reject(reason);
           });
         }
-        var VERSION$1 = "1.8.2";
+        var VERSION$1 = "1.8.3";
         var validators$1 = {};
 
         // eslint-disable-next-line func-names
