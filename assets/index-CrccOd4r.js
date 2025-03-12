@@ -19983,7 +19983,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-Dah3zjGd.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-DIgCfsxS.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -69356,7 +69356,8 @@ class FoxWalletAdapter extends Adapter {
     let times = 0;
     const maxTimes = Math.floor(this.config.checkTimeout / 200);
     const check = () => __awaiter$1(this, void 0, void 0, function* () {
-      if (this._wallet && this._wallet.ready) {
+      var _a4, _b3, _c3;
+      if ((_c3 = (_b3 = (_a4 = this._wallet) === null || _a4 === void 0 ? void 0 : _a4.tronWeb) === null || _b3 === void 0 ? void 0 : _b3.defaultAddress) === null || _c3 === void 0 ? void 0 : _c3.base58) {
         this.checkReadyInterval && clearInterval(this.checkReadyInterval);
         this.checkReadyInterval = null;
         yield this._updateWallet();

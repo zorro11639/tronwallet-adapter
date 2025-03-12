@@ -23209,7 +23209,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-DWpTUkw6.js');
+                        return module.import('./index-legacy-ZIK2tqzL.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -88477,10 +88477,11 @@
               var maxTimes = Math.floor(this.config.checkTimeout / 200);
               var check = function check() {
                 return __awaiter$1(_this119, void 0, void 0, /*#__PURE__*/_regeneratorRuntime().mark(function _callee360() {
+                  var _a, _b, _c;
                   return _regeneratorRuntime().wrap(function _callee360$(_context361) {
                     while (1) switch (_context361.prev = _context361.next) {
                       case 0:
-                        if (!(this._wallet && this._wallet.ready)) {
+                        if (!((_c = (_b = (_a = this._wallet) === null || _a === void 0 ? void 0 : _a.tronWeb) === null || _b === void 0 ? void 0 : _b.defaultAddress) === null || _c === void 0 ? void 0 : _c.base58)) {
                           _context361.next = 8;
                           break;
                         }
