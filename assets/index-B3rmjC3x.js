@@ -18843,39 +18843,6 @@ function isInBrowser() {
 function isInMobileBrowser() {
   return typeof navigator !== "undefined" && navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i);
 }
-function useLocalStorage(key2, defaultState) {
-  const [state2, setState] = reactExports.useState(() => {
-    try {
-      const value = localStorage.getItem(key2);
-      if (value)
-        return JSON.parse(value);
-    } catch (error) {
-      if (isInBrowser()) {
-        console.error(error);
-      }
-    }
-    return defaultState;
-  });
-  const isFirstRender = reactExports.useRef(true);
-  reactExports.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    try {
-      if (state2 === null) {
-        localStorage.removeItem(key2);
-      } else {
-        localStorage.setItem(key2, JSON.stringify(state2));
-      }
-    } catch (error) {
-      if (isInBrowser()) {
-        console.error(error);
-      }
-    }
-  }, [state2, key2]);
-  return [state2, setState];
-}
 var __awaiter$f = function(thisArg, _arguments, P2, generator) {
   function adopt(value) {
     return value instanceof P2 ? value : new P2(function(resolve) {
@@ -20016,7 +19983,7 @@ let d$4 = class d2 {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-hB5VIMVD.js"), true ? [] : void 0);
+      await __vitePreload(() => import("./index-VxbNkHdG.js"), true ? [] : void 0);
       const e3 = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e3), p$4.setIsUiLoaded(true);
     }
@@ -69880,7 +69847,14 @@ function WalletProvider({ children }) {
       new WalletConnectAdapter(walletconnectConfig)
     ];
   }, []);
-  const [selectedAdapterName, setSelectedAdapterName] = useLocalStorage("TronWalletAdapterUsage", TronLinkAdapterName);
+  const walletName = decodeURIComponent(new URLSearchParams(location.search).get("wallet") || "");
+  const [selectedAdapterName, _setSelectedAdapterName] = reactExports.useState(walletName || TronLinkAdapterName);
+  const setSelectedAdapterName = reactExports.useCallback((selectedAdapterName2) => {
+    _setSelectedAdapterName(selectedAdapterName2);
+    setTimeout(() => {
+      window.history.replaceState({}, "", "/?wallet=".concat(encodeURIComponent(selectedAdapterName2)));
+    }, 200);
+  }, [_setSelectedAdapterName]);
   const adapter = reactExports.useMemo(() => adapters2.find((adapter2) => adapter2.name === selectedAdapterName), [selectedAdapterName, adapters2]);
   const [connectionState, setConnectionState] = reactExports.useState({
     connected: false,
@@ -116281,7 +116255,7 @@ const InformAlert = styled(Snackbar)({
   marginTop: "20px",
   border: "1px solid rgba(214, 217, 224, 1)",
   borderRadius: "10px",
-  backgroundColor: "rgba(255, 255, 255, 0.7)",
+  backgroundColor: "rgba(255, 255, 255, 1)",
   minWidth: "320px",
   justifyContent: "flex-start"
 });

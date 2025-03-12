@@ -21206,41 +21206,6 @@
         function isInMobileBrowser() {
           return typeof navigator !== 'undefined' && navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i);
         }
-        function useLocalStorage(key, defaultState) {
-          var _reactExports$useStat29 = reactExports.useState(function () {
-              try {
-                var value = localStorage.getItem(key);
-                if (value) return JSON.parse(value);
-              } catch (error) {
-                if (isInBrowser()) {
-                  console.error(error);
-                }
-              }
-              return defaultState;
-            }),
-            _reactExports$useStat30 = _slicedToArray2(_reactExports$useStat29, 2),
-            state = _reactExports$useStat30[0],
-            setState = _reactExports$useStat30[1];
-          var isFirstRender = reactExports.useRef(true);
-          reactExports.useEffect(function () {
-            if (isFirstRender.current) {
-              isFirstRender.current = false;
-              return;
-            }
-            try {
-              if (state === null) {
-                localStorage.removeItem(key);
-              } else {
-                localStorage.setItem(key, JSON.stringify(state));
-              }
-            } catch (error) {
-              if (isInBrowser()) {
-                console.error(error);
-              }
-            }
-          }, [state, key]);
-          return [state, setState];
-        }
         var __awaiter$f = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
           function adopt(value) {
             return value instanceof P ? value : new P(function (resolve) {
@@ -23244,7 +23209,7 @@
                       }
                       _context19.next = 3;
                       return __vitePreload(function () {
-                        return module.import('./index-legacy-BBuW3kUV.js');
+                        return module.import('./index-legacy-BnwOpXy3.js');
                       }, false ? __VITE_PRELOAD__ : void 0);
                     case 3:
                       _e4 = document.createElement("wcm-modal");
@@ -89227,10 +89192,17 @@
           var adapters = reactExports.useMemo(function () {
             return [new TronLinkAdapter(), new TokenPocketAdapter(), new OkxWalletAdapter(), new BitKeepAdapter(), new GateWalletAdapter(), new ImTokenAdapter(), new FoxWalletAdapter(), new BybitWalletAdapter(), new LedgerAdapter(), new WalletConnectAdapter(walletconnectConfig)];
           }, []);
-          var _useLocalStorage = useLocalStorage("TronWalletAdapterUsage", TronLinkAdapterName),
-            _useLocalStorage2 = _slicedToArray2(_useLocalStorage, 2),
-            selectedAdapterName = _useLocalStorage2[0],
-            setSelectedAdapterName = _useLocalStorage2[1];
+          var walletName = decodeURIComponent(new URLSearchParams(location.search).get("wallet") || "");
+          var _reactExports$useStat29 = reactExports.useState(walletName || TronLinkAdapterName),
+            _reactExports$useStat30 = _slicedToArray2(_reactExports$useStat29, 2),
+            selectedAdapterName = _reactExports$useStat30[0],
+            _setSelectedAdapterName = _reactExports$useStat30[1];
+          var setSelectedAdapterName = reactExports.useCallback(function (selectedAdapterName2) {
+            _setSelectedAdapterName(selectedAdapterName2);
+            setTimeout(function () {
+              window.history.replaceState({}, "", "/?wallet=".concat(encodeURIComponent(selectedAdapterName2)));
+            }, 200);
+          }, [_setSelectedAdapterName]);
           var adapter = reactExports.useMemo(function () {
             return adapters.find(function (adapter2) {
               return adapter2.name === selectedAdapterName;
@@ -155773,7 +155745,7 @@
           marginTop: "20px",
           border: "1px solid rgba(214, 217, 224, 1)",
           borderRadius: "10px",
-          backgroundColor: "rgba(255, 255, 255, 0.7)",
+          backgroundColor: "rgba(255, 255, 255, 1)",
           minWidth: "320px",
           justifyContent: "flex-start"
         });
