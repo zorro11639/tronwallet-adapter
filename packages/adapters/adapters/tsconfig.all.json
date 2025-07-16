@@ -41,6 +41,9 @@
             "path": "../binance/tsconfig.all.json"
         },
         {
+            "path": "../ademowallet/tsconfig.all.json"
+        },
+        {
             "path": "./tsconfig.cjs.json"
         },
         {
