@@ -12,8 +12,8 @@ import {
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type { Transaction, SignedTransaction, AdapterName } from '@tronweb3/tronwallet-abstract-adapter';
 import { ChainNetwork } from '@tronweb3/tronwallet-abstract-adapter';
+import type { ThemeVariables } from '@tronweb3/walletconnect-tron';
 import { WalletConnectWallet, WalletConnectChainID } from '@tronweb3/walletconnect-tron';
-import type { WalletConnectWeb3ModalConfig } from '@tronweb3/walletconnect-tron';
 import type { SignClientTypes } from '@walletconnect/types';
 
 export const WalletConnectWalletName = 'WalletConnect' as AdapterName<'WalletConnect'>;
@@ -28,10 +28,18 @@ export interface WalletConnectAdapterConfig {
      */
     options: SignClientTypes.Options;
     /**
-     * WalletConnectModalOptions to WalletConnect
-     * Detailed documentation can be found in WalletConnect page: https://docs.walletconnect.com/advanced/walletconnectmodal/options.
+     * Theme mode configuration flag. By default themeMode option will be set to user system settings.
+     * @default `system`
+     * @type `dark` | `light`
+     * @see https://docs.reown.com/appkit/react/core/theming
      */
-    web3ModalConfig?: WalletConnectWeb3ModalConfig;
+    themeMode?: `dark` | `light`;
+    /**
+     * Theme variable configuration object.
+     * @default undefined
+     * @see https://docs.reown.com/appkit/react/core/theming#themevariables
+     */
+    themeVariables?: ThemeVariables;
 }
 
 export class WalletConnectAdapter extends Adapter {
@@ -100,7 +108,8 @@ export class WalletConnectAdapter extends Adapter {
                         WalletConnectChainID[this._config.network as `${ChainNetwork}`] ||
                         `tron:${this._config.network}`,
                     options: this._config.options,
-                    web3ModalConfig: this._config.web3ModalConfig,
+                    themeMode: this._config.themeMode,
+                    themeVariables: this._config.themeVariables,
                 });
 
                 ({ address } = await wallet.connect());
