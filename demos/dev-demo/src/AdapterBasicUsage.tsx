@@ -9,6 +9,7 @@ import { useWallet } from './components/WalletProvider';
 import SignUsage from './components/SignUsage';
 import SwitchChain from './components/SwitchChain';
 import BgImg from './images/bg.png';
+import { MetamaskAdapterDemo } from './MetamaskAdapterDemo';
 
 const Container = styled('div')({
   height: '100vh',
@@ -97,6 +98,7 @@ const AdapterBasicUsage: React.FC = () => {
         <SignUsage />
         <SwitchChain />
       </MainContent>
+      <MetamaskAdapterDemo />
     </Container>
   );
 };
