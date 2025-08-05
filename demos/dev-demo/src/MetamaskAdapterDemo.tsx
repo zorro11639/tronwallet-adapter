@@ -55,6 +55,7 @@ export function MetamaskAdapterDemo() {
     async function onConnect() {
         try {
             await adapter.connect();
+            log('connect success');
         } catch (e) {
             log('connect error: ', e);
         }
