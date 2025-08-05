@@ -105,7 +105,7 @@ export function MetamaskAdapterDemo() {
                 <TextField label="Message to sign" size="small" value={signMessage} onChange={(e) => setSignMessage(e.target.value)} />
             </Typography>
             <Detail>
-                <Button variant="contained" disabled={!adapter?.connected} onClick={onConnect}>
+                <Button variant="contained"  onClick={onConnect}>
                     Connect
                 </Button>
                 <Button variant="contained" onClick={onSignMessage}>
@@ -114,7 +114,7 @@ export function MetamaskAdapterDemo() {
                 <Button variant="contained" onClick={onVerifyMessage}>
                     Verify Message
                 </Button>
-                <Button variant="contained" disabled={!adapter?.connected} onClick={onSignTransaction}>
+                <Button variant="contained" onClick={onSignTransaction}>
                     Transfer
                 </Button>
             </Detail>
