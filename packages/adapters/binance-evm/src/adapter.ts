@@ -144,11 +144,11 @@ export class BinanceEvmAdapter extends Adapter {
         this.emit('accountsChanged', accounts);
     };
     private async autoConnect(provider: EIP1193Provider) {
-        setTimeout(() => {
-            this.address = (provider as any).selectedAddress || null;
-            if (this.address) {
-                this.emit('accountsChanged', [this.address]);
-            }
-        }, 200);
+        const accounts = await provider.request<undefined, string[]>({ method: 'eth_accounts' });
+
+        this.address = accounts?.[0] || null;
+        if (this.address) {
+            this.emit('accountsChanged', [...(accounts || null)]);
+        }
     }
 }
