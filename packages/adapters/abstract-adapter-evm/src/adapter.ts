@@ -122,6 +122,13 @@ export abstract class Adapter<Name extends string = string>
 
     abstract connect(options?: Record<string, unknown>): Promise<string>;
     abstract getProvider(): Promise<EIP1193Provider | null>;
+    async network(): Promise<string> {
+        const provider = await this.prepareProvider();
+        return provider.request({
+            method: 'eth_chainId',
+            params: [],
+        });
+    }
     async signMessage({ message, address }: { message: string; address?: string }): Promise<string> {
         const provider = await this.prepareProvider();
         if (!this.connected) {

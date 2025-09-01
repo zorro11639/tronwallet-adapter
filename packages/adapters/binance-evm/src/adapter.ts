@@ -67,12 +67,18 @@ export class BinanceEvmAdapter extends Adapter {
         if (!provider) {
             throw new WalletNotFoundError();
         }
-        const accounts = await provider.request<undefined, string[]>({ method: 'eth_requestAccounts' });
+        let accounts: string[] = [];
+        try {
+            accounts = await provider.request<undefined, string[]>({ method: 'eth_requestAccounts' });
+        } catch (e: any) {
+            throw new WalletConnectionError('Connection error: ' + e?.message, e);
+        }
         if (!accounts.length) {
             throw new WalletConnectionError('No accounts is avaliable.');
         }
         this.address = accounts[0];
         this.connecting = false;
+        this.emit('accountsChanged', accounts);
         return this.address as string;
     }
 
