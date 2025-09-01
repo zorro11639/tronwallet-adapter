@@ -52,10 +52,12 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
         });
         adapter.on('connect', async () => {
             log('connect: ', adapter.address);
+        });
+        adapter.on('accountsChanged', (accounts) => {
+            log('accountsChanged: current', accounts);
+            setAccount(accounts[0]);
             setAccount(adapter.address || '');
-            if (typeof (adapter as any).network === 'function') {
-                adapter
-                    // @ts-ignore
+            adapter
                     .network()
                     .then((res: any) => {
                         log('network()', res);
@@ -64,11 +66,6 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
                     .catch((e: Error) => {
                         console.error('network() error:', e);
                     });
-            }
-        });
-        adapter.on('accountsChanged', (accounts) => {
-            log('accountsChanged: current', accounts);
-            setAccount(accounts[0]);
         });
 
         adapter.on('chainChanged', (data) => {
