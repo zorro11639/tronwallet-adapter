@@ -34,16 +34,16 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
         setAccount(adapter.address || '');
         setReadyState(adapter.readyState);
         if (adapter.connected) {
-            // adapter
-            //     // @ts-ignore
-            //     .network()
-            //     .then((res: Network) => {
-            //         log('network()', res);
-            //         setChainId(res.chainId);
-            //     })
-            //     .catch((e: Error) => {
-            //         console.error('network() error:', e);
-            //     });
+            adapter
+                // @ts-ignore
+                .network()
+                .then((res: any) => {
+                    log('network()', res);
+                    setChainId(res.chainId);
+                })
+                .catch((e: Error) => {
+                    console.error('network() error:', e);
+                });
         }
 
         adapter.on('readyStateChanged', () => {
@@ -54,16 +54,16 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
             log('connect: ', adapter.address);
             setAccount(adapter.address || '');
             if (typeof (adapter as any).network === 'function') {
-                // adapter
-                //     // @ts-ignore
-                //     .network()
-                //     .then((res: Network) => {
-                //         log('network()', res);
-                //         setChainId(res.chainId);
-                //     })
-                //     .catch((e: Error) => {
-                //         console.error('network() error:', e);
-                //     });
+                adapter
+                    // @ts-ignore
+                    .network()
+                    .then((res: any) => {
+                        log('network()', res);
+                        setChainId(res.chainId);
+                    })
+                    .catch((e: Error) => {
+                        console.error('network() error:', e);
+                    });
             }
         });
         adapter.on('accountsChanged', (accounts) => {
