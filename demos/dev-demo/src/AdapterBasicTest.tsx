@@ -98,6 +98,12 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
             )),
         [adapters]
     );
+
+    async function onConnect() {
+        const address = await adapter.connect();
+        log('connected: address ', address)
+        setAccount(address);
+    }
     return (
         <Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -109,8 +115,17 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
             <InfoShow label="Selected wallet readyState:" value={readyState} />
             <InfoShow label="Connected account address:" value={account} />
             <InfoShow label="Current network you choose:" value={chainId} />
-            <SectionConnect adapter={adapter} readyState={readyState} />
+            <Box>
+                <Button variant="contained" onClick={onConnect}>
+                    Connect
+                </Button>
+
+                {/* <Button variant="contained" onClick={() => adapter?.disconnect()}>
+                    Disconnect
+                </Button> */}
+            </Box>
             <SectionSwitchChain adapter={adapter} />
+            <SectionSign adapter={adapter} />
         </Box>
     );
 });
@@ -125,24 +140,6 @@ function InfoShow({ label, value }: { label: string; value: string }) {
         </Box>
     );
 }
-
-const SectionConnect = memo(function SectionConnect({ adapter, readyState }: { adapter: Adapter; readyState: WalletReadyState }) {
-    async function onConnect() {
-        await adapter.connect();
-    }
-
-    return (
-        <Box>
-            <Button variant="contained" onClick={onConnect}>
-                Connect
-            </Button>
-
-            {/* <Button variant="contained" onClick={() => adapter?.disconnect()}>
-                Disconnect
-            </Button> */}
-        </Box>
-    );
-});
 
 const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter;}) {
     const [open, setOpen] = useState(false);
