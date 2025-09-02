@@ -37,9 +37,6 @@ This repository contains wallet adapters and components for Tron DApps. With out
 | [Trust](https://trustwallet.com)            | Android           | Not Support  |
 |                                             | IOS               | Not Support  |
 |                                             | Browser Extension | 2.48.0 <br> 2.49.0 <br> 2.50.1     |
-| [Guarda](https://guarda.com/)               | Android           | Not Support     |
-|                                             | IOS               | Not Support     |
-|                                             | Browser Extension | 1.2.2     |
 | [Tomo](https://tomo.inc/)                 | Android           | 4.2.4        |
 |                                             | iOS               | 4.2.4        |
 |                                             | Browser Extension | Not Support  |
