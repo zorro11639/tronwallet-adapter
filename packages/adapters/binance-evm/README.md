@@ -1,13 +1,13 @@
-# `@tronweb3/tronwallet-adapter-tronlink-evm`
+# `@tronweb3/tronwallet-adapter-binance-evm`
 
-This package provides an adapter to enable DApps to connect to the [TronLink Wallet extension](https://chrome.google.com/webstore/detail/tronlink/ibnejdfjmmkpcnlpebklmnkoeoihofec).
+This package provides an adapter to enable DApps to connect to the [Binance Wallet app](https://www.binance.com/en/binancewallet).
 
 ## Demo
 
 ```typescript
-import { TronLinkEvmAdapter } from '@tronweb3/tronwallet-adapter-tronlink-evm';
+import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
 
-const adapter = new TronLinkEvmAdapter();
+const adapter = new BinanceEvmAdapter();
 // connect
 await adapter.connect();
 
@@ -30,10 +30,10 @@ await adapter.sendTransaction(transaction);
 -   `Constructor()`
 
     ```typescript
-    import { TronLinkEvmAdapter } from '@tronweb3/tronwallet-adapter-tronlink-evm';
-    const tronLinkEvmAdapter = new TronLinkEvmAdapter();
+    import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
+    const tronLinkEvmAdapter = new BinanceEvmAdapter();
     ```
 
-**Caveat** Currently TronLink wallet does not support `addChain()` and `signTypedData()`.
+**Caveat** Currently Binance wallet does not support `addChain()` and `signTypedData()`.
 
 More detailed API can be found in [Abstract Adapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/abstract-adapter-evm/README.md).

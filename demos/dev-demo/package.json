@@ -26,6 +26,7 @@
         "@tronweb3/tronwallet-adapter-react-hooks": "^1.1.10",
         "@tronweb3/tronwallet-adapter-react-ui": "^1.1.11",
         "@tronweb3/tronwallet-adapters": "latest",
+        "ethers": "^6.15.0",
         "events": "^3.3.0",
         "ganache": "^7.9.0",
         "lit-html": "^3.0.0",

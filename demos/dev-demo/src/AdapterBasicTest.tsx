@@ -8,11 +8,13 @@ import {
 } from '@tronweb3/tronwallet-adapter-binance-evm';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { utils } from 'tronweb';
+import { ethers } from "ethers";
+
 const receiver = '0x18B0FDE2FEA85E960677C2a41b80e7557AdcbAE0';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
     const adapters = useMemo(
-        () => [ new BinanceEvmAdapter()],
+        () => [new BinanceEvmAdapter()],
         []
     );
     const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvmAdapter');
@@ -58,14 +60,14 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
             setAccount(accounts[0]);
             setAccount(adapter.address || '');
             adapter
-                    .network()
-                    .then((res: any) => {
-                        log('network()', res);
-                        setChainId(res.chainId);
-                    })
-                    .catch((e: Error) => {
-                        console.error('network() error:', e);
-                    });
+                .network()
+                .then((res: any) => {
+                    log('network()', res);
+                    setChainId(res.chainId);
+                })
+                .catch((e: Error) => {
+                    console.error('network() error:', e);
+                });
         });
 
         adapter.on('chainChanged', (data) => {
@@ -116,10 +118,6 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
                 <Button variant="contained" onClick={onConnect}>
                     Connect
                 </Button>
-
-                {/* <Button variant="contained" onClick={() => adapter?.disconnect()}>
-                    Disconnect
-                </Button> */}
             </Box>
             <SectionSwitchChain adapter={adapter} />
             <SectionSign adapter={adapter} />
@@ -138,17 +136,17 @@ function InfoShow({ label, value }: { label: string; value: string }) {
     );
 }
 
-const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter;}) {
+const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter; }) {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('Hello, Adapter');
     const [signedMessage, setSignedMessage] = useState('');
 
     async function onSignTransaction() {
         const transaction = {
-                    value: '0x' + Number(0.01 * Math.pow(10, 18)).toString(16), // 0.01 is 0.01ETH
-                    to: receiver,
-                    from: adapter.address,
-                };
+            value: '0x' + Number(0.01 * Math.pow(10, 18)).toString(16), // 0.01 is 0.01ETH
+            to: receiver,
+            from: adapter.address,
+        };
         const signedTransaction = await adapter.sendTransaction(transaction);
         setOpen(true);
     }
@@ -164,13 +162,83 @@ const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter;})
     const onVerifyMessage = useCallback(
         async function () {
             const utf8Message = utils.ethersUtils.toUtf8Bytes(message);
-        const hashedMessage = utils.ethersUtils.keccak256(utils.ethersUtils.concat([utils.ethersUtils.toUtf8Bytes('\x19Ethereum Signed Message:\n'), utils.ethersUtils.toUtf8Bytes(String(utf8Message.length)), utf8Message]))
-        // debugger;
-        const address = utils.crypto.ecRecover(hashedMessage, signedMessage.slice(2))
-        console.log('Signature is valid: ', address.slice(2).toLowerCase() === adapter.address!.slice(2).toLowerCase());
+            const hashedMessage = utils.ethersUtils.keccak256(utils.ethersUtils.concat([utils.ethersUtils.toUtf8Bytes('\x19Ethereum Signed Message:\n'), utils.ethersUtils.toUtf8Bytes(String(utf8Message.length)), utf8Message]))
+            const address = utils.crypto.ecRecover(hashedMessage, signedMessage.slice(2))
+            console.log('Signature is valid: ', address.slice(2).toLowerCase() === adapter.address!.slice(2).toLowerCase());
         },
         [message, signedMessage, adapter]
     );
+
+    const onSignTypedData = useCallback(async function () {
+        const typedData = {
+            types: {
+                EIP712Domain: [
+                    {
+                        name: "name",
+                        type: "string"
+                    },
+                    {
+                        name: "version",
+                        type: "string"
+                    },
+                    {
+                        name: "chainId",
+                        type: "uint256"
+                    },
+                    {
+                        name: "verifyingContract",
+                        type: "address"
+                    }
+                ],
+                Person: [
+                    {
+                        name: "name",
+                        type: "string"
+                    },
+                    {
+                        name: "wallet",
+                        type: "address"
+                    }
+                ],
+                Mail: [
+                    {
+                        name: "from",
+                        type: "Person"
+                    },
+                    {
+                        name: "to",
+                        type: "Person"
+                    },
+                    {
+                        name: "contents",
+                        type: "string"
+                    }
+                ]
+            },
+            primaryType: "Mail",
+            domain: {
+                name: "Ether Mail",
+                version: "1",
+                chainId: 1,
+                verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+            },
+            message: {
+                from: {
+                    name: "Cow",
+                    wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826"
+                },
+                to: {
+                    name: "Bob",
+                    wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB"
+                },
+                contents: "Hello, Bob!"
+            }
+        };
+        const signature = await adapter.signTypedData({ address: adapter.address || '', typedData });
+        console.log('SignTypedData signature: ', signature);
+        const isValid = await verifyEip712Signature(typedData.types, typedData.domain, typedData.message, signature, adapter.address || '')
+        console.log('SignTypedData isValid: ', isValid)
+    }, [adapter])
 
     return (
         <Box margin={'20px 0'}>
@@ -188,6 +256,9 @@ const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter;})
 
             <Button variant="contained" disabled={!signedMessage} onClick={onVerifyMessage}>
                 Verify Signed Message
+            </Button>
+            <Button variant="contained" onClick={onSignTypedData}>
+                Sign Typed Data
             </Button>
         </Box>
     );
@@ -225,3 +296,22 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter }: { adapt
         </Box>
     );
 });
+
+
+async function verifyEip712Signature(types: any, domain: any, message: Record<string, any>, signature: string, expectedSigner: string) {
+  try {
+    const signerAddress = ethers.verifyTypedData(
+      domain, 
+      types,
+      message, 
+      signature
+    );
+
+    return ethers.isAddress(signerAddress) && 
+           signerAddress.toLowerCase() === expectedSigner.toLowerCase();
+  } catch (error: any) {
+    console.error("Verify failed：", error.message);
+    return false;
+  }
+}
+

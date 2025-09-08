@@ -82,11 +82,7 @@ export class BinanceEvmAdapter extends Adapter {
         return this.address as string;
     }
 
-    async signTypedData(params: { typedData: TypedData; address?: string }): Promise<string> {
-        throw new WalletError('[BinanceEvm] The wallet does not support signTypedData() currently.');
-    }
-
-    async addChain(chainInfo: Chain): Promise<null> {
+    async addChain(): Promise<null> {
         throw new WalletError('[BinanceEvm] The wallet does not support addChain() currently.');
     }
 
