@@ -1,6 +1,6 @@
 {
     "include": [],
-    "exclude": ["./packages/**/__mocks__", "./packages/*/*/lib"],
+    "exclude": ["./packages/**/__mocks__", "./packages/*/*/lib", "@binance/w3w-utils/dist/index.d.ts"],
     "compilerOptions": {
         "target": "ES2016",
         "module": "ESNext",

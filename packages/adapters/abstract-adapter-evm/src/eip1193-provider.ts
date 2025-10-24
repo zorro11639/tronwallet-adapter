@@ -38,9 +38,9 @@ export interface ProviderEvents {
 export interface EIP1193Provider {
     on<TEvent extends keyof ProviderEvents>(event: TEvent, listener: ProviderEvents[TEvent]): this;
     removeListener<TEvent extends keyof ProviderEvents>(event: TEvent, listener: ProviderEvents[TEvent]): this;
-    removeAllListeners(event?: string | symbol): this;
+    removeAllListeners(): this;
     request<P = unknown[], T = unknown>(params: { method: string; params?: P }): Promise<T>;
 
     /** Used to identity wallet */
-    isMetaMask: boolean;
+    isMetaMask?: boolean;
 }

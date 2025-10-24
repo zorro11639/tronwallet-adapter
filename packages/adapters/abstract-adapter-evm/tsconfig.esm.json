@@ -3,6 +3,8 @@
     "include": ["src"],
     "compilerOptions": {
         "outDir": "lib/esm",
-        "declarationDir": "lib/types"
+        "declarationDir": "lib/types",
+        "typeRoots": ["."],
+        "types": ["src/types.d.ts"]
     }
 }

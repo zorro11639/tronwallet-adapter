@@ -116,12 +116,19 @@ export abstract class Adapter<Name extends string = string>
     abstract address: string | null;
     connecting = false;
 
+    protected eip6963Info = {
+        support: false,
+        name: '',
+    };
+
     get connected() {
         return !!this.address;
     }
 
     abstract connect(options?: Record<string, unknown>): Promise<string>;
-    abstract getProvider(): Promise<EIP1193Provider | null>;
+    protected getInjectedProvider(): EIP1193Provider | null {
+        return window.ethereum || null;
+    }
     async network(): Promise<string> {
         const provider = await this.prepareProvider();
         return provider.request({
@@ -181,7 +188,118 @@ export abstract class Adapter<Name extends string = string>
         });
     }
 
+    protected getProviderPromise: Promise<EIP1193Provider | null> | null = null;
+    async getProvider(): Promise<EIP1193Provider | null> {
+        if (this.getProviderPromise !== null) {
+            return this.getProviderPromise;
+        }
+        this.getProviderPromise = new Promise((resolve) => {
+            let handled = false;
+            if (this.eip6963Info.support) {
+                // Timeout fallback
+                const timeout = setTimeout(() => {
+                    if (handled) return;
+                    handled = true;
+                    window.removeEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
+                    const provider = this.getInjectedProvider();
+                    if (provider) {
+                        resolve(provider);
+                    } else {
+                        console.error(`[${this.name}]: Unable to detect EIP6963 provider`);
+                        resolve(null);
+                    }
+                }, 3000);
+                // EIP-6963 event handler
+                const eip6963Handler = (
+                    event: CustomEvent<{
+                        info: { uuid: string; name: string; icon: string; rdns: string };
+                        provider: EIP1193Provider;
+                    }>
+                ) => {
+                    console.log('EIP6963 announce: ', event.detail);
+                    if (handled) return;
+                    if (event.detail?.info?.name === this.eip6963Info.name) {
+                        handled = true;
+                        window.removeEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
+                        const provider = (event as CustomEvent).detail.provider as EIP1193Provider;
+                        resolve(provider);
+                        clearTimeout(timeout);
+                    }
+                };
+                window.addEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
+                window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+                return;
+            }
+
+            const provider = this.getInjectedProvider();
+            if (provider) {
+                return resolve(provider);
+            }
+            const handleEthereum = () => {
+                if (handled) {
+                    return;
+                }
+                handled = true;
+                const provider = this.getInjectedProvider();
+                if (provider) {
+                    resolve(provider);
+                } else {
+                    console.error(`[${this.name}]: Unable to detect EIP6963 provider`);
+                    resolve(null);
+                }
+            };
+            const interval = setInterval(() => {
+                if (handled) {
+                    clearInterval(interval);
+                    return;
+                }
+                const provider = this.getInjectedProvider();
+                if (provider) {
+                    handleEthereum();
+                    clearTimeout(timeout);
+                    clearInterval(interval);
+                }
+            }, 100);
+            const timeout = setTimeout(() => {
+                clearInterval(interval);
+                handleEthereum();
+            }, 3000);
+        });
+        return this.getProviderPromise;
+    }
+    protected listenEvents(provider: EIP1193Provider) {
+        provider.on('connect', (connectInfo) => {
+            this.emit('connect', connectInfo);
+        });
+        provider.on('disconnect', (error) => {
+            this.emit('disconnect', error);
+        });
+        provider.on('accountsChanged', this.onAccountsChanged);
+        provider.on('chainChanged', this.onChainChanged);
+    }
+    protected onAccountsChanged = (accounts: string[]) => {
+        if (accounts.length === 0) {
+            this.address = null;
+        } else {
+            this.address = accounts[0];
+        }
+        this.emit('accountsChanged', accounts);
+    };
+    protected onChainChanged = (chainId: string) => {
+        console.log('onChainChanged', chainId);
+        this.emit('chainChanged', chainId);
+    };
+
     protected async prepareProvider() {
         return (await this.getProvider()) as EIP1193Provider;
+    }
+    protected async autoConnect(provider: EIP1193Provider) {
+        const accounts = await provider.request<undefined, string[]>({ method: 'eth_accounts' });
+
+        this.address = accounts?.[0] || null;
+        if (this.address) {
+            this.emit('accountsChanged', accounts);
+        }
     }
 }

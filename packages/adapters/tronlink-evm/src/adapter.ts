@@ -71,7 +71,6 @@ export class TronLinkEvmAdapter extends Adapter {
         throw new WalletError('[TronLinkEvm] The wallet does not support addChain() currently.');
     }
 
-    private getProviderPromise: Promise<EIP1193Provider | null> | null = null;
     async getProvider(): Promise<EIP1193Provider | null> {
         if (isInMobileBrowser()) {
             // Currently only extension support EVM
@@ -114,7 +113,7 @@ export class TronLinkEvmAdapter extends Adapter {
         });
         return this.getProviderPromise;
     }
-    private listenEvents(provider: EIP1193Provider) {
+    protected listenEvents(provider: EIP1193Provider) {
         provider.on('connect', (connectInfo) => {
             this.emit('connect', connectInfo);
         });
@@ -126,7 +125,7 @@ export class TronLinkEvmAdapter extends Adapter {
             this.emit('chainChanged', chainId);
         });
     }
-    private onAccountsChanged = (accounts: string[]) => {
+    protected onAccountsChanged = (accounts: string[]) => {
         if (accounts.length === 0) {
             this.address = null;
         } else {
@@ -134,7 +133,7 @@ export class TronLinkEvmAdapter extends Adapter {
         }
         this.emit('accountsChanged', accounts);
     };
-    private async autoConnect(provider: EIP1193Provider) {
+    protected async autoConnect(provider: EIP1193Provider) {
         setTimeout(() => {
             this.address = (provider as any).selectedAddress || null;
             if (this.address) {

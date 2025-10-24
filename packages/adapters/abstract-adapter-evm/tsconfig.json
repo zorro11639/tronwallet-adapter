@@ -1,10 +1,9 @@
 {
     "extends": "../../../tsconfig.esm.json",
     "include": ["src"],
-    "exclude": ["node_modules/@binance/w3w-utils/dist/index.d.ts"],
     "compilerOptions": {
         "outDir": "lib/esm",
         "declarationDir": "lib/types",
-        "types": ["node"]
+        "types": []
     }
 }
