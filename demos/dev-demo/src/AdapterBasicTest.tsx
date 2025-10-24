@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material';
 import { Alert, Box, Button, Grid2, Input, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
-import type { Adapter, Chain } from '@tronweb3/abstract-adapter-evm';
+import type { Adapter, Asset, Chain } from '@tronweb3/abstract-adapter-evm';
 import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
@@ -10,9 +10,10 @@ import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
+import { OkxWalletAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter()], []);
+  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter()], []);
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -102,6 +103,18 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     log('connected: address ', address);
     setAccount(address);
   }
+
+  async function onWatchAsset() {
+    const asset: Asset = {
+      type: 'ERC20',
+      options: {
+        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        symbol: 'USDT',
+        decimals: 6,
+      },
+    };
+    await adapter.watchAsset(asset);
+  }
   return (
     <Grid2 container marginTop={'200px'}>
       <Grid2 size={{ xs: 12, md: 8, lg: 6 }} margin={'auto'}>
@@ -122,6 +135,9 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
         <Box>
           <Button variant="contained" onClick={onConnect} sx={{ marginLeft: 0 }}>
             Connect
+          </Button>
+          <Button variant="contained" onClick={onWatchAsset} sx={{ marginLeft: '10px' }}>
+            Watch assets
           </Button>
         </Box>
         <SectionSwitchChain adapter={adapter} />
@@ -313,6 +329,7 @@ const SectionTriggerContract = function ({ adapter }: { adapter: Adapter }) {
       to: adapter.name === 'TronLinkEvm' ? '0x0000000000000000000000000000000000000000' : null,
       data: byteCode,
       chainId: chainId,
+      gas: '0x59732',
       //   value: '0x0',
       //   nonce: `0x${Number(nonce).toString(16)}`,
     };
@@ -380,6 +397,19 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter }: { adapt
   function onSwitchChain() {
     adapter.switchChain(selectedChainId);
   }
+  async function onAddCustomChain() {
+    const ganacheChain: Chain = {
+      chainId: `0x539`, // 1337
+      chainName: 'Localhost test',
+      nativeCurrency: {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        decimals: 18,
+      },
+      rpcUrls: ['https://10.10.13.141:8545'],
+    };
+    await adapter.addChain(ganacheChain);
+  }
   return (
     <Box margin={'20px 0'}>
       <Typography variant="h5" gutterBottom>
@@ -395,6 +425,9 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter }: { adapt
 
       <Button style={{ margin: '0 20px' }} onClick={onSwitchChain} variant="contained">
         Switch Chain to {selectedChainId}
+      </Button>
+      <Button style={{ margin: '0 20px 0 0' }} onClick={onAddCustomChain} variant="contained">
+        Add Custom Chain
       </Button>
     </Box>
   );

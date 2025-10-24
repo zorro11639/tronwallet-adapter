@@ -60,16 +60,18 @@ pkgsNotChanged.forEach(({ name, version }) => {
 });
 
 console.log('\nTag Content: ');
-console.log('TRON');
+console.log('# Packages latest version');
+console.log('\n## TRON');
 pkgVersions
     .filter(({ name }) => !EVM_PKGS.includes(name))
     .forEach(({ name, version }) => {
         console.log(`- [${name}@${version}](https://www.npmjs.com/package/${name})`);
     });
 
-console.log('\nEVM');
+console.log('\n## EVM');
 pkgVersions
     .filter(({ name }) => EVM_PKGS.includes(name))
     .forEach(({ name, version }) => {
         console.log(`- [${name}@${version}](https://www.npmjs.com/package/${name})`);
     });
+console.log('\n# Features');
