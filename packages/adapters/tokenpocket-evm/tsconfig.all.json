@@ -2,7 +2,7 @@
     "extends": "../../../tsconfig.root.json",
     "references": [
         {
-            "path": "../abstract-adapter/tsconfig.all.json"
+            "path": "../abstract-adapter-evm/tsconfig.all.json"
         },
         {
             "path": "./tsconfig.cjs.json"
