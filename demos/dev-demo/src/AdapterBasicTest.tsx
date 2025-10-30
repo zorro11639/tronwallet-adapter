@@ -3,6 +3,21 @@ import { Alert, Box, Button, Grid2, Input, MenuItem, Select, Stack, TextField, T
 import type { Adapter, Asset, Chain } from '@tronweb3/abstract-adapter-evm';
 import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
+import {
+  BitKeepAdapter,
+  GateWalletAdapter,
+  ImTokenAdapter,
+  LedgerAdapter,
+  OkxWalletAdapter,
+  TokenPocketAdapter,
+  TronLinkAdapter,
+  WalletConnectAdapter,
+  FoxWalletAdapter,
+  BybitWalletAdapter,
+  TomoWalletAdapter,
+  TrustAdapter,
+  SafepalAdapter,
+} from '@tronweb3/tronwallet-adapters';
 import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
 import { TronLinkEvmAdapter } from '@tronweb3/tronwallet-adapter-tronlink-evm';
 import { MetaMaskAdapter } from '@tronweb3/tronwallet-adapter-metamask';
@@ -10,7 +25,6 @@ import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
-import { OkxWalletAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
   const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter()], []);
