@@ -1,7 +1,10 @@
-import type { EIP1193Provider } from '@tronweb3/abstract-adapter-evm';
+import { isInBrowser, isInMobileBrowser, type EIP1193Provider } from '@tronweb3/abstract-adapter-evm';
 
 export function getMetaMaskProvider(): null | EIP1193Provider {
-    if (!window.ethereum) {
+    if (!isInBrowser()) {
+        return null;
+    }
+    if ((isInMobileBrowser() && !isMetaMaskMobileWebView()) || !window.ethereum) {
         return null;
     }
     if (window.ethereum.isMetaMask && !(window.ethereum as any).overrideIsMetaMask) {

@@ -75,6 +75,9 @@
         },
         {
             "path": "./packages/adapters/okx-evm/tsconfig.all.json"
+        },
+        {
+            "path": "./packages/adapters/tokenpocket-evm/tsconfig.all.json"
         }
     ]
 }

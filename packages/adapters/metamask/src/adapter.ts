@@ -74,23 +74,6 @@ export class MetaMaskAdapter extends Adapter {
         return this.address as string;
     }
 
-    async signTypedData({
-        typedData,
-        address = this.address as string,
-    }: {
-        typedData: TypedData;
-        address?: string;
-    }): Promise<string> {
-        const provider = await this.prepareProvider();
-        if (!this.connected) {
-            throw new WalletDisconnectedError();
-        }
-        return provider.request<[string, string], string>({
-            method: 'eth_signTypedData_v4',
-            params: [address, typeof typedData === 'string' ? typedData : JSON.stringify(typedData)],
-        });
-    }
-
     async getProvider(): Promise<EIP1193Provider | null> {
         if (isInMobileBrowser() && !isMetaMaskMobileWebView()) {
             return null;
@@ -124,33 +107,5 @@ export class MetaMaskAdapter extends Adapter {
             }, 3000);
         });
         return this.getProviderPromise;
-    }
-    protected listenEvents(provider: EIP1193Provider) {
-        provider.on('connect', (connectInfo) => {
-            this.emit('connect', connectInfo);
-        });
-        provider.on('disconnect', (error) => {
-            this.emit('disconnect', error);
-        });
-        provider.on('accountsChanged', this.onAccountsChanged);
-        provider.on('chainChanged', (chainId) => {
-            this.emit('chainChanged', chainId);
-        });
-    }
-    protected onAccountsChanged = (accounts: string[]) => {
-        if (accounts.length === 0) {
-            this.address = null;
-        } else {
-            this.address = accounts[0];
-        }
-        this.emit('accountsChanged', accounts);
-    };
-    protected async autoConnect(provider: EIP1193Provider) {
-        const accounts = await provider.request<undefined, string[]>({ method: 'eth_accounts' });
-
-        this.address = accounts?.[0] || null;
-        if (this.address) {
-            this.emit('accountsChanged', [...(accounts || null)]);
-        }
     }
 }

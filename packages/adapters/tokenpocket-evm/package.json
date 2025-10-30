@@ -1,7 +1,12 @@
 {
-    "name": "@tronweb3/abstract-adapter-evm",
-    "version": "1.0.4",
-    "description": "Abstract interface definition of Evm Wallet Adapters.",
+    "name": "@tronweb3/tronwallet-adapter-tokenpocket-evm",
+    "version": "1.0.0",
+    "description": "Wallet adapter for TokenPocket wallet on EVM.",
+    "keywords": [
+        "EVM",
+        "Ethereum Wallet",
+        "TokenPocket"
+    ],
     "author": "tronweb3",
     "repository": {
         "type": "git",
@@ -18,9 +23,9 @@
     "module": "./lib/esm/index.js",
     "types": "./lib/types/index.d.ts",
     "exports": {
+        "types": "./lib/types/index.d.ts",
         "require": "./lib/cjs/index.js",
-        "import": "./lib/esm/index.js",
-        "types": "./lib/types/index.d.ts"
+        "import": "./lib/esm/index.js"
     },
     "files": [
         "lib",
@@ -33,16 +38,16 @@
     "scripts": {
         "clean": "shx mkdir -p lib && shx rm -rf lib",
         "package": "shx echo '{ \"type\": \"commonjs\" }' > lib/cjs/package.json",
-        "test": "jest",
+        "test": "vitest run",
         "test:coverage": "jest  --coverage",
         "build:umd": "node ../../../scripts/build-umd.js"
     },
     "dependencies": {
-        "eventemitter3": "4.0.7",
-        "jest": "29.7.0",
-        "jest-environment-jsdom": "29.7.0"
+        "@tronweb3/abstract-adapter-evm": "workspace:^"
     },
     "devDependencies": {
-        "shx": "0.3.4"
+        "@testing-library/dom": "8.20.1",
+        "shx": "0.3.4",
+        "vitest": "3.2.4"
     }
 }
