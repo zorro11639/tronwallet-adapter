@@ -3,13 +3,16 @@ const ganache = require('ganache');
 require('dotenv').config({});
 
 const options = {
-  fork: process.env.INFURA_PROJECT_ID ? { url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}` } : 'mainnet',
+  fork: process.env.INFURA_PROJECT_ID
+    ? { url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}` }
+    : 'mainnet',
   chain: {
     // hardfork: 'berlin',
   },
 };
 options.wallet = {
-  mnemonic: 'shove comic where catch muscle impulse that fork plunge robust noise subject',
+  mnemonic:
+    'shove comic where catch muscle impulse that fork plunge robust noise subject',
 };
 const server = ganache.server(options);
 const PORT = 8545;
