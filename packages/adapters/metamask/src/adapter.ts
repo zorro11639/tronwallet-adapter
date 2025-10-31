@@ -33,25 +33,22 @@ export class MetaMaskAdapter extends Adapter {
     constructor(options: MetaMaskAdapterOptions = { useDeeplink: true }) {
         super();
         this.options = options;
-        const provider = getMetaMaskProvider();
-        if (provider) {
-            this.readyState = WalletReadyState.Found;
-            this.listenEvents(provider);
-            this.autoConnect(provider);
-        } else {
-            this.getProvider().then((res) => {
-                if (res) {
-                    this.readyState = WalletReadyState.Found;
-                    this.listenEvents(res);
-                    this.autoConnect(res);
-                } else {
-                    this.readyState = WalletReadyState.NotFound;
-                }
-                this.emit('readyStateChanged', this.readyState);
-            });
-        }
+        this.eip6963Info = {
+            name: 'MetaMask',
+            support: true,
+        };
+        this.getProvider().then((res) => {
+            if (res) {
+                this.readyState = WalletReadyState.Found;
+                this.listenEvents(res);
+                this.autoConnect(res);
+            } else {
+                this.readyState = WalletReadyState.NotFound;
+            }
+            this.emit('readyStateChanged', this.readyState);
+        });
     }
-
+    protected getInjectedProvider = getMetaMaskProvider;
     async connect() {
         if (this.options.useDeeplink !== false) {
             if (isInMobileBrowser() && !isMetaMaskMobileWebView()) {
@@ -74,38 +71,38 @@ export class MetaMaskAdapter extends Adapter {
         return this.address as string;
     }
 
-    async getProvider(): Promise<EIP1193Provider | null> {
-        if (isInMobileBrowser() && !isMetaMaskMobileWebView()) {
-            return null;
-        }
-        if (this.getProviderPromise !== null) {
-            return this.getProviderPromise;
-        }
-        this.getProviderPromise = new Promise((resolve) => {
-            const provider = getMetaMaskProvider();
-            if (provider) {
-                return resolve(provider);
-            }
-            let handled = false;
-            const handleEthereum = () => {
-                if (handled) {
-                    return;
-                }
-                handled = true;
-                window.removeEventListener('ethereum#initialized', handleEthereum);
-                const provider = getMetaMaskProvider();
-                if (provider) {
-                    resolve(provider);
-                } else {
-                    console.error('MetaMaskAdapter: Unable to detect window.ethereum.');
-                    resolve(null);
-                }
-            };
-            window.addEventListener('ethereum#initialized', handleEthereum, { once: true });
-            setTimeout(() => {
-                handleEthereum();
-            }, 3000);
-        });
-        return this.getProviderPromise;
-    }
+    // async getProvider(): Promise<EIP1193Provider | null> {
+    //     if (isInMobileBrowser() && !isMetaMaskMobileWebView()) {
+    //         return null;
+    //     }
+    //     if (this.getProviderPromise !== null) {
+    //         return this.getProviderPromise;
+    //     }
+    //     this.getProviderPromise = new Promise((resolve) => {
+    //         const provider = getMetaMaskProvider();
+    //         if (provider) {
+    //             return resolve(provider);
+    //         }
+    //         let handled = false;
+    //         const handleEthereum = () => {
+    //             if (handled) {
+    //                 return;
+    //             }
+    //             handled = true;
+    //             window.removeEventListener('ethereum#initialized', handleEthereum);
+    //             const provider = getMetaMaskProvider();
+    //             if (provider) {
+    //                 resolve(provider);
+    //             } else {
+    //                 console.error('MetaMaskAdapter: Unable to detect window.ethereum.');
+    //                 resolve(null);
+    //             }
+    //         };
+    //         window.addEventListener('ethereum#initialized', handleEthereum, { once: true });
+    //         setTimeout(() => {
+    //             handleEthereum();
+    //         }, 3000);
+    //     });
+    //     return this.getProviderPromise;
+    // }
 }

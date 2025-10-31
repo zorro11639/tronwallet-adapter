@@ -9,4 +9,7 @@ export default defineConfig({
         },
         environment: 'jsdom',
     },
+    ssr: {
+        noExternal: ['eventemitter3'],
+    },
 });

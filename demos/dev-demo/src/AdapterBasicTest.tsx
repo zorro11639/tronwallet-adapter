@@ -11,9 +11,11 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
 import { OkxWalletAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
+import { isInMobileBrowser } from '@tronweb3/tronwallet-abstract-adapter';
+import { TokenPocketAdapter } from '@tronweb3/tronwallet-adapter-tokenpocket-evm';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter()], []);
+  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter(), new TokenPocketAdapter()], []);
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -43,6 +45,8 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
         .catch((e: Error) => {
           console.error('network() error:', e);
         });
+    } else {
+      setChainId('');
     }
 
     adapter.on('readyStateChanged', () => {
@@ -105,12 +109,16 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
   }
 
   async function onWatchAsset() {
+    if (isInMobileBrowser() && adapter.name === 'MetaMask') {
+      console.error('MetaMask mobile does not support watchAssets');
+      return;
+    }
     const asset: Asset = {
       type: 'ERC20',
       options: {
-        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-        symbol: 'USDT',
-        decimals: 6,
+        address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
+        symbol: 'BNB',
+        decimals: 18,
       },
     };
     await adapter.watchAsset(asset);

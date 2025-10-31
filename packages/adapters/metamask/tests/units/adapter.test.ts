@@ -99,7 +99,7 @@ describe('MetaMaskAdapter', () => {
             expect(getProvider).toBeCalledTimes(1);
             expect(request).toHaveBeenLastCalledWith({
                 method: 'eth_signTypedData_v4',
-                params: [adapter.address, JSON.stringify(typedData)],
+                params: [adapter.address, typedData],
             });
             request.mockReset();
             request.mockRestore();

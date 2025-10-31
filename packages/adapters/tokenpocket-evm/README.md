@@ -34,7 +34,5 @@ await adapter.sendTransaction(transaction);
     const adapter = new TokenPocketAdapter();
     ```
 
-### Caveat
-- Currently TokenPocket wallet app does not support `addChain()`.
 
 More detailed API can be found in [Abstract Adapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/abstract-adapter-evm/README.md).
