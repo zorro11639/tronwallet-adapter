@@ -12,10 +12,9 @@ import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
 import { OkxWalletAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
 import { isInMobileBrowser } from '@tronweb3/tronwallet-abstract-adapter';
-import { TokenPocketAdapter } from '@tronweb3/tronwallet-adapter-tokenpocket-evm';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter(), new TokenPocketAdapter()], []);
+  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new OkxWalletAdapter()], []);
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
