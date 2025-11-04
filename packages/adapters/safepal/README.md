@@ -74,7 +74,7 @@ await tronWeb.trx.sendRawTransaction(signedTransaction);
     ```
 
 ### Caveats
--   `multiSign()` and `switchChain()` are not supported in SafePal App and Extension.
--   SafePal App and Extension will reload current page so there is no need to listen `accountsChanged` event.
+-   `multiSign()` and `switchChain()` are not supported in SafePal App.
+-   SafePal App will reload current page so there is no need to listen `accountsChanged` event.
 
 For more information about tronwallet adapters, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters)
