@@ -216,7 +216,6 @@ export abstract class Adapter<Name extends string = string>
                         provider: EIP1193Provider;
                     }>
                 ) => {
-                    console.log('EIP6963 announce: ', event.detail);
                     if (handled) return;
                     if (event.detail?.info?.name === this.eip6963Info.name) {
                         handled = true;
@@ -287,7 +286,6 @@ export abstract class Adapter<Name extends string = string>
         this.emit('accountsChanged', accounts);
     };
     protected onChainChanged = (chainId: string) => {
-        console.log('onChainChanged', chainId);
         this.emit('chainChanged', chainId);
     };
 

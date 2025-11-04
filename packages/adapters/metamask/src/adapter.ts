@@ -70,39 +70,4 @@ export class MetaMaskAdapter extends Adapter {
         this.connecting = false;
         return this.address as string;
     }
-
-    // async getProvider(): Promise<EIP1193Provider | null> {
-    //     if (isInMobileBrowser() && !isMetaMaskMobileWebView()) {
-    //         return null;
-    //     }
-    //     if (this.getProviderPromise !== null) {
-    //         return this.getProviderPromise;
-    //     }
-    //     this.getProviderPromise = new Promise((resolve) => {
-    //         const provider = getMetaMaskProvider();
-    //         if (provider) {
-    //             return resolve(provider);
-    //         }
-    //         let handled = false;
-    //         const handleEthereum = () => {
-    //             if (handled) {
-    //                 return;
-    //             }
-    //             handled = true;
-    //             window.removeEventListener('ethereum#initialized', handleEthereum);
-    //             const provider = getMetaMaskProvider();
-    //             if (provider) {
-    //                 resolve(provider);
-    //             } else {
-    //                 console.error('MetaMaskAdapter: Unable to detect window.ethereum.');
-    //                 resolve(null);
-    //             }
-    //         };
-    //         window.addEventListener('ethereum#initialized', handleEthereum, { once: true });
-    //         setTimeout(() => {
-    //             handleEthereum();
-    //         }, 3000);
-    //     });
-    //     return this.getProviderPromise;
-    // }
 }
