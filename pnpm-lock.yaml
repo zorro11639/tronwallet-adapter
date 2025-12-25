@@ -197,7 +197,7 @@ importers:
         version: link:../../packages/adapters/binance
       '@tronweb3/tronwallet-adapter-binance-evm':
         specifier: ^1.0.0
-        version: link:../../packages/adapters/binance-evm
+        version: link:../../packages/adapters/evm/binance
       '@tronweb3/tronwallet-adapter-bitkeep':
         specifier: ^1.0.2
         version: link:../../packages/adapters/bitkeep
@@ -236,7 +236,7 @@ importers:
         version: 1.1.9
       '@tronweb3/tronwallet-adapter-tronlink-evm':
         specifier: ^1.0.1
-        version: link:../../packages/adapters/tronlink-evm
+        version: link:../../packages/adapters/evm/tronlink
       '@tronweb3/tronwallet-adapter-trust':
         specifier: ^1.0.2
         version: link:../../packages/adapters/trust
@@ -285,19 +285,19 @@ importers:
         version: 1.7.1
       '@tronweb3/abstract-adapter-evm':
         specifier: latest
-        version: link:../../packages/adapters/abstract-adapter-evm
+        version: link:../../packages/adapters/evm/abstract-adapter
       '@tronweb3/tronwallet-abstract-adapter':
         specifier: latest
         version: link:../../packages/adapters/abstract-adapter
       '@tronweb3/tronwallet-adapter-binance-evm':
         specifier: latest
-        version: link:../../packages/adapters/binance-evm
+        version: link:../../packages/adapters/evm/binance
       '@tronweb3/tronwallet-adapter-ledger':
         specifier: ^1.1.11
         version: link:../../packages/adapters/ledger
-      '@tronweb3/tronwallet-adapter-metamask':
-        specifier: latest
-        version: link:../../packages/adapters/metamask
+      '@tronweb3/tronwallet-adapter-metamask-evm':
+        specifier: ^1.0.0
+        version: link:../../packages/adapters/evm/metamask
       '@tronweb3/tronwallet-adapter-react-hooks':
         specifier: latest
         version: link:../../packages/react/react-hooks
@@ -306,7 +306,7 @@ importers:
         version: link:../../packages/react/react-ui
       '@tronweb3/tronwallet-adapter-tronlink-evm':
         specifier: ^1.0.1
-        version: link:../../packages/adapters/tronlink-evm
+        version: link:../../packages/adapters/evm/tronlink
       '@tronweb3/tronwallet-adapters':
         specifier: latest
         version: link:../../packages/adapters/adapters
@@ -565,22 +565,6 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4
 
-  packages/adapters/abstract-adapter-evm:
-    dependencies:
-      eventemitter3:
-        specifier: 4.0.7
-        version: 4.0.7
-      jest:
-        specifier: 29.7.0
-        version: 29.7.0(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@18.19.42)(typescript@5.5.4))
-      jest-environment-jsdom:
-        specifier: 29.7.0
-        version: 29.7.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
-    devDependencies:
-      shx:
-        specifier: 0.3.4
-        version: 0.3.4
-
   packages/adapters/adapters:
     dependencies:
       '@tronweb3/tronwallet-adapter-binance':
@@ -667,25 +651,6 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.7.5)(happy-dom@20.0.10)(jiti@1.21.6)(jsdom@23.2.0(bufferutil@4.0.8)(utf-8-validate@6.0.3))(msw@2.7.3(@types/node@22.7.5)(typescript@5.5.4))(terser@5.31.3)(yaml@2.5.0)
 
-  packages/adapters/binance-evm:
-    dependencies:
-      '@binance/w3w-utils':
-        specifier: 1.1.6
-        version: 1.1.6
-      '@tronweb3/abstract-adapter-evm':
-        specifier: workspace:^
-        version: link:../abstract-adapter-evm
-    devDependencies:
-      '@testing-library/dom':
-        specifier: 8.20.1
-        version: 8.20.1
-      shx:
-        specifier: 0.3.4
-        version: 0.3.4
-      vitest:
-        specifier: 3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.7.5)(happy-dom@20.0.10)(jiti@1.21.6)(jsdom@23.2.0)(msw@2.7.3(@types/node@22.7.5)(typescript@5.5.4))(terser@5.31.3)(yaml@2.5.0)
-
   packages/adapters/bitkeep:
     dependencies:
       '@tronweb3/tronwallet-abstract-adapter':
@@ -720,6 +685,79 @@ importers:
       jest-environment-jsdom:
         specifier: ^29.3.1
         version: 29.7.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+      shx:
+        specifier: ^0.3.4
+        version: 0.3.4
+
+  packages/adapters/evm/abstract-adapter:
+    dependencies:
+      eventemitter3:
+        specifier: 4.0.7
+        version: 4.0.7
+      jest:
+        specifier: 29.7.0
+        version: 29.7.0(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@18.19.42)(typescript@5.5.4))
+      jest-environment-jsdom:
+        specifier: 29.7.0
+        version: 29.7.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+    devDependencies:
+      shx:
+        specifier: 0.3.4
+        version: 0.3.4
+
+  packages/adapters/evm/binance:
+    dependencies:
+      '@binance/w3w-utils':
+        specifier: 1.1.6
+        version: 1.1.6
+      '@tronweb3/abstract-adapter-evm':
+        specifier: workspace:^
+        version: link:../abstract-adapter
+    devDependencies:
+      '@testing-library/dom':
+        specifier: 8.20.1
+        version: 8.20.1
+      shx:
+        specifier: 0.3.4
+        version: 0.3.4
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.7.5)(happy-dom@20.0.10)(jiti@1.21.6)(jsdom@23.2.0)(msw@2.7.3(@types/node@22.7.5)(typescript@5.5.4))(terser@5.31.3)(yaml@2.5.0)
+
+  packages/adapters/evm/metamask:
+    dependencies:
+      '@tronweb3/abstract-adapter-evm':
+        specifier: workspace:^
+        version: link:../abstract-adapter
+    devDependencies:
+      '@testing-library/dom':
+        specifier: ^8.20.0
+        version: 8.20.1
+      jest:
+        specifier: '28'
+        version: 28.1.3(@types/node@18.19.42)(ts-node@10.9.2(@types/node@18.19.42)(typescript@5.5.4))
+      jest-environment-jsdom:
+        specifier: '28'
+        version: 28.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+      shx:
+        specifier: ^0.3.4
+        version: 0.3.4
+
+  packages/adapters/evm/tronlink:
+    dependencies:
+      '@tronweb3/abstract-adapter-evm':
+        specifier: workspace:^
+        version: link:../abstract-adapter
+    devDependencies:
+      '@testing-library/dom':
+        specifier: ^8.20.0
+        version: 8.20.1
+      jest:
+        specifier: '28'
+        version: 28.1.3(@types/node@22.7.5)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.5.4))
+      jest-environment-jsdom:
+        specifier: '28'
+        version: 28.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       shx:
         specifier: ^0.3.4
         version: 0.3.4
@@ -834,25 +872,6 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4
 
-  packages/adapters/metamask:
-    dependencies:
-      '@tronweb3/abstract-adapter-evm':
-        specifier: workspace:^
-        version: link:../abstract-adapter-evm
-    devDependencies:
-      '@testing-library/dom':
-        specifier: ^8.20.0
-        version: 8.20.1
-      jest:
-        specifier: '28'
-        version: 28.1.3(@types/node@18.19.42)(ts-node@10.9.2(@types/node@18.19.42)(typescript@5.5.4))
-      jest-environment-jsdom:
-        specifier: '28'
-        version: 28.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
-      shx:
-        specifier: ^0.3.4
-        version: 0.3.4
-
   packages/adapters/okxwallet:
     dependencies:
       '@tronweb3/tronwallet-abstract-adapter':
@@ -930,25 +949,6 @@ importers:
         version: 29.7.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       shx:
         specifier: 0.3.4
-        version: 0.3.4
-
-  packages/adapters/tronlink-evm:
-    dependencies:
-      '@tronweb3/abstract-adapter-evm':
-        specifier: workspace:^
-        version: link:../abstract-adapter-evm
-    devDependencies:
-      '@testing-library/dom':
-        specifier: ^8.20.0
-        version: 8.20.1
-      jest:
-        specifier: '28'
-        version: 28.1.3(@types/node@22.7.5)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.5.4))
-      jest-environment-jsdom:
-        specifier: '28'
-        version: 28.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
-      shx:
-        specifier: ^0.3.4
         version: 0.3.4
 
   packages/adapters/trust:
@@ -4780,11 +4780,6 @@ packages:
 
   acorn@7.4.1:
     resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
-  acorn@8.12.1:
-    resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -8850,10 +8845,6 @@ packages:
   tinyexec@0.3.2:
     resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
 
-  tinyglobby@0.2.14:
-    resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
-    engines: {node: '>=12.0.0'}
-
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
@@ -9593,18 +9584,6 @@ packages:
 
   ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  ws@8.18.1:
-    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -15282,8 +15261,6 @@ snapshots:
 
   acorn@7.4.1: {}
 
-  acorn@8.12.1: {}
-
   acorn@8.15.0: {}
 
   aes-js@3.1.2: {}
@@ -18707,7 +18684,7 @@ snapshots:
   jsdom@19.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     dependencies:
       abab: 2.0.6
-      acorn: 8.12.1
+      acorn: 8.15.0
       acorn-globals: 6.0.0
       cssom: 0.5.0
       cssstyle: 2.3.0
@@ -18731,7 +18708,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 10.0.0
-      ws: 8.18.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -18764,7 +18741,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.18.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -20599,11 +20576,6 @@ snapshots:
 
   tinyexec@0.3.2: {}
 
-  tinyglobby@0.2.14:
-    dependencies:
-      fdir: 6.4.4(picomatch@4.0.2)
-      picomatch: 4.0.2
-
   tinyglobby@0.2.15:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.3)
@@ -21255,11 +21227,11 @@ snapshots:
       expect-type: 1.2.2
       magic-string: 0.30.17
       pathe: 2.0.3
-      picomatch: 4.0.2
+      picomatch: 4.0.3
       std-env: 3.9.0
       tinybench: 2.9.0
       tinyexec: 0.3.2
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
       vite: 6.3.6(@types/node@22.7.5)(jiti@1.21.6)(terser@5.31.3)(yaml@2.5.0)
@@ -21299,11 +21271,11 @@ snapshots:
       expect-type: 1.2.2
       magic-string: 0.30.17
       pathe: 2.0.3
-      picomatch: 4.0.2
+      picomatch: 4.0.3
       std-env: 3.9.0
       tinybench: 2.9.0
       tinyexec: 0.3.2
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
       vite: 6.3.6(@types/node@22.7.5)(jiti@1.21.6)(terser@5.31.3)(yaml@2.5.0)
@@ -21522,11 +21494,6 @@ snapshots:
       utf-8-validate: 6.0.3
 
   ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.3):
-    optionalDependencies:
-      bufferutil: 4.0.8
-      utf-8-validate: 6.0.3
-
-  ws@8.18.1(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     optionalDependencies:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.3
