@@ -1,11 +1,11 @@
 import type { WalletConnectAdapterConfig } from '@tronweb3/tronwallet-adapters';
 
-export const walletconnectConfig: WalletConnectAdapterConfig = {
+export const walletConnectConfig: WalletConnectAdapterConfig = {
   network: 'Nile',
   options: {
     relayUrl: 'wss://relay.walletconnect.com',
     // example WC app project ID
-    projectId: '',
+    projectId: 'af6db2b77c4ab90c0c7986bb504bdeba',
     metadata: {
       name: 'Test DApp',
       description: 'Test',

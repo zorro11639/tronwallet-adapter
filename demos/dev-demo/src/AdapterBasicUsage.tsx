@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import AdapterSelect from './components/AdapterSelect';
 import ConnectionState from './components/ConnectionState';
@@ -9,6 +9,26 @@ import { useWallet } from './components/WalletProvider';
 import SignUsage from './components/SignUsage';
 import SwitchChain from './components/SwitchChain';
 import BgImg from './images/bg.png';
+import { UniversalProvider } from '@walletconnect/universal-provider';
+import { walletConnectConfig } from './config';
+import QRCode from 'qrcode';
+
+function extractAddressFromSession(session: any): string {
+  const accounts = Object.values(session.namespaces).flatMap((namespace: any) => namespace.accounts);
+
+  const account = accounts[0];
+  if (!account) {
+    throw new Error('[WalletConnectWallet] No accounts found in session');
+  }
+
+  // Account format: chainId:namespace:address (e.g., "tron:0x2b6653dc:Txxxxxxxxxxxxxxx")
+  const address = account.split(':')[2];
+  if (!address) {
+    throw new Error(`[WalletConnectWallet] Invalid account format: ${account}`);
+  }
+
+  return address;
+}
 
 const Container = styled('div')({
   height: '100vh',
@@ -79,6 +99,37 @@ const ConnectButton = styled(Button)({
 const AdapterBasicUsage: React.FC = () => {
   const { connectionState, connect, disconnect } = useWallet();
 
+  const [url, setUrl] = useState('');
+  async function handleConnect() {
+    const provider = await UniversalProvider.init({
+      projectId: walletConnectConfig.options.projectId,
+      metadata: walletConnectConfig.options.metadata,
+      relayUrl: walletConnectConfig.options.relayUrl,
+    });
+    provider.on('display_uri', (uri: string) => {
+      console.log('display_uri', uri);
+      QRCode.toDataURL(uri)
+        .then((_url: string) => {
+          console.log(_url);
+          setUrl(_url);
+        })
+        .catch((err: any) => {
+          console.error(err);
+        });
+    });
+    const session = await provider.connect({
+      pairingTopic: undefined,
+      optionalNamespaces: {
+        tron: {
+          chains: ['tron:0x2b6653dc'],
+          methods: ['tron_signTransaction', 'tron_signMessage'],
+          events: [],
+        },
+      },
+    });
+    const address = extractAddressFromSession(session);
+    console.log(address);
+  }
   return (
     <Container>
       <Title>Adapter Basic Use Case</Title>
@@ -94,6 +145,10 @@ const AdapterBasicUsage: React.FC = () => {
         <SignUsage />
         <SwitchChain />
       </MainContent>
+      {/* <div>
+        <button onClick={handleConnect}>ConnectWithWalletConnect</button>
+        <img src={url} alt="" width={200} height={200} />
+      </div> */}
     </Container>
   );
 };
