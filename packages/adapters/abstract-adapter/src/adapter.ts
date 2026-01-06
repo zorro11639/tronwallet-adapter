@@ -1,6 +1,8 @@
 import EventEmitter from 'eventemitter3';
 import type { WalletError } from './errors.js';
 import type { SignedTransaction, Transaction } from './types.js';
+import type { UniversalProviderOpts } from '@walletconnect/universal-provider';
+import { UniversalProvider } from '@walletconnect/universal-provider';
 
 export { EventEmitter };
 
@@ -76,7 +78,12 @@ export interface BaseAdapterConfig {
      * Default is true.
      */
     openUrlWhenWalletNotFound?: boolean;
+
+    useWalletConnectWhenWalletNotFound?: boolean;
+    customQrCode?: boolean;
+    onDisplayUri?: (uri: string) => void;
 }
+
 export abstract class Adapter<Name extends string = string>
     extends EventEmitter<AdapterEvents>
     implements AdapterProps
@@ -111,4 +118,56 @@ export abstract class Adapter<Name extends string = string>
     switchChain(_chainId: string): Promise<void> {
         return Promise.reject("The current wallet doesn't support switch chain.");
     }
+
+    protected WalletConnectAdapter: any;
+    protected isConnectedWithWc = false;
+    protected wcWallet: Adapter | null = null;
+    protected getWcWallet(config: unknown): Adapter {
+        if (!this.WalletConnectAdapter) {
+            throw new Error('[AbstractAdapter] WalletConnectAdapter is not provided.');
+        }
+        if (!config || typeof config !== 'object') {
+            throw new Error('[AbstractAdapter] WalletConnectAdapterConfig is not provided.');
+        }
+        if (!this.wcWallet) {
+            this.wcWallet = new this.WalletConnectAdapter(config) as Adapter;
+        }
+        return this.wcWallet;
+    }
+
+    protected isConnectedWithCustomWc = false;
+    protected walletConnectProvider: InstanceType<typeof UniversalProvider> | null = null;
+    protected async connectByWalletConnect(
+        options: UniversalProviderOpts,
+        optionalNamespaces: any,
+        onDisplayUri?: (uri: string) => void
+    ) {
+        if (!this.walletConnectProvider) {
+            this.walletConnectProvider = await UniversalProvider.init(options);
+        }
+        this.walletConnectProvider.on('display_uri', onDisplayUri);
+        const session = await this.walletConnectProvider.connect({
+            pairingTopic: undefined,
+            optionalNamespaces,
+        });
+        const address = extractAddressFromSession(session);
+        return address;
+    }
+}
+
+function extractAddressFromSession(session: any): string {
+    const accounts = Object.values(session.namespaces).flatMap((namespace: any) => namespace.accounts);
+
+    const account = accounts[0];
+    if (!account) {
+        throw new Error(' No accounts found in session');
+    }
+
+    // Account format: chainId:namespace:address (e.g., "tron:0x2b6653dc:Txxxxxxxxxxxxxxx")
+    const address = account.split(':')[2];
+    if (!address) {
+        throw new Error(`Invalid account format: ${account}`);
+    }
+
+    return address;
 }

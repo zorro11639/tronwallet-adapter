@@ -36,6 +36,7 @@
         "build:umd": "node ../../../scripts/build-umd.js"
     },
     "dependencies": {
+        "@walletconnect/universal-provider": "^2.23.1",
         "eventemitter3": "^4.0.0",
         "tronweb": "6"
     },
