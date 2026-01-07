@@ -18,6 +18,7 @@ import type {
     AdapterName,
     BaseAdapterConfig,
 } from '@tronweb3/tronwallet-abstract-adapter';
+import { type WalletConnectAdapterConfig, WalletConnectAdapter } from '@tronweb3/tronwallet-adapter-walletconnect';
 
 declare global {
     interface Window {
@@ -34,6 +35,8 @@ export interface BinanceWalletAdapterConfig extends BaseAdapterConfig {
      * Default is 2 * 1000ms
      */
     checkTimeout?: number;
+
+    walletConnectConfig?: WalletConnectAdapterConfig;
 }
 
 export const BinanceWalletAdapterName = 'Binance Wallet' as AdapterName<'Binance Wallet'>;
@@ -50,7 +53,10 @@ export class BinanceWalletAdapter extends Adapter {
     icon =
         'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjMEIwRTExIi8+CjxwYXRoIGQ9Ik01IDE1TDcuMjU4MDYgMTIuNzQxOUw5LjUxNjEzIDE1TDcuMjU4MDYgMTcuMjU4MUw1IDE1WiIgZmlsbD0iI0YwQjkwQiIvPgo8cGF0aCBkPSJNOC44NzA5NyAxMS4xMjlMMTUgNUwyMS4xMjkgMTEuMTI5TDE4Ljg3MSAxMy4zODcxTDE1IDkuNTE2MTNMMTEuMTI5IDEzLjM4NzFMOC44NzA5NyAxMS4xMjlaIiBmaWxsPSIjRjBCOTBCIi8+CjxwYXRoIGQ9Ik0xMi43NDE5IDE1TDE1IDEyLjc0MTlMMTcuMjU4MSAxNUwxNSAxNy4yNTgxTDEyLjc0MTkgMTVaIiBmaWxsPSIjRjBCOTBCIi8+CjxwYXRoIGQ9Ik0xMS4xMjkgMTYuNjEyOUw4Ljg3MDk3IDE4Ljg3MUwxNSAyNUwyMS4xMjkgMTguODcxTDE4Ljg3MSAxNi42MTI5TDE1IDIwLjQ4MzlMMTEuMTI5IDE2LjYxMjlaIiBmaWxsPSIjRjBCOTBCIi8+CjxwYXRoIGQ9Ik0yMC40ODM5IDE1TDIyLjc0MTkgMTIuNzQxOUwyNSAxNUwyMi43NDE5IDE3LjI1ODFMMjAuNDgzOSAxNVoiIGZpbGw9IiNGMEI5MEIiLz4KPC9zdmc+Cg==';
 
-    config: Required<BinanceWalletAdapterConfig>;
+    config: Required<Omit<BinanceWalletAdapterConfig, 'walletConnectConfig' | 'onDisplayUri'>> & {
+        walletConnectConfig?: WalletConnectAdapterConfig;
+        onDisplayUri?: (uri: string) => void;
+    };
     private _readyState: WalletReadyState = isInBrowser() ? WalletReadyState.Loading : WalletReadyState.NotFound;
     private _state: AdapterState = AdapterState.Loading;
     private _connecting: boolean;
@@ -59,13 +65,23 @@ export class BinanceWalletAdapter extends Adapter {
 
     constructor(config: BinanceWalletAdapterConfig = {}) {
         super();
-        const { checkTimeout = 2 * 1000, openUrlWhenWalletNotFound = true } = config;
+        this.WalletConnectAdapter = WalletConnectAdapter;
+        const {
+            checkTimeout = 2 * 1000,
+            openUrlWhenWalletNotFound = true,
+            useWalletConnectWhenWalletNotFound = false,
+            walletConnectConfig,
+            customQrCode = false,
+        } = config;
         if (typeof checkTimeout !== 'number') {
             throw new Error('[BinanceWalletAdapter] config.checkTimeout should be a number');
         }
         this.config = {
             checkTimeout,
             openUrlWhenWalletNotFound,
+            useWalletConnectWhenWalletNotFound,
+            walletConnectConfig,
+            customQrCode,
         };
         this._connecting = false;
         this._provider = null;
@@ -132,10 +148,49 @@ export class BinanceWalletAdapter extends Adapter {
             if (this.connected || this.connecting) return;
             await this._checkWallet();
             if (this.state === AdapterState.NotFound) {
-                if (this.config.openUrlWhenWalletNotFound !== false && isInBrowser()) {
-                    window.open(this.url, '_blank');
+                if (!this.config.useWalletConnectWhenWalletNotFound && !this.config.customQrCode) {
+                    if (this.config.openUrlWhenWalletNotFound !== false && isInBrowser()) {
+                        window.open(this.url, '_blank');
+                    }
+                    throw new WalletNotFoundError();
                 }
-                throw new WalletNotFoundError();
+                this._connecting = true;
+
+                if (this.config.customQrCode) {
+                    const { projectId, relayUrl, metadata } = this.config.walletConnectConfig!.options;
+                    const address = await this.connectByWalletConnect(
+                        {
+                            projectId,
+                            relayUrl,
+                            metadata,
+                        },
+                        {
+                            tron: {
+                                chains: ['tron:0x2b6653dc'],
+                                methods: ['tron_signTransaction', 'tron_signMessage'],
+                                events: [],
+                            },
+                        },
+                        this.config.onDisplayUri
+                    );
+                    this.setAddress(address);
+                    this.setState(AdapterState.Connected);
+                    this.emit('connect', address);
+                    this.isConnectedWithCustomWc = true;
+                    return;
+                }
+                const wallet = this.getWcWallet(this.config.walletConnectConfig);
+                try {
+                    await wallet.connect();
+                    this.setAddress(wallet.address);
+                    this.setState(AdapterState.Connected);
+                    this.emit('connect', wallet.address as string);
+                    wallet.on('accountsChanged', this._onAccountsChanged);
+                    this.isConnectedWithWc = true;
+                } catch (error: any) {
+                    throw new WalletConnectionError(error?.message, error);
+                }
+                return;
             }
 
             this._connecting = true;
@@ -168,6 +223,9 @@ export class BinanceWalletAdapter extends Adapter {
     }
 
     async signMessage(message: string): Promise<string> {
+        if (this.isConnectedWithWc) {
+            return this.getWcWallet(this.config.walletConnectConfig).signMessage(message);
+        }
         try {
             if (this.state !== AdapterState.Connected) throw new WalletDisconnectedError();
             try {
@@ -195,9 +253,9 @@ export class BinanceWalletAdapter extends Adapter {
         }
     }
 
-    private _onAccountsChanged = (address: string[]) => {
+    private _onAccountsChanged = (address: string[] | string) => {
         const preAddr = this.address || '';
-        this.setAddress(address[0]);
+        this.setAddress(Array.isArray(address) ? address[0] : address);
         this.emit('accountsChanged', this.address || '', preAddr);
     };
     private _listenEvent() {
