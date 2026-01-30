@@ -24,8 +24,8 @@ jobs:
         with:
           version: 8
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # - name: Install dependencies
+      #   run: pnpm install --frozen-lockfile
 
       - name: Run version check
         run: node scripts/check-version.js
