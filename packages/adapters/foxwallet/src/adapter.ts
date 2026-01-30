@@ -21,7 +21,7 @@ import type {
     Network,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { openFoxWallet, supportFoxWallet } from './utils.js';
-console.log(333);
+
 declare global {
     interface Window {
         foxwallet?: {

@@ -22,7 +22,7 @@ import type {
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
 import type { Tron } from '@tronweb3/tronwallet-adapter-tronlink';
 import { supportGuarda } from './utils.js';
-
+console.log('test');
 export interface GuardaAdapterConfig extends BaseAdapterConfig {
     checkTimeout?: number;
     openUrlWhenWalletNotFound?: boolean;
