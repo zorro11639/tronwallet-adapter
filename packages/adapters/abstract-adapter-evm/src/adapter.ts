@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import type { EIP1193Provider, ProviderEvents } from './eip1193-provider.js';
-import { WalletDisconnectedError } from './errors.js';
+import { WalletDisconnectedError, WalletNotFoundError } from './errors.js';
 
 export { EventEmitter };
 
@@ -182,6 +182,9 @@ export abstract class Adapter<Name extends string = string>
     }
     async watchAsset(asset: Asset): Promise<boolean> {
         const provider = await this.prepareProvider();
+        if (!this.connected) {
+            throw new WalletDisconnectedError();
+        }
         return provider.request({
             method: 'wallet_watchAsset',
             params: asset,
@@ -200,33 +203,27 @@ export abstract class Adapter<Name extends string = string>
                 const timeout = setTimeout(() => {
                     if (handled) return;
                     handled = true;
-                    window.removeEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
-                    const provider = this.getInjectedProvider();
-                    if (provider) {
-                        resolve(provider);
-                    } else {
-                        console.error(`[${this.name}]: Unable to detect EIP6963 provider`);
-                        resolve(null);
-                    }
+                    window.removeEventListener('eip6963:announceProvider', eip6963Handler);
+                    console.error(`[${this.name}]: EIP-6963 provider announcement timed out.`);
+                    resolve(null);
                 }, 3000);
                 // EIP-6963 event handler
-                const eip6963Handler = (
-                    event: CustomEvent<{
+                const eip6963Handler = (event: Event) => {
+                    const customEvent = event as CustomEvent<{
                         info: { uuid: string; name: string; icon: string; rdns: string };
                         provider: EIP1193Provider;
-                    }>
-                ) => {
-                    console.log('EIP6963 announce: ', event.detail);
+                    }>;
+                    console.log('EIP6963 announce: ', customEvent.detail);
                     if (handled) return;
-                    if (event.detail?.info?.name === this.eip6963Info.name) {
+                    if (customEvent.detail?.info?.name === this.eip6963Info.name) {
                         handled = true;
-                        window.removeEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
-                        const provider = (event as CustomEvent).detail.provider as EIP1193Provider;
+                        window.removeEventListener('eip6963:announceProvider', eip6963Handler);
+                        const provider = customEvent.detail.provider;
                         resolve(provider);
                         clearTimeout(timeout);
                     }
                 };
-                window.addEventListener('eip6963:announceProvider', eip6963Handler as EventListener);
+                window.addEventListener('eip6963:announceProvider', eip6963Handler);
                 window.dispatchEvent(new Event('eip6963:requestProvider'));
 
                 return;
@@ -245,7 +242,7 @@ export abstract class Adapter<Name extends string = string>
                 if (provider) {
                     resolve(provider);
                 } else {
-                    console.error(`[${this.name}]: Unable to detect EIP6963 provider`);
+                    console.error(`[${this.name}]: Unable to detect provider.`);
                     resolve(null);
                 }
             };
@@ -292,7 +289,11 @@ export abstract class Adapter<Name extends string = string>
     };
 
     protected async prepareProvider() {
-        return (await this.getProvider()) as EIP1193Provider;
+        const provider = await this.getProvider();
+        if (!provider) {
+            throw new WalletNotFoundError();
+        }
+        return provider;
     }
     protected async autoConnect(provider: EIP1193Provider) {
         const accounts = await provider.request<undefined, string[]>({ method: 'eth_accounts' });
