@@ -28,6 +28,11 @@ const unSignedTransaction = await tronWeb.transactionBuilder.sendTrx(
 const signedTransaction = await adapter.signTransaction(unSignedTransaction);
 // broadcast the transaction
 await tronWeb.trx.sendRawTransaction(signedTransaction);
+
+// OR 
+// using adapter to sign and broadcast the transaction
+const result = await adapter.signAndSendTransaction(unSignedTransaction);
+console.log(result.txHash);
 ```
 
 ## Documentation
@@ -102,6 +107,15 @@ const adapter = new BinanceWalletAdapter({
         console.log('WalletConnect URI:', uri);
         // Display your custom QR code here
     });
+    ```
+
+-   `signAndSendTransaction(transaction: Transaction)`
+
+    Sign and send a transaction to the Tron network. This API will use Binance Wallet to sign the transaction and then use Binance service to broadcast the transaction. The return value contains the transaction hash, the signature, and the signed transaction object.
+
+    ```typescript
+    const result = await adapter.signAndSendTransaction(transaction);
+    console.log(result.txHash);
     ```
 
 -   `network()` method is supported to get current network information. The type of returned value is `Network` as follows:

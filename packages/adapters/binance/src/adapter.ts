@@ -62,6 +62,7 @@ export interface BinanceWalletAdapterConfig extends BaseAdapterConfig {
 export const BinanceWalletAdapterName = 'Binance Wallet' as AdapterName<'Binance Wallet'>;
 
 const chainIdNetworkMap: Record<string, NetworkType> = {
+    'CT_195': NetworkType.Mainnet,
     '0x2b6653dc': NetworkType.Mainnet,
     '0x94a9059e': NetworkType.Shasta,
     '0xcd8690dc': NetworkType.Nile,
@@ -165,15 +166,18 @@ export class BinanceWalletAdapter extends Adapter {
             await this._checkWallet();
             if (this.state !== AdapterState.Connected) throw new WalletDisconnectedError();
 
+            const chainIdMap: Record<string, string> = {
+                'CT_195': '0x2b6653dc',
+                0x2b6653dc: '0x2b6653dc',
+                Mainnet: '0x2b6653dc',
+                Shasta: '0x94a9059e',
+                Nile: '0xcd8690dc',
+            };
             // If using WalletConnect fallback, delegate to WalletConnect adapter
             if (this._walletConnectAdapter && !this._provider) {
                 // WalletConnect doesn't expose network() method, return default network from config
                 const networkType = this.config.walletConnectConfig?.network as string;
-                const chainIdMap: Record<string, string> = {
-                    Mainnet: '0x2b6653dc',
-                    Shasta: '0x94a9059e',
-                    Nile: '0xcd8690dc',
-                };
+                
                 return {
                     networkType: chainIdNetworkMap[chainIdMap[networkType] || ''] || NetworkType.Unknown,
                     chainId: chainIdMap[networkType] || '',
@@ -187,7 +191,7 @@ export class BinanceWalletAdapter extends Adapter {
                 const chainId = this._provider.getChainId();
                 return {
                     networkType: chainIdNetworkMap[chainId] || NetworkType.Unknown,
-                    chainId,
+                    chainId: chainIdMap[chainId],
                     fullNode: '',
                     solidityNode: '',
                     eventServer: '',
@@ -334,6 +338,30 @@ export class BinanceWalletAdapter extends Adapter {
 
             try {
                 return await this._provider.signTransaction(transaction);
+            } catch (error: any) {
+                throw new WalletSignTransactionError(error?.message, error);
+            }
+        } catch (error: any) {
+            this.emit('error', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Sign and send a transaction to the Tron network.
+     * @param transaction Transaction to sign and send
+     * @returns containing the newly created transaction hash
+     */
+    async signAndSendTransaction(transaction: Transaction): Promise<{ txHash: string; signature: string; transaction: string }> {
+        try {
+            if (this.state !== AdapterState.Connected) throw new WalletDisconnectedError();
+
+            if (this._walletConnectAdapter) {
+                throw new Error("WalletConnect doesn't support signAndSendTransaction.");
+            }
+
+            try {
+                return await this._provider.signAndSendTransaction(transaction);
             } catch (error: any) {
                 throw new WalletSignTransactionError(error?.message, error);
             }
