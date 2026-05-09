@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { SafepalAdapter } from '../../src/adapter.js';
 
 describe('SafepalAdapter', () => {
