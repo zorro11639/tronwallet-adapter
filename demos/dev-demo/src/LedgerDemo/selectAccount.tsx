@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import type { Account, GetAccounts } from '@tronweb3/tronwallet-adapter-ledger/lib/types/LedgerWallet.js';
+import type { Account, GetAccounts } from '@tronweb3/tronwallet-adapters';
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -26,7 +26,7 @@ export function selectAccount(config: { accounts: Account[]; getAccounts: GetAcc
       root.unmount();
       div.remove();
     }
-    root.render(<SelectAccountModal accounts={config.accounts} getAccounts={config.getAccounts} onCancel={onCancel} onConfirm={onConfirm} />);
+    root.render(<SelectAccountModal accounts={config.accounts} getAccounts={config.getAccounts} onCancel={onCancel} onConfirm={onConfirm}></SelectAccountModal>);
   });
 }
 export function SelectAccountModal(props: SelectAccountModalPros) {

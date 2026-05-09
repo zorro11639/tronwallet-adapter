@@ -38,13 +38,19 @@
             "path": "./packages/adapters/gatewallet/tsconfig.all.json"
         },
         {
-            "path": "./packages/adapters/abstract-adapter-evm/tsconfig.all.json"
+            "path": "./packages/adapters/evm/abstract-adapter/tsconfig.all.json"
         },
         {
-            "path": "./packages/adapters/metamask/tsconfig.all.json"
+            "path": "./packages/adapters/evm/metamask/tsconfig.all.json"
         },
         {
-            "path": "./packages/adapters/tronlink-evm/tsconfig.all.json"
+            "path": "./packages/adapters/metamask-tron/tsconfig.all.json"
+        },
+        {
+            "path": "./packages/adapters/evm/tronlink/tsconfig.all.json"
+        },
+        {
+            "path": "./packages/adapters/evm/trust/tsconfig.all.json"
         },
         {
             "path": "./packages/adapters/foxwallet/tsconfig.all.json"
@@ -65,13 +71,19 @@
             "path": "./packages/vue/vue-hooks/tsconfig.all.json"
         },
         {
+            "path": "./packages/adapters/onekey/tsconfig.all.json"
+        },
+        {
+            "path": "./packages/adapters/backpack/tsconfig.all.json"
+        },
+        {
             "path": "./packages/adapters/binance/tsconfig.all.json"
         },
         {
-            "path": "./packages/adapters/safepal/tsconfig.all.json"
+            "path": "./packages/adapters/evm/binance/tsconfig.all.json"
         },
         {
-            "path": "./packages/adapters/binance-evm/tsconfig.all.json"
+            "path": "./packages/adapters/safepal/tsconfig.all.json"
         }
     ]
 }

@@ -13,9 +13,8 @@ function ReactHooksDemoWrap({ children }: any) {
       new WalletConnectAdapter({
         network: 'Nile',
         options: {
-          relayUrl: 'wss://relay.walletconnect.com',
-          // example walletconnect app project ID
-          projectId: 'e899c82be21d4acca2c8aec45e893598',
+          relayUrl: import.meta.env.VITE_WALLETCONNECT_RELAY_URL,
+          projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
           metadata: {
             name: 'Example App',
             description: 'Example App',
@@ -54,7 +53,7 @@ function ReactHooksDemoWrap({ children }: any) {
     </WalletProvider>
   );
 }
-function _ReactHooksDemo() {
+function InternalReactHooksDemo() {
   const { wallets, address, wallet, connected, select, connect, signMessage, disconnect } = useWallet();
   const [messageToSign, setMessageToSign] = useState('Adapter');
   const [signedMessage, setSignedMessage] = useState('');
@@ -154,7 +153,7 @@ function _ReactHooksDemo() {
 export function ReactHooksDemo() {
   return (
     <ReactHooksDemoWrap>
-      <_ReactHooksDemo />
+      <InternalReactHooksDemo />
     </ReactHooksDemoWrap>
   );
 }

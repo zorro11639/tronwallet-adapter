@@ -6,7 +6,7 @@ import type { Adapter } from '@tronweb3/tronwallet-abstract-adapter';
 import { AdapterState } from '@tronweb3/tronwallet-abstract-adapter';
 import { Box, Button, Typography, Tooltip, Select, MenuItem, Alert, FormControl, TextField } from '@mui/material';
 import { tronWeb } from './tronweb.js';
-const receiver = 'TMDKznuDWaZwfZHcM61FVFstyYNmK6Njk1';
+const receiver = '';
 
 export function TronLinkAdapterDemo() {
   const [connectState, setConnectState] = useState(AdapterState.NotFound);
@@ -20,7 +20,7 @@ export function TronLinkAdapterDemo() {
   const adapter = useMemo(
     () =>
       new TronLinkAdapter({
-        openTronLinkAppOnMobile: true,
+        openAppWithDeeplink: true,
         openUrlWhenWalletNotFound: false,
         checkTimeout: 3000,
       }),
@@ -225,7 +225,7 @@ export function MultiSignDemo(props: { address: string; adapter: Adapter }) {
   const multiSignWithAddress1 = useCallback(
     async function () {
       const transaction = await tronWeb.transactionBuilder.sendTrx(receiver, tronWeb.toSun(0.000001) as unknown as number, props.address, { permissionId: 2 });
-      const signedTransaction = await props.adapter.multiSign(transaction, null, 2);
+      const signedTransaction = await props.adapter.multiSign(transaction, { permissionId: 2 });
       setTransferTransaction(signedTransaction);
     },
     [props.adapter, setTransferTransaction, props.address]
@@ -233,7 +233,7 @@ export function MultiSignDemo(props: { address: string; adapter: Adapter }) {
   const multiSignWithAddress2 = useCallback(
     async function () {
       console.log('first multi signed tx:', transferTransaction);
-      const signedTransaction = await props.adapter.multiSign(transferTransaction as any, null, 2);
+      const signedTransaction = await props.adapter.multiSign(transferTransaction as any, { permissionId: 2 });
       console.log('second multi signed tx:', signedTransaction);
       setTransferTransaction(signedTransaction);
       const signWeight = await tronWeb.trx.getSignWeight(signedTransaction, 2);

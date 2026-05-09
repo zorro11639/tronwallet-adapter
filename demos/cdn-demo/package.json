@@ -3,9 +3,7 @@
     "private": true,
     "version": "0.0.3",
     "type": "module",
-    "scripts": {
-        "dev": "serve"
-    },
+    "scripts": {},
     "dependencies": {
         "@tronweb3/abstract-adapter-evm": "^1.0.1",
         "@tronweb3/tronwallet-abstract-adapter": "^1.1.6",
@@ -18,7 +16,7 @@
         "@tronweb3/tronwallet-adapter-guarda": "^1.0.0",
         "@tronweb3/tronwallet-adapter-imtoken": "^1.0.3",
         "@tronweb3/tronwallet-adapter-ledger": "^1.1.8",
-        "@tronweb3/tronwallet-adapter-metamask": "^1.0.1",
+        "@tronweb3/tronwallet-adapter-metamask-evm": "^1.0.0",
         "@tronweb3/tronwallet-adapter-okxwallet": "^1.0.2",
         "@tronweb3/tronwallet-adapter-tokenpocket": "1.0.6",
         "@tronweb3/tronwallet-adapter-tomowallet": "^1.0.1",
@@ -28,10 +26,7 @@
         "@tronweb3/tronwallet-adapter-walletconnect": "^1.0.5",
         "@tronweb3/tronwallet-adapter-safepal": "^1.0.0",
         "@tronweb3/tronwallet-adapters": "1.2.1",
-        "@walletconnect/modal": "^2.6.2",
-        "@walletconnect/sign-client": "^2.1.4"
-    },
-    "devDependencies": {
-        "serve": "^14.2.4"
+        "@walletconnect/modal": "2.6.2",
+        "@walletconnect/sign-client": "2.14.0"
     }
 }

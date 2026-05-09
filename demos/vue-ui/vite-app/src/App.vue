@@ -2,25 +2,14 @@
 import VueUiDemo from './components/VueUiDemo.vue';
 import HooksDemo from './components/HooksDemo.vue';
 import { WalletProvider } from '@tronweb3/tronwallet-adapter-vue-hooks';
-import { Adapter } from '@tronweb3/tronwallet-abstract-adapter';
-import {
-    BitKeepAdapter,
-    LedgerAdapter,
-    OkxWalletAdapter,
-    TokenPocketAdapter,
-    TronLinkAdapter,
-    WalletConnectAdapter,
-    BybitWalletAdapter,
-    SafepalAdapter
-} from '@tronweb3/tronwallet-adapters';
+import type { Adapter } from '@tronweb3/tronwallet-abstract-adapter';
+import * as Adapters from '@tronweb3/tronwallet-adapters';
 import { WalletModalProvider } from '@tronweb3/tronwallet-adapter-vue-ui';
-const tronLink = new TronLinkAdapter();
-const walletConnect = new WalletConnectAdapter({
+const walletConnect = new Adapters.WalletConnectAdapter({
     network: 'Nile',
     options: {
-        relayUrl: 'wss://relay.walletconnect.com',
-        // example WC app project ID
-        projectId: '',
+        relayUrl: import.meta.env.VITE_WALLETCONNECT_RELAY_URL,
+        projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
         metadata: {
             name: 'Test DApp',
             description: 'Test dApp',
@@ -40,22 +29,14 @@ const walletConnect = new WalletConnectAdapter({
             '1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369',
             '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
         ],
-        // mobileWallets: [],
-        // desktopWallets: []
-        // explorerExcludedWalletIds: [
-        //   '2c81da3add65899baeac53758a07e652eea46dbb5195b8074772c62a77bbf568'
-        // ]
     },
 });
-const ledger = new LedgerAdapter({
-    accountNumber: 2,
-});
-const tokenPocket = new TokenPocketAdapter();
-const bitKeep = new BitKeepAdapter();
-const okxWalletAdapter = new OkxWalletAdapter();
-const bybit = new BybitWalletAdapter();
-const safepal = new SafepalAdapter();
-const adapters = [tronLink, walletConnect, ledger, tokenPocket, bitKeep, okxWalletAdapter, bybit, safepal];
+const adapters = [
+    walletConnect,
+    ...Object.entries(Adapters)
+        .filter(([key]) => key.endsWith('Adapter') && !key.endsWith('EvmAdapter') && !key.includes('WalletConnect'))
+        .map(([key, value]) => new (value as any)()),
+];
 
 function onAdapterChanged(adapter: Adapter) {
     console.log('[wallet hooks] onAdapterChanged: ', adapter?.name);

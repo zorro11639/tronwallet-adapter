@@ -3,31 +3,21 @@ import { Alert, Box, Button, Grid2, Input, MenuItem, Select, Stack, TextField, T
 import type { Adapter, Chain } from '@tronweb3/abstract-adapter-evm';
 import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
-import {
-  BitKeepAdapter,
-  GateWalletAdapter,
-  ImTokenAdapter,
-  LedgerAdapter,
-  OkxWalletAdapter,
-  TokenPocketAdapter,
-  TronLinkAdapter,
-  WalletConnectAdapter,
-  FoxWalletAdapter,
-  BybitWalletAdapter,
-  TomoWalletAdapter,
-  TrustAdapter,
-  SafepalAdapter,
-} from '@tronweb3/tronwallet-adapters';
-import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
-import { TronLinkEvmAdapter } from '@tronweb3/tronwallet-adapter-tronlink-evm';
-import { MetaMaskAdapter } from '@tronweb3/tronwallet-adapter-metamask';
+import Adapters from '@tronweb3/tronwallet-adapters';
 import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
 
 export const AdapterBasicTest = memo(function AdapterBasicTest() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskAdapter(), new TronLinkEvmAdapter(), new SafepalAdapter()], []);
+  const adapters = useMemo(
+    () => [
+      ...Object.entries(Adapters)
+        .filter(([key]) => key.endsWith('EvmAdapter'))
+        .map(([key, value]) => new (value as any)()),
+    ],
+    []
+  );
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -44,6 +34,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     [selectedName]
   );
   useEffect(() => {
+    setChainId('');
     setAccount(adapter.address || '');
     setReadyState(adapter.readyState);
     if (adapter.connected) {
@@ -66,7 +57,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     adapter.on('connect', async () => {
       log('connect: ', adapter.address);
     });
-    adapter.on('accountsChanged', (accounts) => {
+    adapter.on('accountsChanged', (accounts: string[]) => {
       log('accountsChanged: current', accounts);
       setAccount(adapter.address || '');
       if (adapter.address) {
@@ -84,7 +75,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
       }
     });
 
-    adapter.on('chainChanged', (data) => {
+    adapter.on('chainChanged', (data: any) => {
       log('chainChanged: ', data);
       setChainId(data);
     });
@@ -92,6 +83,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     adapter.on('disconnect', () => {
       log('disconnect');
       setAccount(adapter.address || '');
+      setChainId('');
     });
 
     return () => {
@@ -176,7 +168,7 @@ const SectionSign = memo(function SectionSign({ adapter }: { adapter: Adapter })
       from: adapter.address,
       chainId: chainId,
     };
-    const signedTransaction = await adapter.sendTransaction(transaction);
+    const signedTransaction = await adapter.sendTransaction(adapter.name === 'Trust Wallet' ? { ...transaction, data: '0x' } : transaction);
     setOpen(true);
   }
 
@@ -403,7 +395,10 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter }: { adapt
       <Select labelId="demo-simple-select-label" id="demo-simple-select" value={selectedChainId} size="small" onChange={(e) => setSelectedChainId(e.target.value as Chain['chainId'])}>
         <MenuItem value={'0x1'}>Ethereum Mainnet</MenuItem>
         <MenuItem value={'0x38'}>BSC Mainnet</MenuItem>
+        <MenuItem value={'0x61'}>BSC Testnet</MenuItem>
         <MenuItem value={'0x2105'}>Base Mainnet</MenuItem>
+        <MenuItem value={'0xc7'}>BitTorrent Chain Mainnet</MenuItem>
+        <MenuItem value={'0x405'}>BitTorrent Chain Donau</MenuItem>
         <MenuItem value={'0xa4b1'}>Arbitrum One</MenuItem>
         <MenuItem value={'0x539'}>Localhost Test</MenuItem>
       </Select>

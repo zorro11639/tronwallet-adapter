@@ -199,20 +199,19 @@ export class SafepalAdapter extends Adapter {
         }
     }
 
-    async multiSign(
-        transaction: Transaction,
-        privateKey?: string | false,
-        permissionId?: number
-    ): Promise<SignedTransaction> {
+    async multiSign(transaction: Transaction, options: { permissionId?: number } = {}): Promise<SignedTransaction> {
         try {
             const wallet = await this.checkAndGetWallet();
+
             try {
-                return await wallet.tronWeb.trx.multiSign(transaction, privateKey, permissionId);
+                return await wallet.tronWeb.trx.multiSign(transaction, undefined, options.permissionId);
             } catch (error: any) {
-                if (error instanceof Error) {
+                if (error instanceof Error || (typeof error === 'object' && error.message)) {
                     throw new WalletSignTransactionError(error.message, error);
-                } else {
+                } else if (typeof error === 'string') {
                     throw new WalletSignTransactionError(error, new Error(error));
+                } else {
+                    throw new WalletSignTransactionError('Unknown error', error);
                 }
             }
         } catch (error: any) {

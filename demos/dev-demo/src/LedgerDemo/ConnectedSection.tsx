@@ -1,8 +1,8 @@
 import { Alert, Button, TextField } from '@mui/material';
-import type { LedgerAdapter } from '@tronweb3/tronwallet-adapter-ledger';
+import type { LedgerAdapter } from '@tronweb3/tronwallet-adapters';
 import { useCallback, useState } from 'react';
 import { tronWeb } from '../tronweb.js';
-const receiver = 'TMDKznuDWaZwfZHcM61FVFstyYNmK6Njk1';
+const receiver = '';
 
 export function ConnectedSection(props: { adapter: LedgerAdapter }) {
   const [signMessage, setSignMessage] = useState('Hello, Adapter');

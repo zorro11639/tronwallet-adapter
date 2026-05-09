@@ -48,8 +48,75 @@ interface BinanceWalletAdapterConfig {
      * Default is 2 * 1000ms
      */
     checkTimeout?: number;
+    /**
+     * Set if use WalletConnect as fallback when Binance Wallet is not found.
+     * Default is false.
+     */
+    useWalletConnectWhenWalletNotFound?: boolean;
+    /**
+     * WalletConnect configuration, required when useWalletConnectWhenWalletNotFound is true.
+     */
+    walletConnectConfig?: WalletConnectAdapterConfig;
+    /**
+     * Callback to receive the WalletConnect URI for custom QR code rendering.
+     * When provided, the AppKit modal will be skipped.
+     * Only used when falling back to WalletConnect.
+     */
+    onWalletConnectUri?: (uri: string) => void;
 }
 ```
+
+**Example with WalletConnect fallback:**
+
+```typescript
+import { BinanceWalletAdapter } from '@tronweb3/tronwallet-adapter-binance';
+
+const adapter = new BinanceWalletAdapter({
+    useWalletConnectWhenWalletNotFound: true,
+    walletConnectConfig: {
+        network: 'Nile',
+        options: {
+            projectId: 'your_project_id',
+            metadata: {
+                name: 'Your DApp',
+                description: 'Your DApp Description',
+                url: 'https://your-dapp.com',
+                icons: ['https://your-dapp.com/icon.png'],
+            },
+        },
+    },
+    // Optional: custom QR code rendering
+    onWalletConnectUri: (uri) => {
+        console.log('WalletConnect URI:', uri);
+        // Display your custom QR code here
+    },
+});
+```
+
+-   `signAndSendTransaction(transaction: Transaction): Promise<{ signature: string; txHash: string; transaction: SignedTransaction }>`
+
+    Sign a transaction and broadcast it using the Binance Wallet's selected network in a single call.
+
+    ```typescript
+    const unSignedTransaction = await tronWeb.transactionBuilder.sendTrx(
+        targetAddress,
+        100,
+        adapter.address
+    );
+    const { signature, txHash, transaction } = await adapter.signAndSendTransaction(unSignedTransaction);
+    console.log('txHash:', txHash);
+    ```
+
+-   `setOnWalletConnectUri(callback: ((uri: string) => void) | undefined): void`
+
+    Set the onWalletConnectUri callback for custom QR code rendering. This allows dynamic configuration of the URI handler after adapter initialization.
+
+    ```typescript
+    adapter.setOnWalletConnectUri((uri) => {
+        console.log('WalletConnect URI:', uri);
+        // Display your custom QR code here
+    });
+    ```
 
 -   `network()` method is supported to get current network information. The type of returned value is `Network` as follows:
 

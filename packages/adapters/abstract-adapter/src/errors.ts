@@ -12,7 +12,9 @@ export class WalletError extends Error {
  */
 export class WalletNotFoundError extends WalletError {
     name = 'WalletNotFoundError';
-    message = 'The wallet is not found.';
+    constructor(message?: string, error?: any) {
+        super(message || 'The wallet is not found.', error);
+    }
 }
 
 /**
@@ -72,7 +74,9 @@ export class WalletWalletLoadError extends WalletError {
  */
 export class WalletWindowClosedError extends WalletError {
     name = 'WalletWindowClosedError';
-    message = 'The QR window is closed.';
+    constructor(message?: string, error?: any) {
+        super(message || 'The QR window is closed.', error);
+    }
 }
 /**
  * Occurs when request wallet to switch chain.
@@ -85,4 +89,10 @@ export class WalletSwitchChainError extends WalletError {
  */
 export class WalletGetNetworkError extends WalletError {
     name = 'WalletGetNetworkError';
+}
+/**
+ * Occurs when call `signTypedData()`.
+ */
+export class WalletSignTypedDataError extends WalletError {
+    name = 'WalletSignTypedDataError';
 }

@@ -1,16 +1,17 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable no-undef */
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
 const EVM_PKGS = [
     '@tronweb3/abstract-adapter-evm',
-    '@tronweb3/tronwallet-adapter-metamask',
+    '@tronweb3/tronwallet-adapter-metamask-evm',
     '@tronweb3/tronwallet-adapter-tronlink-evm',
+    '@tronweb3/tronwallet-adapter-binance-evm',
+    '@tronweb3/tronwallet-adapter-trust-evm',
 ];
 const DIRS = [
     path.resolve(__dirname, '../packages/adapters'),
+    path.resolve(__dirname, '../packages/adapters/evm'),
     path.resolve(__dirname, '../packages/react'),
     path.resolve(__dirname, '../packages/vue'),
 ];
@@ -18,7 +19,7 @@ const pkgVersions = [];
 const pkgsToBeReleased = [];
 const pkgsNotChanged = [];
 DIRS.forEach((dir) => {
-    const subDirs = fs.readdirSync(dir).filter((pkg) => !pkg.startsWith('.'));
+    const subDirs = fs.readdirSync(dir).filter((pkg) => !pkg.startsWith('.') && pkg !== 'evm');
     subDirs.forEach((pkg) => {
         try {
             const { name, version } = JSON.parse(fs.readFileSync(path.resolve(dir, pkg, 'package.json')));
@@ -59,15 +60,15 @@ pkgsNotChanged.forEach(({ name, version }) => {
     console.log(`${name}: ${version}`);
 });
 
-console.log('\nTag Content: ');
-console.log('TRON');
+console.log('\nTag Content: \n# Package Latest Version\n## TRON');
+
 pkgVersions
     .filter(({ name }) => !EVM_PKGS.includes(name))
     .forEach(({ name, version }) => {
         console.log(`- [${name}@${version}](https://www.npmjs.com/package/${name})`);
     });
 
-console.log('\nEVM');
+console.log('\n## EVM');
 pkgVersions
     .filter(({ name }) => EVM_PKGS.includes(name))
     .forEach(({ name, version }) => {
