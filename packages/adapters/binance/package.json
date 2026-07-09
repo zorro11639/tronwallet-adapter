@@ -1,6 +1,6 @@
 {
     "name": "@tronweb3/tronwallet-adapter-binance",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Wallet adapter for Binance Wallet",
     "keywords": [
         "TRON",
@@ -46,7 +46,6 @@
         "build:umd": "node ../../../scripts/build-umd.js"
     },
     "dependencies": {
-        "@binance/w3w-utils": "1.1.8",
         "@tronweb3/tronwallet-abstract-adapter": "workspace:^",
         "@tronweb3/tronwallet-adapter-tronlink": "workspace:^",
         "@tronweb3/tronwallet-adapter-walletconnect": "workspace:^"

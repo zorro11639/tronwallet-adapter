@@ -24,10 +24,14 @@ import {
     WalletConnectAdapter,
     type WalletConnectConnectOptions,
 } from '@tronweb3/tronwallet-adapter-walletconnect';
+import { openBinanceWallet } from './utils.js';
 
 declare global {
     interface Window {
         isBinance: boolean;
+        binancew3w?: {
+            tron?: any;
+        };
     }
 }
 
@@ -49,6 +53,13 @@ export interface BinanceWalletAdapterConfig extends BaseAdapterConfig {
      * Default is false
      */
     useWalletConnectWhenWalletNotFound?: boolean;
+
+    /**
+     * Whether to open the Binance app via deeplink on a mobile browser when the
+     * Binance Wallet provider is not injected.
+     * Default is true
+     */
+    openAppWithDeeplink?: boolean;
 
     walletConnectConfig?: WalletConnectAdapterConfig;
 
@@ -95,6 +106,7 @@ export class BinanceWalletAdapter extends AddonAdapter {
         this.config = {
             ...this.commonConfig,
             useWalletConnectWhenWalletNotFound: false,
+            openAppWithDeeplink: true,
             ...config,
         };
         this._connecting = false;
@@ -206,7 +218,18 @@ export class BinanceWalletAdapter extends AddonAdapter {
             const shouldUseWalletConnect = this.state === AdapterState.NotFound || !this._provider;
 
             if (shouldUseWalletConnect) {
+                // Mobile-first (see issue: Binance button should open the Binance app):
+                // when the Binance provider is not injected and we're in a mobile browser, open the
+                // Binance app via deeplink FIRST — regardless of the WalletConnect-fallback setting.
+                // This lets a single config serve both: mobile opens the app, desktop falls back to
+                // WalletConnect / the download page. Opt out with `openAppWithDeeplink: false`.
+                if (this._openAppByDeepLinkIfNeed()) {
+                    // The browser is navigating to the Binance app; nothing more to do this session.
+                    throw new WalletNotFoundError();
+                }
+
                 if (!this.config.useWalletConnectWhenWalletNotFound) {
+                    // Desktop (or deeplink disabled) without WalletConnect fallback: open the download page.
                     if (this.config.openUrlWhenWalletNotFound !== false && isInBrowser()) {
                         window.open(this.url, '_blank');
                     }
@@ -489,7 +512,16 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
     }
 
+    /**
+     * Open the Binance app via deeplink when running in a mobile browser and the
+     * Binance Wallet provider is not injected. Returns `true` when the deeplink
+     * was triggered, `false` otherwise (so the caller can fall back to opening
+     * the download page).
+     */
     protected _openAppByDeepLinkIfNeed(): boolean {
-        return false;
+        if (this.config.openAppWithDeeplink === false) {
+            return false;
+        }
+        return openBinanceWallet();
     }
 }

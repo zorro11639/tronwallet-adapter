@@ -1,6 +1,7 @@
 packages:
     - 'packages/*/*'
     - 'packages/adapters/evm/*'
+    - '!packages/deprecated/**'
     - 'demos/*/*'
     - 'demos/dev-demo'
     - 'demos/cdn-demo'

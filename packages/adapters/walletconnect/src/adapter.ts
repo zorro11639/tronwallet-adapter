@@ -14,9 +14,53 @@ import type { WalletConnectModalConfig } from '@walletconnect/modal';
 export type WalletConnectWeb3ModalConfig = Omit<WalletConnectModalConfig, 'projectId'>;
 import type { Transaction, SignedTransaction, AdapterName } from '@tronweb3/tronwallet-abstract-adapter';
 import { ChainNetwork } from '@tronweb3/tronwallet-abstract-adapter';
-import type { ThemeVariables } from '@tronweb3/walletconnect-tron';
-import { WalletConnectWallet, WalletConnectChainID } from '@tronweb3/walletconnect-tron';
 import type { SignClientTypes } from '@walletconnect/types';
+
+// `@tronweb3/walletconnect-tron` is intentionally NOT imported at the top level — not even for
+// types. Two reasons:
+//  1. Runtime: it statically pulls in `@walletconnect/universal-provider` ->
+//     `@walletconnect/core` -> `@walletconnect/keyvaluestorage`, whose module has a top-level
+//     IIFE that touches `globalThis.localStorage` (unguarded) at module-eval time and THROWS
+//     when the browser has cookies/storage fully disabled. So we lazy-load it via `await import()`
+//     inside connect() (deferred into an async chunk loaded only when the user connects).
+//  2. Types: even a type-only import drags its heavy upstream type graph (Reown/viem/ox) into
+//     type-checking, which fails to compile under this repo's classic `moduleResolution: "node"`.
+// We therefore model the slice of its API we use with the local types below.
+
+/**
+ * Theme variables forwarded to the underlying WalletConnect modal. Declared locally (instead of
+ * re-using `walletconnect-tron`'s `ThemeVariables`) to keep that package out of the type graph.
+ */
+export type ThemeVariables = Partial<
+    Record<
+        | '--w3m-font-family'
+        | '--w3m-accent'
+        | '--w3m-color-mix'
+        | '--w3m-color-mix-strength'
+        | '--w3m-font-size-master'
+        | '--w3m-border-radius-master'
+        | '--w3m-z-index'
+        | '--w3m-qr-color',
+        string | number
+    >
+>;
+
+/** Minimal structural view of `walletconnect-tron`'s `WalletConnectWallet` — only what this adapter uses. */
+interface WalletConnectWalletLike {
+    connect(options?: { onUri?: (uri: string) => void }): Promise<{ address: string }>;
+    disconnect(): Promise<void>;
+    signTransaction(transaction: Transaction): Promise<SignedTransaction>;
+    signMessage(message: string): Promise<string>;
+    checkConnectStatus(): Promise<{ address: string }>;
+    on(event: string, handler: (...args: any[]) => void): void;
+    off(event: string, handler: (...args: any[]) => void): void;
+}
+
+/** Shape of the lazily-imported `walletconnect-tron` module (only the members this adapter touches). */
+interface WalletConnectTronModule {
+    WalletConnectWallet: new (config: Record<string, unknown>) => WalletConnectWalletLike;
+    WalletConnectChainID: Record<string, string>;
+}
 
 export const WalletConnectWalletName = 'WalletConnect' as AdapterName<'WalletConnect'>;
 const NETWORK = Object.keys(ChainNetwork);
@@ -118,7 +162,7 @@ export class WalletConnectAdapter extends Adapter {
     private _readyState: WalletReadyState = WalletReadyState.Found;
     private _state: AdapterState = AdapterState.Disconnect;
     private _connecting: boolean;
-    private _wallet: WalletConnectWallet | null;
+    private _wallet: WalletConnectWalletLike | null;
     private _config: WalletConnectAdapterConfig;
     private _address: string | null;
 
@@ -168,10 +212,10 @@ export class WalletConnectAdapter extends Adapter {
         this._config = config;
     }
 
-    private _getChainId(network: string): WalletConnectChainID | `tron:${string}` {
-        const mapped = WalletConnectChainID[network as `${ChainNetwork}`];
+    private _getChainId(network: string, chainIdEnum: Record<string, string>): string {
+        const mapped = chainIdEnum[network];
         if (mapped) return mapped;
-        if (network.startsWith('tron:')) return network as `tron:${string}`;
+        if (network.startsWith('tron:')) return network;
         return `tron:${network}`;
     }
 
@@ -204,9 +248,17 @@ export class WalletConnectAdapter extends Adapter {
             let address = '';
             try {
                 if (!this._wallet) {
+                    // Lazy-load to keep walletconnect-tron's top-level localStorage access
+                    // (via @walletconnect/keyvaluestorage) out of the synchronous module graph
+                    // (see import note at top of file).
+                    // Cast through `unknown` to a local shape so TypeScript never resolves
+                    // walletconnect-tron's declaration file (and its heavy upstream type graph).
+                    const { WalletConnectWallet, WalletConnectChainID } = (await import(
+                        '@tronweb3/walletconnect-tron'
+                    )) as unknown as WalletConnectTronModule;
                     this._wallet = new WalletConnectWallet({
                         ...this._config,
-                        network: this._getChainId(this._config.network),
+                        network: this._getChainId(this._config.network, WalletConnectChainID),
                     });
                 }
 

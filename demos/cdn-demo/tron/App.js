@@ -8,7 +8,6 @@ const { GateWalletAdapter } = window['@tronweb3/tronwallet-adapter-gatewallet'];
 const { ImTokenAdapter } = window['@tronweb3/tronwallet-adapter-imtoken'];
 const { BybitWalletAdapter } = window['@tronweb3/tronwallet-adapter-bybit'];
 const { FoxWalletAdapter } = window['@tronweb3/tronwallet-adapter-foxwallet'];
-const { TomoWalletAdapter } = window['@tronweb3/tronwallet-adapter-tomowallet'];
 const { TrustAdapter } = window['@tronweb3/tronwallet-adapter-trust'];
 const { BinanceWalletAdapter } = window['@tronweb3/tronwallet-adapter-binance'];
 const { LedgerAdapter } = window['@tronweb3/tronwallet-adapter-ledger'];
@@ -20,7 +19,6 @@ const tronWeb = new window.TronWeb.TronWeb({
 export default {
     setup() {
         const options = [
-            new TomoWalletAdapter(),
             new TronLinkAdapter(),
             new TokenPocketAdapter(),
             new OkxWalletAdapter(),

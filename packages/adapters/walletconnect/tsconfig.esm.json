@@ -4,6 +4,9 @@
     "compilerOptions": {
         "outDir": "lib/esm",
         "skipLibCheck": true,
-        "declarationDir": "lib/types"
+        "declarationDir": "lib/types",
+        "paths": {
+            "@tronweb3/walletconnect-tron": ["./src/walletconnect-tron.shim.d.ts"]
+        }
     }
 }

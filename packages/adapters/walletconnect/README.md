@@ -216,5 +216,6 @@ await tronWeb.trx.sendRawTransaction(signedTransaction);
 ### Caveates
 
 -   `multiSign()` and `switchChain(chainId: string)` are not supported.
+-   **Browser storage requirement.** WalletConnect (via `@walletconnect/core`) relies on browser storage (`localStorage`). Since `3.0.5`, the WalletConnect runtime is loaded lazily (only when `connect()` is called), so importing this package — or the aggregate [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters) — no longer crashes the page when cookies/storage are fully disabled. In that environment `connect()` will reject gracefully instead; other adapters keep working, so prompt the user to enable browser storage to use WalletConnect.
 
 For more information about wallet adapter, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters).

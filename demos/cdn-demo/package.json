@@ -20,7 +20,6 @@
         "@tronweb3/tronwallet-adapter-okxwallet": "^1.0.2",
         "@tronweb3/tronwallet-adapter-okxwallet-evm": "^1.0.0",
         "@tronweb3/tronwallet-adapter-tokenpocket": "1.0.6",
-        "@tronweb3/tronwallet-adapter-tomowallet": "^1.0.1",
         "@tronweb3/tronwallet-adapter-tronlink": "^1.1.9",
         "@tronweb3/tronwallet-adapter-tronlink-evm": "^1.0.1",
         "@tronweb3/tronwallet-adapter-trust": "^1.0.2",

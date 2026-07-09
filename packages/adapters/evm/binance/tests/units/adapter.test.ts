@@ -3,14 +3,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { WalletConnectionError, WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { BinanceProvider, installBinanceEIP6963Provider } from './binance-provider.js';
 
-// Mock @binance/w3w-utils so supportBinanceEvm() can be controlled in tests
-vi.mock('@binance/w3w-utils', () => ({
-    isExtensionInstalled: vi.fn(() => false),
-    isInBinance: vi.fn(() => false),
-    getDeepLink: vi.fn(() => ({ bnc: '' })),
-}));
-import { isExtensionInstalled } from '@binance/w3w-utils';
-
 async function flushPromises() {
     for (const i of [1, 2, 3]) {
         await Promise.resolve(i);
@@ -20,11 +12,11 @@ async function flushPromises() {
 describe('BinanceEvmAdapter', () => {
     beforeEach(() => {
         vi.useFakeTimers();
+        vi.spyOn(window, 'open').mockImplementation(() => null);
         // @ts-ignore
         window.ethereum = null;
         // @ts-ignore
         window.binancew3w = undefined;
-        vi.mocked(isExtensionInstalled).mockReturnValue(false);
     });
 
     afterEach(() => {
@@ -79,7 +71,6 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('should discover Binance provider via injected window.ethereum when provider.isBinance is true', async () => {
-        vi.mocked(isExtensionInstalled).mockReturnValue(true);
         const provider = new BinanceProvider();
         // @ts-ignore
         window.ethereum = provider;
@@ -93,10 +84,9 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('should discover Binance provider via injected window.binancew3w.ethereum when provider.isBinance is true', async () => {
-        vi.mocked(isExtensionInstalled).mockReturnValue(true);
         const provider = new BinanceProvider();
         // @ts-ignore
-        window.binancew3w = { ethereum: provider };
+        window.binancew3w = { isExtension: true, ethereum: provider };
 
         const adapter = new BinanceEvmAdapter();
         vi.advanceTimersByTime(200);
@@ -107,10 +97,9 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('should not fallback to window.binancew3w.ethereum when isBinance is missing', async () => {
-        vi.mocked(isExtensionInstalled).mockReturnValue(true);
         const provider = new BinanceProvider({ isBinance: false });
         // @ts-ignore
-        window.binancew3w = { ethereum: provider };
+        window.binancew3w = { isExtension: true, ethereum: provider };
 
         const adapter = new BinanceEvmAdapter();
         vi.advanceTimersByTime(3100);
@@ -120,8 +109,9 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('should not fallback to window.ethereum when isBinance is missing', async () => {
-        vi.mocked(isExtensionInstalled).mockReturnValue(true);
         const provider = new BinanceProvider({ isBinance: false });
+        // @ts-ignore
+        window.binancew3w = { isExtension: true };
         // @ts-ignore
         window.ethereum = provider;
 
@@ -133,7 +123,7 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('connect should reset connecting after WalletNotFoundError', async () => {
-        const adapter = new BinanceEvmAdapter();
+        const adapter = new BinanceEvmAdapter({ openUrlWhenWalletNotFound: false });
         const res = adapter.connect();
 
         vi.advanceTimersByTime(3100);
@@ -142,7 +132,6 @@ describe('BinanceEvmAdapter', () => {
     });
 
     it('connect should reset connecting after provider rejects requestAccounts', async () => {
-        vi.mocked(isExtensionInstalled).mockReturnValue(true);
         const provider = new BinanceProvider();
         provider.request = vi.fn(({ method }) => {
             if (method === 'eth_accounts') {

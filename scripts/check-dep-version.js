@@ -2,10 +2,34 @@ const fs = require('fs');
 const path = require('path');
 
 const pkgDepMap = new Map();
+const packagesRoot = path.resolve(process.cwd(), 'packages');
+
+function isDeprecatedPackageDir(dir) {
+    const relativePath = path.relative(packagesRoot, dir);
+    return relativePath === 'deprecated' || relativePath.startsWith(`deprecated${path.sep}`);
+}
+
 function scanDir(dir) {
-    try {
-        const content = fs.readFileSync(path.resolve(dir, 'package.json'), { encoding: 'utf-8' });
-        const json = JSON.parse(content);
+    if (isDeprecatedPackageDir(dir)) {
+        return;
+    }
+
+    // Read and validate package.json if present. A missing package.json is normal
+    // (e.g. the `packages/` root itself is not a package); a present but malformed
+    // or invalid one is a release-blocking error and must fail closed.
+    const pkgPath = path.resolve(dir, 'package.json');
+    if (fs.existsSync(pkgPath)) {
+        let json;
+        try {
+            json = JSON.parse(fs.readFileSync(pkgPath, { encoding: 'utf-8' }));
+        } catch (e) {
+            console.error(`Malformed package.json at ${pkgPath}: ${e.message}`);
+            process.exit(1);
+        }
+        if (typeof json.name !== 'string' || typeof json.version !== 'string') {
+            console.error(`Invalid package.json at ${pkgPath}: "name" and "version" must be strings.`);
+            process.exit(1);
+        }
         const depVersionMap = new Map();
         const deps = {
             ...(json.dependencies || {}),
@@ -22,8 +46,6 @@ function scanDir(dir) {
             version: json.version,
             depVersionMap,
         });
-    } catch {
-        //
     }
     fs.readdirSync(dir).forEach((subDir) => {
         const newPath = path.resolve(dir, subDir);

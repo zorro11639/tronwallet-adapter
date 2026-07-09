@@ -15,6 +15,8 @@ The `Adapter` class defines the common interface for all adapters of specified w
 -   [TronLinkEvmAdapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/tronlink/README.md)
 -   [BinanceEvmAdapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/binance/README.md)
 -   [TrustEvmAdapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/trust/README.md)
+-   [OkxWalletEvmAdapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/okxwallet/README.md)
+-   [LedgerEvmAdapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/ledger/README.md)
 
 #### Properties
 

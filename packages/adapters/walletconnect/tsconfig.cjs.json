@@ -3,6 +3,9 @@
     "include": ["src"],
     "compilerOptions": {
         "outDir": "lib/cjs",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "paths": {
+            "@tronweb3/walletconnect-tron": ["./src/walletconnect-tron.shim.d.ts"]
+        }
     }
 }

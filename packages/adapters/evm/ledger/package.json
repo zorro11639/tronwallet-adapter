@@ -1,0 +1,67 @@
+{
+    "name": "@tronweb3/tronwallet-adapter-ledger-evm",
+    "version": "1.0.0",
+    "description": "Wallet adapter for Ledger Hardware Wallet on EVM-Compatible Chains.",
+    "keywords": [
+        "EVM",
+        "Ethereum Wallet",
+        "Ledger wallet",
+        "Hardware wallet"
+    ],
+    "author": "tronweb3",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tronweb3/tronwallet-adapter"
+    },
+    "license": "MIT",
+    "type": "module",
+    "sideEffects": [
+        "./lib/**/polyfills/*"
+    ],
+    "engines": {
+        "node": ">=16",
+        "pnpm": ">=7"
+    },
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
+    "types": "./lib/types/index.d.ts",
+    "exports": {
+        "types": "./lib/types/index.d.ts",
+        "import": "./lib/esm/index.js",
+        "require": "./lib/cjs/index.js"
+    },
+    "files": [
+        "lib",
+        "src",
+        "LICENSE"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "shx mkdir -p lib && shx rm -rf lib",
+        "package": "shx echo '{ \"type\": \"commonjs\" }' > lib/cjs/package.json",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "build:umd": "node ../../../../scripts/build-umd.js"
+    },
+    "dependencies": {
+        "@ethereumjs/common": "4.4.0",
+        "@ethereumjs/rlp": "5.0.2",
+        "@ethereumjs/tx": "5.4.0",
+        "@ethereumjs/util": "9.1.0",
+        "@ethersproject/hash": "5.8.0",
+        "@ledgerhq/hw-app-eth": "6.35.6",
+        "@ledgerhq/hw-transport": "6.27.1",
+        "@ledgerhq/hw-transport-webhid": "6.27.1",
+        "@tronweb3/abstract-adapter-evm": "workspace:^",
+        "buffer": "6.0.3",
+        "preact": "10.23.0"
+    },
+    "devDependencies": {
+        "@testing-library/dom": "8.20.0",
+        "@types/w3c-web-hid": "1.0.6",
+        "shx": "0.3.4",
+        "vitest": "3.2.4"
+    }
+}
