@@ -6,6 +6,6 @@ export default defineConfig({
         environment: 'happy-dom',
     },
     ssr: {
-        noExternal: ['@binance/w3w-utils', '@tronweb3/abstract-adapter-evm'],
+        noExternal: ['@tronweb3/abstract-adapter-evm'],
     },
 });

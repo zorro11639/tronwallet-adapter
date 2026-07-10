@@ -14,6 +14,7 @@
     },
     "license": "MIT",
     "type": "module",
+    "private": true,
     "sideEffects": false,
     "engines": {
         "node": ">=16",

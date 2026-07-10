@@ -45,6 +45,17 @@ interface BinanceWalletAdapterConfig {
      */
     checkTimeout?: number;
     /**
+     * Whether to open the Binance app via deeplink on a mobile browser when the
+     * Binance Wallet provider is not injected.
+     * Default is true.
+     *
+     * This takes precedence on mobile: even when `useWalletConnectWhenWalletNotFound`
+     * is enabled, a mobile browser will open the Binance app via deeplink instead of
+     * showing the WalletConnect QR (desktop still falls back to WalletConnect). Set to
+     * `false` to disable and keep the WalletConnect / download-page fallback on mobile.
+     */
+    openAppWithDeeplink?: boolean;
+    /**
      * Set if use WalletConnect as fallback when Binance Wallet is not found.
      * Default is false.
      */

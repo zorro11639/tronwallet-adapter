@@ -1,11 +1,11 @@
 import type { SelectChangeEvent } from '@mui/material';
-import { Box, Button, Input, MenuItem, Select, Stack, Typography, styled } from '@mui/material';
+import { Alert, Box, Button, Input, MenuItem, Select, Stack, Typography, styled } from '@mui/material';
 import type { Adapter, Chain, LegacyTransaction, EIP1559Transaction, Transaction, Address, Quantity, Hex } from '@tronweb3/abstract-adapter-evm';
 import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter } from '@tronweb3/tronwallet-adapters';
+import { LedgerEvmAdapter } from '@tronweb3/tronwallet-adapter-ledger-evm';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
 
 // ─── Shared Styled Components ────────────────────────────────────────────────
@@ -120,7 +120,7 @@ const SectionButton = styled(Button)({
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter()], []);
+  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter(), new LedgerEvmAdapter()], []);
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -131,6 +131,7 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
   }
 
   const adapter = useMemo(() => adapters.find((a) => a.name === selectedName) || adapters[0], [selectedName, adapters]);
+  const isLedgerEvm = adapter.name === 'Ledger Evm';
   const log = useCallback(
     function (...args: unknown[]) {
       console.log(`[${selectedName} Adapter] `, ...args);
@@ -244,12 +245,18 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
           <ConnectButton onClick={onConnect} disabled={!!account}>
             {account ? 'Connected to Wallet' : 'Connect Wallet'}
           </ConnectButton>
+          {isLedgerEvm && (
+            <Alert severity="info" sx={{ marginTop: '12px' }}>
+              Ledger EVM adapter supports connect and signing. Sending transaction and contract actions are disabled in this demo.
+            </Alert>
+          )}
         </BasicInfoWrap>
 
         {/* Right Column: Action Cards */}
         <Box sx={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-          <SectionSign adapter={adapter} connected={!!account} />
-          <SectionTriggerContract adapter={adapter} connected={!!account} />
+          {isLedgerEvm && <SectionLedgerSignTransaction adapter={adapter} connected={!!account} />}
+          <SectionSign adapter={adapter} connected={!!account} supportsSendTransaction={!isLedgerEvm} />
+          <SectionTriggerContract adapter={adapter} connected={!!account} supportsSendTransaction={!isLedgerEvm} />
           <SectionSwitchChain adapter={adapter} connected={!!account} />
         </Box>
       </MainContent>
@@ -259,7 +266,7 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
 
 // ─── Section: Sign ───────────────────────────────────────────────────────────
 
-const SectionSign = memo(function SectionSign({ adapter, connected }: { adapter: Adapter; connected: boolean }) {
+const SectionSign = memo(function SectionSign({ adapter, connected, supportsSendTransaction }: { adapter: Adapter; connected: boolean; supportsSendTransaction: boolean }) {
   const [message, setMessage] = useState('Hello, Adapter');
   const [signedMessage, setSignedMessage] = useState('');
   const [receiver, setReceiver] = useState('');
@@ -313,12 +320,10 @@ const SectionSign = memo(function SectionSign({ adapter, connected }: { adapter:
   }, [adapter, message]);
 
   const onVerifyMessage = useCallback(async () => {
-    const utf8Message = utils.ethersUtils.toUtf8Bytes(message);
-    const hashedMessage = utils.ethersUtils.keccak256(
-      utils.ethersUtils.concat([utils.ethersUtils.toUtf8Bytes('\x19Ethereum Signed Message:\n'), utils.ethersUtils.toUtf8Bytes(String(utf8Message.length)), utf8Message])
-    );
-    const address = utils.crypto.ecRecover(hashedMessage, signedMessage.slice(2));
-    console.log('Signature is valid:', address.slice(2).toLowerCase() === adapter.address!.slice(2).toLowerCase());
+    // ethers.verifyMessage handles the EIP-191 prefix/hash and returns a
+    // standard EVM address, so EVM message/typedData/tx verification all use ethers.
+    const recovered = ethers.verifyMessage(message, signedMessage);
+    console.log('Signature is valid:', recovered.toLowerCase() === adapter.address!.toLowerCase());
   }, [message, signedMessage, adapter]);
 
   const onSignTypedData = useCallback(async () => {
@@ -367,16 +372,79 @@ const SectionSign = memo(function SectionSign({ adapter, connected }: { adapter:
       </SectionButton>
       <SectionButton onClick={onSignTypedData}>Sign Typed Data</SectionButton>
       <DarkInput placeholder="Receiver Address" disableUnderline value={receiver} onChange={(e) => setReceiver(e.target.value)} />
-      <SectionButton disabled={!connected || !receiver} onClick={onSignTransaction}>
+      <SectionButton disabled={!connected || !receiver || !supportsSendTransaction} onClick={onSignTransaction}>
         Transfer
       </SectionButton>
     </SectionCard>
   );
 });
 
+// ─── Section: Ledger Sign Transaction ────────────────────────────────────────
+
+const SectionLedgerSignTransaction = memo(function SectionLedgerSignTransaction({ adapter, connected }: { adapter: Adapter; connected: boolean }) {
+  const [result, setResult] = useState('');
+
+  const onSign = useCallback(
+    async (useEip1559: boolean) => {
+      try {
+        setResult('Please review and approve the transaction on your Ledger device...');
+        // Follow the adapter's current chain (updated by switchChain), same as the
+        // other EVM wallets in this demo. network() returns a hex chainId.
+        const cid = await adapter.network();
+        const chainId = Number(cid);
+        const base = {
+          // Placeholder recipient — nothing is broadcast, so any valid address
+          // works. Using the well-known burn address to make that explicit.
+          to: '0x000000000000000000000000000000000000dEaD',
+          value: '0x2386f26fc10000', // 0.01 ETH
+          data: '0x',
+          nonce: 0,
+          gasLimit: '0x5208',
+          chainId,
+        };
+        const ledgerAdapter = adapter as LedgerEvmAdapter;
+        const signedRaw = await ledgerAdapter.signTransaction(useEip1559 ? { ...base, maxFeePerGas: '0x77359400', maxPriorityFeePerGas: '0x3b9aca00' } : { ...base, gasPrice: '0x77359400' });
+        // Offline verification: recover the sender from the signed raw tx.
+        // If it equals the Ledger address, serialization + signing + signature
+        // reassembly are all correct. Nothing is broadcast.
+        const recovered = ethers.Transaction.from(signedRaw).from || '';
+        const ok = recovered.toLowerCase() === (adapter.address || '').toLowerCase();
+        console.log('Ledger signed raw tx:', signedRaw);
+        console.log('Recovered sender:', recovered, '— expected:', adapter.address, '— match:', ok);
+        setResult(
+          `${useEip1559 ? 'EIP-1559' : 'Legacy'} tx signed.\nRecovered sender: ${recovered}\nLedger address: ${adapter.address}\nMatch: ${
+            ok ? '✅ YES — signature is valid' : '❌ NO — signature is broken'
+          }\nRaw tx logged to console.`
+        );
+      } catch (e: any) {
+        setResult(`Error: ${e?.message || e}`);
+      }
+    },
+    [adapter]
+  );
+
+  return (
+    <SectionCard background="linear-gradient(210deg, #41B7E9 -1.29%, #07094C 40%, #07094C 75%, #4643DF 98.71%)">
+      <Typography variant="h6" fontWeight={700} color="white">
+        Ledger Sign Transaction (offline verify)
+      </Typography>
+      <Typography sx={{ color: 'rgba(255,255,255,0.75)', fontSize: 12 }}>
+        Signs a transaction on the device using the current chain (use Switch Chain to change it), then recovers the sender address locally. Nothing is broadcast, no funds needed.
+      </Typography>
+      <SectionButton disabled={!connected} onClick={() => onSign(true)}>
+        Sign EIP-1559 Tx
+      </SectionButton>
+      <SectionButton disabled={!connected} onClick={() => onSign(false)}>
+        Sign Legacy Tx
+      </SectionButton>
+      {result && <Typography sx={{ color: 'white', fontSize: 12, wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>{result}</Typography>}
+    </SectionCard>
+  );
+});
+
 // ─── Section: Smart Contract ─────────────────────────────────────────────────
 
-const SectionTriggerContract = function ({ adapter, connected }: { adapter: Adapter; connected: boolean }) {
+const SectionTriggerContract = function ({ adapter, connected, supportsSendTransaction }: { adapter: Adapter; connected: boolean; supportsSendTransaction: boolean }) {
   const [number, setNumber] = useState('0');
   const [contractAddress, setContractAddress] = useState('');
 
@@ -425,15 +493,15 @@ const SectionTriggerContract = function ({ adapter, connected }: { adapter: Adap
       <Typography variant="h6" fontWeight={700} color="white">
         Smart Contract
       </Typography>
-      <SectionButton disabled={!connected} onClick={deployContract}>
+      <SectionButton disabled={!connected || !supportsSendTransaction} onClick={deployContract}>
         Deploy Contract
       </SectionButton>
       <DarkInput placeholder="Contract Address" disableUnderline value={contractAddress} onChange={(e) => setContractAddress(e.target.value)} />
       <DarkInput placeholder="Number" disableUnderline value={number} onChange={(e) => setNumber(e.target.value)} />
-      <SectionButton disabled={!connected || !contractAddress} onClick={triggerContract}>
+      <SectionButton disabled={!connected || !contractAddress || !supportsSendTransaction} onClick={triggerContract}>
         Store Number
       </SectionButton>
-      <SectionButton disabled={!connected || !contractAddress} onClick={readContract}>
+      <SectionButton disabled={!connected || !contractAddress || !supportsSendTransaction} onClick={readContract}>
         Get Number
       </SectionButton>
     </SectionCard>
@@ -463,7 +531,6 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter, connected
         }}
       >
         <MenuItem value="0x1">Ethereum Mainnet</MenuItem>
-        <MenuItem value="0xaa36a7">Ethereum Sepolia Testnet</MenuItem>
         <MenuItem value="0x38">BSC Mainnet</MenuItem>
         <MenuItem value="0x61">BSC Testnet</MenuItem>
         <MenuItem value="0x2105">Base Mainnet</MenuItem>
