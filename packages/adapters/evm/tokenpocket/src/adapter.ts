@@ -105,19 +105,13 @@ export class TokenPocketEvmAdapter extends Adapter {
     async sendTransaction(transaction: Transaction): Promise<string> {
         const res = (await super.sendTransaction(transaction)) as unknown;
         if (res && typeof res === 'object' && 'code' in res && 'message' in res) {
+            // In Extension, when the fee is insufficient, it returns an error object instead of throwing an error.
             const err = res as { code: number; message: string };
             const error = new Error(err.message);
             (error as any).code = err.code;
             throw error;
         }
         return res as string;
-    }
-
-    protected isEIP6963Provider(provider: EIP1193Provider, info?: EIP6963ProviderInfo): boolean {
-        if (!info?.rdns) {
-            return false;
-        }
-        return info.rdns === TOKENPOCKET_RDNS;
     }
 
     protected getInjectedProvider(): EIP1193Provider | null {
