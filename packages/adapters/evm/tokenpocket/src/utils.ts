@@ -47,14 +47,19 @@ export function openTokenPocketWithDeeplink(): void {
     if (typeof window === 'undefined') {
         return;
     }
-    const param = {
-        action: 'link',
-        actionType: 'dapp',
-        dappUrl: window.location.href,
+    const { origin, pathname, search, hash } = window.location;
+    const url = origin + pathname + search + hash;
+    const params = {
+        action: 'open',
+        actionId: Date.now() + '',
+        callbackUrl: 'http://someurl.com', // no need callback
+        blockchain: 'ETH',
+        chain: 'ETH',
+        url,
         protocol: 'TokenPocket',
-        version: '2.0',
+        version: '1.0',
     };
-    const encodedParam = encodeURIComponent(JSON.stringify(param));
-    const link = `tpoutside://pull.activity?param=${encodedParam}`;
+    const encodedParams = encodeURIComponent(JSON.stringify(params));
+    const link = `tpdapp://open?params=${encodedParams}`;
     window.location.href = link;
 }
