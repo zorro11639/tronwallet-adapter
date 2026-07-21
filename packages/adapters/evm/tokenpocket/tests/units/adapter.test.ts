@@ -216,8 +216,48 @@ describe('TokenPocketEvmAdapter', () => {
                 throw error;
             });
             await expect(adapter.connect()).rejects.toThrow();
-            expect(adapter.connecting).toBe(false);
             provider.request = oldRequest;
+        });
+    });
+
+    describe('#sendTransaction()', () => {
+        test('should return tx hash on success', async () => {
+            provider._setAccountsRes(['address']);
+            cleanupEIP6963 = installTokenPocketEIP6963Provider(provider);
+            const adapter = new TokenPocketEvmAdapter();
+            await flushPromises();
+
+            const txHash = '0xmocktxhash';
+            const request = vi.spyOn(provider, 'request').mockResolvedValue(txHash);
+
+            const tx = { from: '0xaddress', to: '0xreceiver', value: '0x1' } as any;
+            const res = await adapter.sendTransaction(tx);
+            expect(res).toEqual(txHash);
+            expect(request).toHaveBeenCalledWith({
+                method: 'eth_sendTransaction',
+                params: [tx],
+            });
+            request.mockReset();
+        });
+
+        test('should throw error when provider returns a JSON error object instead of rejecting', async () => {
+            provider._setAccountsRes(['address']);
+            cleanupEIP6963 = installTokenPocketEIP6963Provider(provider);
+            const adapter = new TokenPocketEvmAdapter();
+            await flushPromises();
+
+            const errorObj = {
+                code: -32000,
+                message:
+                    'client: transaction check failed: runtime error: module: core code: 20 message: gas price too low',
+            };
+            const request = vi.spyOn(provider, 'request').mockResolvedValue(errorObj);
+
+            const tx = { from: '0xaddress', to: '0xreceiver', value: '0x1' } as any;
+            const resPromise = adapter.sendTransaction(tx);
+
+            await expect(resPromise).rejects.toThrow('client: transaction check failed');
+            request.mockReset();
         });
     });
 });

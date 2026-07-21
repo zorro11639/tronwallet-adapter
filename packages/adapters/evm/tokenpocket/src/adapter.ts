@@ -1,4 +1,4 @@
-import type { EIP1193Provider, EIP6963ProviderInfo, TypedData } from '@tronweb3/abstract-adapter-evm';
+import type { EIP1193Provider, EIP6963ProviderInfo, TypedData, Transaction } from '@tronweb3/abstract-adapter-evm';
 import {
     Adapter,
     WalletReadyState,
@@ -100,6 +100,17 @@ export class TokenPocketEvmAdapter extends Adapter {
             method: 'eth_signTypedData_v4',
             params: [address, typeof typedData === 'string' ? typedData : JSON.stringify(typedData)],
         });
+    }
+
+    async sendTransaction(transaction: Transaction): Promise<string> {
+        const res = (await super.sendTransaction(transaction)) as unknown;
+        if (res && typeof res === 'object' && 'code' in res && 'message' in res) {
+            const err = res as { code: number; message: string };
+            const error = new Error(err.message);
+            (error as any).code = err.code;
+            throw error;
+        }
+        return res as string;
     }
 
     protected isEIP6963Provider(provider: EIP1193Provider, info?: EIP6963ProviderInfo): boolean {

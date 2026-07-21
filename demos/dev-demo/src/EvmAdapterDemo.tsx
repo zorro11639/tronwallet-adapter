@@ -299,11 +299,12 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
         value: ('0x' + Number(11).toString(16)) as Quantity,
         chainId: cid as Quantity,
         ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-        type: '0x2',
-        maxFeePerGas: '0x3B9ACA00', // 1 Gwei
-        maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
+        // type: '0x2',
+        // maxFeePerGas: '0x3B9ACA00', // 1 Gwei
+        // maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
       };
       const hash = await adapter.sendTransaction(tx);
+      console.log('hash: ', hash);
       setSignResult(`Transaction success!\nHash: ${hash}`);
     } catch (e: any) {
       setSignResult(`Transaction error: ${e?.message || e}`);
