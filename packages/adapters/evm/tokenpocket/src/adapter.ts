@@ -5,7 +5,6 @@ import {
     WalletNotFoundError,
     WalletConnectionError,
     WalletDisconnectedError,
-    WalletSendTransactionError,
     isInMobileBrowser,
     isInBrowser,
 } from '@tronweb3/abstract-adapter-evm';
@@ -107,7 +106,9 @@ export class TokenPocketEvmAdapter extends Adapter {
         const res = (await super.sendTransaction(transaction)) as unknown;
         if (res && typeof res === 'object' && 'code' in res && 'message' in res) {
             const err = res as { code: number; message: string };
-            throw new WalletSendTransactionError(err.message, err);
+            const error = new Error(err.message);
+            (error as any).code = err.code;
+            throw error;
         }
         return res as string;
     }

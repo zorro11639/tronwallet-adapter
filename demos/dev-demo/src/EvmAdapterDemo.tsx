@@ -1,7 +1,7 @@
 import type { SelectChangeEvent } from '@mui/material';
 import { Alert, Box, Button, Input, MenuItem, Select, Stack, Typography, styled } from '@mui/material';
 import type { Adapter, Chain, LegacyTransaction, EIP1559Transaction, Transaction, Address, Quantity, Hex } from '@tronweb3/abstract-adapter-evm';
-import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
+import { WalletError, WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter, TokenPocketEvmAdapter } from '@tronweb3/tronwallet-adapters';
 import { LedgerEvmAdapter } from '@tronweb3/tronwallet-adapter-ledger-evm';
@@ -307,6 +307,7 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
       console.log('hash: ', hash);
       setSignResult(`Transaction success!\nHash: ${hash}`);
     } catch (e: any) {
+      console.log(e instanceof WalletError);
       setSignResult(`Transaction error: ${e?.message || e}`);
     }
   }

@@ -50,14 +50,7 @@ export function openTokenPocketWithDeeplink(): void {
     const { origin, pathname, search, hash } = window.location;
     const url = origin + pathname + search + hash;
     const params = {
-        action: 'open',
-        actionId: Date.now() + '',
-        callbackUrl: 'http://someurl.com', // no need callback
-        blockchain: 'ETH',
-        chain: 'ETH',
         url,
-        protocol: 'TokenPocket',
-        version: '1.0',
     };
     const encodedParams = encodeURIComponent(JSON.stringify(params));
     const link = `tpdapp://open?params=${encodedParams}`;

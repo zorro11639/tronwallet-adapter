@@ -42,10 +42,3 @@ export class WalletSignTransactionError extends WalletError {
 export class WalletSignMessageError extends WalletError {
     name = 'WalletSignMessageError';
 }
-
-/**
- * Occurs when send a transaction.
- */
-export class WalletSendTransactionError extends WalletError {
-    name = 'WalletSendTransactionError';
-}

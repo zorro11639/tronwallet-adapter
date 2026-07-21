@@ -1,5 +1,5 @@
 import { vi, describe, beforeEach, afterEach, test, expect } from 'vitest';
-import { WalletNotFoundError, WalletSendTransactionError } from '@tronweb3/abstract-adapter-evm';
+import { WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { TokenPocketEvmAdapter } from '../../src/adapter.js';
 import { TokenPocketProvider, installTokenPocketEIP6963Provider } from './tokenpocket-provider.js';
 
@@ -256,7 +256,7 @@ describe('TokenPocketEvmAdapter', () => {
             const tx = { from: '0xaddress', to: '0xreceiver', value: '0x1' } as any;
             const resPromise = adapter.sendTransaction(tx);
 
-            await expect(resPromise).rejects.toBeInstanceOf(WalletSendTransactionError);
+            await expect(resPromise).rejects.toThrow('client: transaction check failed');
             request.mockReset();
         });
     });
