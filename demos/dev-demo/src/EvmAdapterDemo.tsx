@@ -287,70 +287,42 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
   const [message, setMessage] = useState('Hello, Adapter');
   const [signedMessage, setSignedMessage] = useState('');
   const [receiver, setReceiver] = useState('');
+  const [signResult, setSignResult] = useState('');
 
   async function onSignTransaction() {
-    const cid = await adapter.network();
-
-    // ── Type 0x0: Legacy transaction ──────────────────────────────────────
-    // const tx: LegacyTransaction = {
-    //   ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-    //   from: adapter.address as Address,
-    //   to: receiver as Address,
-    //   value: ('0x' + Number(11).toString(16)) as Quantity,
-    //   chainId: cid as Quantity,
-    //   type: '0x0',
-    //   gasPrice: '0x3B9ACA00' as Quantity, // 1 Gwei
-    // };
-
-    // ── Type 0x1: EIP-2930 transaction (gasPrice + optional accessList) ───
-    // import EIP2930Transaction, AccessList from '@tronweb3/abstract-adapter-evm' when uncommenting
-    // const tx: EIP2930Transaction = {
-    //   ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-    //   from: adapter.address as Address,
-    //   to: receiver as Address,
-    //   value: ('0x' + Number(11).toString(16)) as Quantity,
-    //   chainId: cid as Quantity,
-    //   type: '0x1',
-    //   gasPrice: '0x3B9ACA00' as Quantity,
-    //   accessList: [], // e.g. [{ address: '0x...', storageKeys: ['0x...'] }]
-    // };
-
-    // ── Type 0x2: EIP-1559 transaction (maxFeePerGas + maxPriorityFeePerGas)
-    const tx: Transaction = {
-      from: adapter.address as Address,
-      to: receiver as Address,
-      value: ('0x' + Number(11).toString(16)) as Quantity,
-      chainId: cid as Quantity,
-      ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-      type: '0x2',
-      maxFeePerGas: '0x3B9ACA00', // 1 Gwei
-      maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
-    };
-
-    await adapter.sendTransaction(tx);
+    try {
+      setSignResult('Sending transaction...');
+      const cid = await adapter.network();
+      const tx: Transaction = {
+        from: adapter.address as Address,
+        to: receiver as Address,
+        value: ('0x' + Number(11).toString(16)) as Quantity,
+        chainId: cid as Quantity,
+        ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
+        type: '0x2',
+        maxFeePerGas: '0x3B9ACA00', // 1 Gwei
+        maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
+      };
+      const hash = await adapter.sendTransaction(tx);
+      setSignResult(`Transaction success!\nHash: ${hash}`);
+    } catch (e: any) {
+      setSignResult(`Transaction error: ${e?.message || e}`);
+    }
   }
 
   const onSignMessage = useCallback(async () => {
-    const res = await adapter.signMessage({ message, address: adapter.address! });
-    setSignedMessage(res);
-    console.log('Sign string signature:', res);
+    try {
+      setSignResult('Signing message...');
+      const res = await adapter.signMessage({ message, address: adapter.address! });
+      setSignedMessage(res);
+      console.log('Sign string signature:', res);
+      setSignResult(`Sign Message success!\nSignature: ${res}`);
+    } catch (e: any) {
+      setSignResult(`Sign Message error: ${e?.message || e}`);
+    }
   }, [adapter, message]);
 
   const onVerifyMessage = useCallback(async () => {
-<<<<<<< HEAD
-    // ethers.verifyMessage handles the EIP-191 prefix/hash and returns a
-    // standard EVM address, so EVM message/typedData/tx verification all use ethers.
-    const recovered = ethers.verifyMessage(message, signedMessage);
-    console.log('Signature is valid:', recovered.toLowerCase() === adapter.address!.toLowerCase());
-=======
-<<<<<<< HEAD
-    const utf8Message = utils.ethersUtils.toUtf8Bytes(message);
-    const hashedMessage = utils.ethersUtils.keccak256(
-      utils.ethersUtils.concat([utils.ethersUtils.toUtf8Bytes('\x19Ethereum Signed Message:\n'), utils.ethersUtils.toUtf8Bytes(String(utf8Message.length)), utf8Message])
-    );
-    const address = utils.crypto.ecRecover(hashedMessage, signedMessage.slice(2));
-    console.log('Signature is valid:', address.slice(2).toLowerCase() === adapter.address!.slice(2).toLowerCase());
-=======
     try {
       const recovered = ethers.verifyMessage(message, signedMessage);
       const isMatch = recovered.toLowerCase() === adapter.address!.toLowerCase();
@@ -363,42 +335,50 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
     } catch (e: any) {
       setSignResult(`Verify Message error: ${e?.message || e}`);
     }
->>>>>>> f9ce233 (fixup! feat(evm): add TokenPocket EVM adapter and fix chain ID display with Oasis testnet in demo)
->>>>>>> 464d246 (feat(evm): add TokenPocket EVM adapter and fix chain ID display with Oasis testnet in demo)
   }, [message, signedMessage, adapter]);
 
   const onSignTypedData = useCallback(async () => {
-    const cid = await adapter.network();
-    const typedData = {
-      types: {
-        EIP712Domain: [
-          { name: 'name', type: 'string' },
-          { name: 'version', type: 'string' },
-          { name: 'chainId', type: 'uint256' },
-          { name: 'verifyingContract', type: 'address' },
-        ],
-        Person: [
-          { name: 'name', type: 'string' },
-          { name: 'wallet', type: 'address' },
-        ],
-        Mail: [
-          { name: 'from', type: 'Person' },
-          { name: 'to', type: 'Person' },
-          { name: 'contents', type: 'string' },
-        ],
-      },
-      primaryType: 'Mail',
-      domain: { name: 'Ether Mail', version: '1', chainId: Number(cid), verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC' },
-      message: {
-        from: { name: 'Cow', wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826' },
-        to: { name: 'Bob', wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB' },
-        contents: 'Hello, Bob!你好""abc123……&*））《》',
-      },
-    };
-    const signature = await adapter.signTypedData({ address: adapter.address || '', typedData });
-    console.log('SignTypedData signature:', signature);
-    const isValid = await verifyEip712Signature({ Person: typedData.types.Person, Mail: typedData.types.Mail }, typedData.domain, typedData.message, signature, adapter.address || '');
-    console.log('SignTypedData isValid:', isValid);
+    try {
+      setSignResult('Signing typed data...');
+      const cid = await adapter.network();
+      const typedData = {
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' },
+          ],
+          Person: [
+            { name: 'name', type: 'string' },
+            { name: 'wallet', type: 'address' },
+          ],
+          Mail: [
+            { name: 'from', type: 'Person' },
+            { name: 'to', type: 'Person' },
+            { name: 'contents', type: 'string' },
+          ],
+        },
+        primaryType: 'Mail',
+        domain: { name: 'Ether Mail', version: '1', chainId: Number(cid), verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC' },
+        message: {
+          from: { name: 'Cow', wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826' },
+          to: { name: 'Bob', wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB' },
+          contents: 'Hello, Bob!你好""abc123……&*））《》',
+        },
+      };
+      const signature = await adapter.signTypedData({ address: adapter.address || '', typedData });
+      console.log('SignTypedData signature:', signature);
+      const isValid = await verifyEip712Signature({ Person: typedData.types.Person, Mail: typedData.types.Mail }, typedData.domain, typedData.message, signature, adapter.address || '');
+      console.log('SignTypedData isValid:', isValid);
+      if (isValid) {
+        setSignResult(`Sign Typed Data success!\nSignature: ${signature}\nVerification: Valid ✅`);
+      } else {
+        setSignResult(`Sign Typed Data success!\nSignature: ${signature}\nVerification: Invalid ❌ (Recovered signer mismatch)`);
+      }
+    } catch (e: any) {
+      setSignResult(`Sign Typed Data error: ${e?.message || e}`);
+    }
   }, [adapter]);
 
   return (
@@ -416,6 +396,23 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
       <SectionButton disabled={!connected || !receiver || !supportsSendTransaction} onClick={onSignTransaction}>
         Transfer
       </SectionButton>
+      {signResult && (
+        <Typography
+          sx={{
+            color: 'white',
+            fontSize: 12,
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+            background: 'rgba(0, 0, 0, 0.2)',
+            padding: '12px',
+            borderRadius: '10px',
+            marginTop: '10px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          {signResult}
+        </Typography>
+      )}
     </SectionCard>
   );
 });
