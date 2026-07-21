@@ -491,42 +491,67 @@ const SectionTriggerContract = function ({ adapter, connected, supportsSendTrans
     '0x608060405234801561001057600080fd5b506101c0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80632e64cec11461003b5780636057361d14610059575b600080fd5b610043610075565b60405161005091906100ae565b60405180910390f35b610073600480360381019061006e91906100fa565b61008b565b005b600060016000546100869190610156565b905090565b8060008190555050565b6000819050919050565b6100a881610095565b82525050565b60006020820190506100c3600083018461009f565b92915050565b600080fd5b6100d781610095565b81146100e257600080fd5b50565b6000813590506100f4816100ce565b92915050565b6000602082840312156101105761010f6100c9565b5b600061011e848285016100e5565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061016182610095565b915061016c83610095565b925082820190508082111561018457610183610127565b5b9291505056fea26469706673582212209410fe094761ba1df4dc51e0ffea2cfd9c83dba2f7a18f4c4812a9a67234f15664736f6c63430008120033';
   const [deployData, setDeployData] = useState(defaultByteCode);
   const [toAddressOption, setToAddressOption] = useState<'none' | 'zero'>('none');
+  const [contractResult, setContractResult] = useState('');
 
   async function deployContract() {
-    const provider1 = await adapter.getProvider();
-    if (!provider1) return;
-    const cid = await adapter.network();
-    const baseDeployTx: EIP1559Transaction = {
-      from: adapter.address as Address,
-      ...(toAddressOption === 'zero' ? { to: '0x0000000000000000000000000000000000000000' as Address } : {}),
-      data: deployData as Hex,
-      chainId: cid as Quantity,
-    };
-    console.log(baseDeployTx);
-    const tx = await adapter.sendTransaction(baseDeployTx);
-    console.log('transaction hash:', tx);
+    try {
+      setContractResult('Deploying contract...');
+      const provider1 = await adapter.getProvider();
+      if (!provider1) {
+        setContractResult('Error: Provider not found');
+        return;
+      }
+      const cid = await adapter.network();
+      const baseDeployTx: EIP1559Transaction = {
+        from: adapter.address as Address,
+        ...(toAddressOption === 'zero' ? { to: '0x0000000000000000000000000000000000000000' as Address } : {}),
+        data: deployData as Hex,
+        chainId: cid as Quantity,
+      };
+      console.log(baseDeployTx);
+      const tx = await adapter.sendTransaction(baseDeployTx);
+      console.log('transaction hash:', tx);
+      setContractResult(`Deploy success!\nTransaction Hash: ${tx}`);
+    } catch (e: any) {
+      setContractResult(`Deploy error: ${e?.message || e}`);
+    }
   }
 
   async function triggerContract() {
-    const selector = `${keccak256(toUtf8Bytes('store(uint256)')).slice(0, 10)}`;
-    const param1 = Number(number).toString(16).padStart(64, '0');
-    const tx: LegacyTransaction = {
-      from: adapter.address as Address,
-      to: contractAddress as Address,
-      data: (selector + param1) as Hex,
-      gas: '0x19023' as Quantity,
-    };
-    const result = await adapter.sendTransaction(tx);
-    console.log('signedTransaction', result);
+    try {
+      setContractResult('Storing number...');
+      const selector = `${keccak256(toUtf8Bytes('store(uint256)')).slice(0, 10)}`;
+      const param1 = Number(number).toString(16).padStart(64, '0');
+      const tx: LegacyTransaction = {
+        from: adapter.address as Address,
+        to: contractAddress as Address,
+        data: (selector + param1) as Hex,
+        gas: '0x19023' as Quantity,
+      };
+      const result = await adapter.sendTransaction(tx);
+      console.log('signedTransaction', result);
+      setContractResult(`Store Number success!\nTransaction Hash: ${result}`);
+    } catch (e: any) {
+      setContractResult(`Store Number error: ${e?.message || e}`);
+    }
   }
 
   async function readContract() {
-    const provider1 = await adapter.getProvider();
-    if (!provider1) return;
-    const provider = new ethers.BrowserProvider(provider1);
-    const contract = new ethers.Contract(contractAddress, ['function retrieve() view returns (uint256)'], provider);
-    const result = await contract.retrieve();
-    console.log('read contract result:', result);
+    try {
+      setContractResult('Reading number...');
+      const provider1 = await adapter.getProvider();
+      if (!provider1) {
+        setContractResult('Error: Provider not found');
+        return;
+      }
+      const provider = new ethers.BrowserProvider(provider1);
+      const contract = new ethers.Contract(contractAddress, ['function retrieve() view returns (uint256)'], provider);
+      const result = await contract.retrieve();
+      console.log('read contract result:', result);
+      setContractResult(`Get Number success!\nValue: ${result}`);
+    } catch (e: any) {
+      setContractResult(`Get Number error: ${e?.message || e}`);
+    }
   }
 
   return (
@@ -562,6 +587,23 @@ const SectionTriggerContract = function ({ adapter, connected, supportsSendTrans
       <SectionButton disabled={!connected || !contractAddress || !supportsSendTransaction} onClick={readContract}>
         Get Number
       </SectionButton>
+      {contractResult && (
+        <Typography
+          sx={{
+            color: 'white',
+            fontSize: 12,
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+            background: 'rgba(0, 0, 0, 0.2)',
+            padding: '12px',
+            borderRadius: '10px',
+            marginTop: '10px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          {contractResult}
+        </Typography>
+      )}
     </SectionCard>
   );
 };
