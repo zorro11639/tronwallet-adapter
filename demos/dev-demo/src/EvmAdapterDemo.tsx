@@ -3,7 +3,7 @@ import { Alert, Box, Button, Input, MenuItem, Select, Stack, Typography, styled 
 import type { Adapter, Chain, LegacyTransaction, EIP1559Transaction, Transaction, Address, Quantity, Hex } from '@tronweb3/abstract-adapter-evm';
 import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
-import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter } from '@tronweb3/tronwallet-adapters';
+import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter, TokenPocketEvmAdapter } from '@tronweb3/tronwallet-adapters';
 import { LedgerEvmAdapter } from '@tronweb3/tronwallet-adapter-ledger-evm';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
@@ -120,7 +120,10 @@ const SectionButton = styled(Button)({
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter(), new LedgerEvmAdapter()], []);
+  const adapters = useMemo(
+    () => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter(), new TokenPocketEvmAdapter(), new LedgerEvmAdapter()],
+    []
+  );
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -161,6 +164,13 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
     });
     adapter.on('connect', async () => {
       log('connect: ', adapter.address);
+      if (adapter.address) {
+        adapter
+          // @ts-ignore
+          .network()
+          .then((res: any) => setChainId(res))
+          .catch(() => {});
+      }
     });
     adapter.on('accountsChanged', (accounts) => {
       log('accountsChanged:', accounts);
@@ -204,6 +214,13 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
     const address = await adapter.connect();
     log('connected address:', address);
     setAccount(address);
+    if (address) {
+      adapter
+        // @ts-ignore
+        .network()
+        .then((res: any) => setChainId(res))
+        .catch(() => {});
+    }
   }
 
   return (
@@ -320,10 +337,34 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
   }, [adapter, message]);
 
   const onVerifyMessage = useCallback(async () => {
+<<<<<<< HEAD
     // ethers.verifyMessage handles the EIP-191 prefix/hash and returns a
     // standard EVM address, so EVM message/typedData/tx verification all use ethers.
     const recovered = ethers.verifyMessage(message, signedMessage);
     console.log('Signature is valid:', recovered.toLowerCase() === adapter.address!.toLowerCase());
+=======
+<<<<<<< HEAD
+    const utf8Message = utils.ethersUtils.toUtf8Bytes(message);
+    const hashedMessage = utils.ethersUtils.keccak256(
+      utils.ethersUtils.concat([utils.ethersUtils.toUtf8Bytes('\x19Ethereum Signed Message:\n'), utils.ethersUtils.toUtf8Bytes(String(utf8Message.length)), utf8Message])
+    );
+    const address = utils.crypto.ecRecover(hashedMessage, signedMessage.slice(2));
+    console.log('Signature is valid:', address.slice(2).toLowerCase() === adapter.address!.slice(2).toLowerCase());
+=======
+    try {
+      const recovered = ethers.verifyMessage(message, signedMessage);
+      const isMatch = recovered.toLowerCase() === adapter.address!.toLowerCase();
+      console.log('Signature is valid:', isMatch);
+      if (isMatch) {
+        setSignResult(`Verify Message success!\nRecovered address matches current account:\n${recovered}`);
+      } else {
+        setSignResult(`Verify Message failed!\nRecovered: ${recovered}\nExpected: ${adapter.address}`);
+      }
+    } catch (e: any) {
+      setSignResult(`Verify Message error: ${e?.message || e}`);
+    }
+>>>>>>> f9ce233 (fixup! feat(evm): add TokenPocket EVM adapter and fix chain ID display with Oasis testnet in demo)
+>>>>>>> 464d246 (feat(evm): add TokenPocket EVM adapter and fix chain ID display with Oasis testnet in demo)
   }, [message, signedMessage, adapter]);
 
   const onSignTypedData = useCallback(async () => {
@@ -537,6 +578,7 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter, connected
         <MenuItem value="0xc7">BitTorrent Chain Mainnet</MenuItem>
         <MenuItem value="0x405">BitTorrent Chain Donau</MenuItem>
         <MenuItem value="0xa4b1">Arbitrum One</MenuItem>
+        <MenuItem value="0x5aff">Oasis Sapphire Testnet</MenuItem>
         <MenuItem value="0x539">Localhost Test</MenuItem>
       </Select>
       <SectionButton disabled={!connected} onClick={() => adapter.switchChain(selectedChainId).catch((e) => console.error('switchChain error:', e))}>

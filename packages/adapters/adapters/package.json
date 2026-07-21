@@ -59,6 +59,7 @@
         "@tronweb3/tronwallet-adapter-okxwallet": "workspace:^",
         "@tronweb3/tronwallet-adapter-onekey": "workspace:^",
         "@tronweb3/tronwallet-adapter-tokenpocket": "workspace:^",
+        "@tronweb3/tronwallet-adapter-tokenpocket-evm": "workspace:^",
         "@tronweb3/tronwallet-adapter-tronlink": "workspace:^",
         "@tronweb3/tronwallet-adapter-tronlink-evm": "workspace:^",
         "@tronweb3/tronwallet-adapter-trust": "workspace:^",

@@ -16,6 +16,7 @@
         "@tronweb3/tronwallet-adapters": "latest",
         "@tronweb3/abstract-adapter-evm": "latest",
         "@tronweb3/tronwallet-adapter-okxwallet-evm": "latest",
+        "@tronweb3/tronwallet-adapter-tokenpocket-evm": "latest",
         "@tronweb3/tronwallet-adapter-metamask-evm": "latest",
         "element-plus": "2.13.5",
         "tronweb": "6.2.2",

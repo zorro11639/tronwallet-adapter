@@ -314,6 +314,7 @@ export abstract class Adapter<Name extends string = string>
                         info?: EIP6963ProviderInfo;
                         provider?: EIP1193Provider;
                     }>;
+
                     const announcedProvider = customEvent.detail?.provider;
 
                     if (!announcedProvider || !this.isEIP6963Provider(announcedProvider, customEvent.detail?.info)) {

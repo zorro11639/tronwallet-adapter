@@ -1,0 +1,122 @@
+import type { EIP1193Provider, EIP6963ProviderInfo, TypedData } from '@tronweb3/abstract-adapter-evm';
+import {
+    Adapter,
+    WalletReadyState,
+    WalletNotFoundError,
+    WalletConnectionError,
+    WalletDisconnectedError,
+    isInMobileBrowser,
+    isInBrowser,
+} from '@tronweb3/abstract-adapter-evm';
+import { METADATA } from './metadata.js';
+import {
+    getTokenPocketProvider,
+    isTokenPocketMobileWebView,
+    TOKENPOCKET_RDNS,
+    openTokenPocketWithDeeplink,
+} from './utils.js';
+
+declare global {
+    interface Window {
+        tokenpocket?: any;
+    }
+}
+
+export interface TokenPocketEvmAdapterOptions {
+    useDeeplink?: boolean;
+    openUrlWhenWalletNotFound?: boolean;
+}
+
+export { TokenPocketEvmAdapterName } from './metadata.js';
+
+export class TokenPocketEvmAdapter extends Adapter {
+    name = METADATA.name;
+    url = METADATA.url;
+    icon = METADATA.icon;
+    readyState = WalletReadyState.Loading;
+    address: string | null = null;
+    connecting = false;
+    options: TokenPocketEvmAdapterOptions;
+
+    constructor(options: TokenPocketEvmAdapterOptions = { useDeeplink: true }) {
+        super();
+        this.options = options;
+        this.eip6963Info.support = true;
+        this.eip6963Info.name = 'TokenPocket';
+        this.eip6963Info.rdns = TOKENPOCKET_RDNS;
+
+        void this.getProvider().then((provider) => {
+            if (provider) {
+                this.readyState = WalletReadyState.Found;
+                this.listenEvents(provider);
+                void this.autoConnect(provider);
+            } else {
+                this.readyState = WalletReadyState.NotFound;
+            }
+            this.emit('readyStateChanged', this.readyState);
+        });
+    }
+
+    async connect() {
+        if (this.options.useDeeplink !== false) {
+            if (isInMobileBrowser() && !isTokenPocketMobileWebView()) {
+                openTokenPocketWithDeeplink();
+                return '';
+            }
+        }
+        this.connecting = true;
+
+        try {
+            const provider = await this.getProvider();
+            if (!provider) {
+                if (this.options.openUrlWhenWalletNotFound !== false && isInBrowser()) {
+                    window.open(this.url, '_blank');
+                }
+                throw new WalletNotFoundError();
+            }
+            const accounts = await provider.request<undefined, string[]>({ method: 'eth_requestAccounts' });
+            if (!accounts.length) {
+                throw new WalletConnectionError('No accounts is available.');
+            }
+            this.address = accounts[0];
+            return this.address as string;
+        } finally {
+            this.connecting = false;
+        }
+    }
+
+    async signTypedData({
+        typedData,
+        address = this.address as string,
+    }: {
+        typedData: TypedData;
+        address?: string;
+    }): Promise<string> {
+        const provider = await this.prepareProvider();
+        if (!this.connected) {
+            throw new WalletDisconnectedError();
+        }
+        return provider.request<[string, string], string>({
+            method: 'eth_signTypedData_v4',
+            params: [address, typeof typedData === 'string' ? typedData : JSON.stringify(typedData)],
+        });
+    }
+
+    protected isEIP6963Provider(provider: EIP1193Provider, info?: EIP6963ProviderInfo): boolean {
+        if (!info?.rdns) {
+            return false;
+        }
+        return info.rdns === TOKENPOCKET_RDNS;
+    }
+
+    protected getInjectedProvider(): EIP1193Provider | null {
+        return getTokenPocketProvider();
+    }
+
+    async getProvider(): Promise<EIP1193Provider | null> {
+        if (isInMobileBrowser() && !isTokenPocketMobileWebView()) {
+            return null;
+        }
+        return super.getProvider();
+    }
+}
