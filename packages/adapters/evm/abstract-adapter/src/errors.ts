@@ -29,7 +29,6 @@ export class WalletDisconnectedError extends WalletError {
 export class WalletConnectionError extends WalletError {
     name = 'WalletConnectionError';
 }
-
 /**
  * Occurs when sign a transaction.
  */
@@ -42,4 +41,11 @@ export class WalletSignTransactionError extends WalletError {
  */
 export class WalletSignMessageError extends WalletError {
     name = 'WalletSignMessageError';
+}
+
+/**
+ * Occurs when send a transaction.
+ */
+export class WalletSendTransactionError extends WalletError {
+    name = 'WalletSendTransactionError';
 }
