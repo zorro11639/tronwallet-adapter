@@ -13,7 +13,7 @@
 - [@tronweb3/tronwallet-adapter-guarda@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-guarda)
 - [@tronweb3/tronwallet-adapter-imtoken@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-imtoken)
 - [@tronweb3/tronwallet-adapter-ledger@1.1.14](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-ledger)
-- [@tronweb3/tronwallet-adapter-metamask-tron@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-metamask-tron)
+- [@tronweb3/tronwallet-adapter-metamask-tron@1.1.1](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-metamask-tron)
 - [@tronweb3/tronwallet-adapter-okxwallet@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-okxwallet)
 - [@tronweb3/tronwallet-adapter-onekey@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-onekey)
 - [@tronweb3/tronwallet-adapter-tokenpocket@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-tokenpocket)
