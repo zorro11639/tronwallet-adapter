@@ -222,6 +222,9 @@ importers:
       '@tronweb3/tronwallet-adapter-tokenpocket':
         specifier: 1.0.6
         version: 1.0.6(bufferutil@4.0.8)
+      '@tronweb3/tronwallet-adapter-tokenpocket-evm':
+        specifier: ^1.1.0
+        version: link:../../packages/adapters/evm/tokenpocket
       '@tronweb3/tronwallet-adapter-tronlink':
         specifier: ^1.1.9
         version: 1.1.9
@@ -235,8 +238,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.6(@types/react@18.3.3)(bufferutil@4.0.8)(immer@11.1.8)(react@19.0.0)(typescript@5.8.2)(zod@3.25.76)
       '@tronweb3/tronwallet-adapters':
-        specifier: 1.2.1
-        version: 1.2.1(@types/react@18.3.3)(bufferutil@4.0.8)(immer@11.1.8)(react@19.0.0)(typescript@5.8.2)(zod@3.25.76)
+        specifier: 1.3.2
+        version: link:../../packages/adapters/adapters
       '@walletconnect/modal':
         specifier: 2.6.2
         version: 2.6.2(@types/react@18.3.3)(react@19.0.0)
@@ -285,6 +288,9 @@ importers:
       '@tronweb3/tronwallet-adapter-react-ui':
         specifier: latest
         version: link:../../packages/react/react-ui
+      '@tronweb3/tronwallet-adapter-tokenpocket-evm':
+        specifier: workspace:*
+        version: link:../../packages/adapters/evm/tokenpocket
       '@tronweb3/tronwallet-adapters':
         specifier: latest
         version: link:../../packages/adapters/adapters
@@ -431,6 +437,9 @@ importers:
       '@tronweb3/tronwallet-adapter-react-ui':
         specifier: latest
         version: link:../../../packages/react/react-ui
+      '@tronweb3/tronwallet-adapter-tokenpocket-evm':
+        specifier: latest
+        version: link:../../../packages/adapters/evm/tokenpocket
       '@tronweb3/tronwallet-adapters':
         specifier: latest
         version: link:../../../packages/adapters/adapters
@@ -507,6 +516,9 @@ importers:
       '@tronweb3/tronwallet-adapter-okxwallet-evm':
         specifier: latest
         version: link:../../../packages/adapters/evm/okxwallet
+      '@tronweb3/tronwallet-adapter-tokenpocket-evm':
+        specifier: latest
+        version: link:../../../packages/adapters/evm/tokenpocket
       '@tronweb3/tronwallet-adapter-vue-hooks':
         specifier: latest
         version: link:../../../packages/vue/vue-hooks
@@ -614,6 +626,9 @@ importers:
       '@tronweb3/tronwallet-adapter-tokenpocket':
         specifier: workspace:^
         version: link:../tokenpocket
+      '@tronweb3/tronwallet-adapter-tokenpocket-evm':
+        specifier: workspace:^
+        version: link:../evm/tokenpocket
       '@tronweb3/tronwallet-adapter-tronlink':
         specifier: workspace:^
         version: link:../tronlink
@@ -814,6 +829,25 @@ importers:
         version: 4.1.0(@types/node@22.9.0)(@vitest/ui@4.1.0)(happy-dom@20.8.9)(jsdom@28.1.0)(msw@2.7.3(@types/node@22.9.0)(typescript@5.8.2))(vite@6.4.3(@types/node@22.9.0)(jiti@2.6.1)(terser@5.31.3)(yaml@2.8.3))
 
   packages/adapters/evm/okxwallet:
+    dependencies:
+      '@tronweb3/abstract-adapter-evm':
+        specifier: workspace:^
+        version: link:../abstract-adapter
+    devDependencies:
+      '@testing-library/dom':
+        specifier: 8.20.1
+        version: 8.20.1
+      happy-dom:
+        specifier: 20.8.9
+        version: 20.8.9(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+      shx:
+        specifier: 0.3.4
+        version: 0.3.4
+      vitest:
+        specifier: 4.1.0
+        version: 4.1.0(@types/node@22.9.0)(@vitest/ui@4.1.0)(happy-dom@20.8.9)(jsdom@28.1.0)(msw@2.7.3(@types/node@22.9.0)(typescript@5.8.2))(vite@6.4.3(@types/node@22.9.0)(jiti@2.6.1)(terser@5.31.3)(yaml@2.8.3))
+
+  packages/adapters/evm/tokenpocket:
     dependencies:
       '@tronweb3/abstract-adapter-evm':
         specifier: workspace:^
@@ -4092,14 +4126,6 @@ packages:
     resolution: {integrity: sha512-2wev5T/Z+Yt96nv2upZeq54v8zk8aXCg0p6yx1BpfY2y25lC0jEiul+F/6o5s2uIUXe2ENdbpMiGQz8+/Jy1EQ==}
     engines: {node: '>=16', pnpm: '>=7'}
 
-  '@tronweb3/tronwallet-adapter-bitkeep@1.1.6':
-    resolution: {integrity: sha512-COyDtycbAKXMDq3+0EAe+sq9lizI34qt1dFq1jzRmDBck3k+8N3ABGRSpTHZUw37rcmc4CbACVVhwOpPypZJCA==}
-    engines: {node: '>=16', pnpm: '>=7'}
-
-  '@tronweb3/tronwallet-adapter-ledger@1.1.11':
-    resolution: {integrity: sha512-r0S/4W9fszd247nKa+e/QWTdd1q6crqtUsHumbkT6YSU//tAy2iDoI9Ecz5o1ORabZ5WL7nLiuEr/ZuqCYcabA==}
-    engines: {node: '>=16', pnpm: '>=7'}
-
   '@tronweb3/tronwallet-adapter-ledger@1.1.8':
     resolution: {integrity: sha512-Tg8plalHNErkp9o+AOCjzlFcWzzI4ewBljaZYc6ue/5W83PNzRHSmUqlwGIDScJD/oSU9gZ/avYPCfJI1MPKtQ==}
     engines: {node: '>=16', pnpm: '>=7'}
@@ -4122,10 +4148,6 @@ packages:
 
   '@tronweb3/tronwallet-adapter-walletconnect@1.0.6':
     resolution: {integrity: sha512-90GCwPOodykBu6cNZWDiYtJTcBF/wterstRt+goZTpCHWf7sS+S5350yFxR/YCWeRinbViFOjDmwvO/JHYYUaA==}
-    engines: {node: '>=16', pnpm: '>=7'}
-
-  '@tronweb3/tronwallet-adapters@1.2.1':
-    resolution: {integrity: sha512-Ofnas57Cw1sizv1zcZBZ3eWuqh6HiPEbLZmbHQTyQ1lfa5F6jpc8+eOnWnqDJjV1kmaEdxZGbIUHuakawPhHYA==}
     engines: {node: '>=16', pnpm: '>=7'}
 
   '@tronweb3/walletconnect-tron@2.0.0':
@@ -6902,9 +6924,6 @@ packages:
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
-
-  js-base64@3.7.7:
-    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
   js-beautify@1.15.1:
     resolution: {integrity: sha512-ESjNzSlt/sWE8sciZH8kBF8BPlwXPwhR6pWKAw8bw4Bwj+iZcnKW6ONWUutJ7eObuBZQpiIb8S7OYspWrKt7rA==}
@@ -12945,31 +12964,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@tronweb3/tronwallet-adapter-bitkeep@1.1.6(bufferutil@4.0.8)':
-    dependencies:
-      '@tronweb3/tronwallet-abstract-adapter': 1.1.9(bufferutil@4.0.8)
-      '@tronweb3/tronwallet-adapter-tronlink': 1.1.12(bufferutil@4.0.8)
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - supports-color
-      - utf-8-validate
-
-  '@tronweb3/tronwallet-adapter-ledger@1.1.11(bufferutil@4.0.8)':
-    dependencies:
-      '@ledgerhq/hw-app-trx': 6.29.2
-      '@ledgerhq/hw-transport': 6.27.1
-      '@ledgerhq/hw-transport-webhid': 6.27.1
-      '@tronweb3/tronwallet-abstract-adapter': 1.1.10(bufferutil@4.0.8)
-      buffer: 6.0.3
-      eventemitter3: 4.0.7
-      preact: 10.23.0
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - supports-color
-      - utf-8-validate
-
   '@tronweb3/tronwallet-adapter-ledger@1.1.8':
     dependencies:
       '@ledgerhq/hw-app-trx': 6.29.2
@@ -13031,40 +13025,6 @@ snapshots:
       - '@upstash/redis'
       - '@vercel/kv'
       - bufferutil
-      - encoding
-      - immer
-      - ioredis
-      - react
-      - supports-color
-      - typescript
-      - uWebSockets.js
-      - utf-8-validate
-      - zod
-
-  '@tronweb3/tronwallet-adapters@1.2.1(@types/react@18.3.3)(bufferutil@4.0.8)(immer@11.1.8)(react@19.0.0)(typescript@5.8.2)(zod@3.25.76)':
-    dependencies:
-      '@tronweb3/tronwallet-adapter-bitkeep': 1.1.6(bufferutil@4.0.8)
-      '@tronweb3/tronwallet-adapter-ledger': 1.1.11(bufferutil@4.0.8)
-      '@tronweb3/tronwallet-adapter-okxwallet': 1.0.3
-      '@tronweb3/tronwallet-adapter-tokenpocket': 1.0.6(bufferutil@4.0.8)
-      '@tronweb3/tronwallet-adapter-tronlink': 1.1.9
-      '@tronweb3/tronwallet-adapter-walletconnect': 1.0.6(@types/react@18.3.3)(bufferutil@4.0.8)(immer@11.1.8)(react@19.0.0)(typescript@5.8.2)(zod@3.25.76)
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@react-native-async-storage/async-storage'
-      - '@types/react'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - bufferutil
-      - debug
       - encoding
       - immer
       - ioredis
@@ -17427,8 +17387,6 @@ snapshots:
     optional: true
 
   joycon@3.1.1: {}
-
-  js-base64@3.7.7: {}
 
   js-beautify@1.15.1:
     dependencies:
