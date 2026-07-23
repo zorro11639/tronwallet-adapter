@@ -41,4 +41,8 @@ await adapter.sendTransaction(transaction);
     const adapter = new TokenPocketEvmAdapter({ useDeeplink: false });
     ```
 
+### Caveats
+
+- **Contract Deployment on TokenPocket iOS App**: The TokenPocket iOS App cannot sign transactions for deploying new contracts because it requires a `to` field to be present. However, passing a `to` field causes the wallet to process the transaction as a contract call rather than a contract deployment.
+
 More detailed API can be found in [Abstract Adapter](https://github.com/tronweb3/tronwallet-adapter/blob/main/packages/adapters/evm/abstract-adapter/README.md).
