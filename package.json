@@ -34,7 +34,7 @@
         "build:ts": "tsc --build tsconfig.all.json",
         "build:other": "pnpm --recursive --filter \"@tronweb3/*\" run build",
         "build:umd": "pnpm --recursive run build:umd",
-        "build-demos": "pnpm run --filter {demos/*/*}  --filter {demos/dev-demo} build",
+        "build-demos": "pnpm --parallel --filter \"./demos/**\" run build",
         "package": "pnpm --recursive run package",
         "release": "pnpm prerelease && changeset publish",
         "watch": "pnpm run watch:ts & pnpm run watch:other",
