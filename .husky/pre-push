@@ -3,12 +3,3 @@
 
 echo "📦 Running build & test..."
 pnpm build && pnpm test && pnpm build-demos
-
-echo "🔒 Checking for high-risk dependencies..."
-node scripts/audit-high-risk.js
-
-echo "🧹 Running lint & formatting checks..."
-pnpm lint
-
-echo "🏷️ Checking repo versions..."
-node scripts/check-repo-version.js

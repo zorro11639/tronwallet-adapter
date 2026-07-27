@@ -1,2 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔒 Checking for high-risk dependencies..."
+node scripts/audit-high-risk.js
+
+npx lint-staged
+node scripts/check-repo-version.js
