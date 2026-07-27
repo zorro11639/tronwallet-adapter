@@ -1,4 +1,4 @@
-import type { EIP1193Provider, EIP6963ProviderInfo, TypedData, Transaction } from '@tronweb3/abstract-adapter-evm';
+import type { EIP1193Provider, TypedData, Transaction } from '@tronweb3/abstract-adapter-evm';
 import {
     Adapter,
     WalletReadyState,

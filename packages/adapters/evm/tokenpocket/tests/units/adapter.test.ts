@@ -140,7 +140,10 @@ describe('TokenPocketEvmAdapter', () => {
         test('adapter should not match provider with wrong rdns', async () => {
             (window as any).ethereum = null;
             (window as any).tokenpocket = undefined;
-            cleanupEIP6963 = installTokenPocketEIP6963Provider(provider, { name: 'Other Wallet', rdns: 'io.other.wallet' });
+            cleanupEIP6963 = installTokenPocketEIP6963Provider(provider, {
+                name: 'Other Wallet',
+                rdns: 'io.other.wallet',
+            });
             const adapter = new TokenPocketEvmAdapter();
             vi.advanceTimersByTime(3000);
             await flushPromises();

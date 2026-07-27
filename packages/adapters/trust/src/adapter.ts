@@ -244,9 +244,6 @@ export class TrustAdapter extends AddonAdapter {
     }
 
     private messageHandler = async (e: TronLinkMessageEvent) => {
-        if (!e.data?.isTronLink) {
-            return;
-        }
         const message = e.data?.message;
         if (!message) {
             return;
