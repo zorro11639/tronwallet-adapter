@@ -1,2 +1,2 @@
-export * from './metadata.js';
+export { TokenPocketEvmAdapterName } from './metadata.js';
 export * from './adapter.js';
