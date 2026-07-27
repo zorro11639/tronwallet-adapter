@@ -32,7 +32,7 @@
 - [@tronweb3/tronwallet-adapter-ledger-evm@1.0.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-ledger-evm)
 - [@tronweb3/tronwallet-adapter-metamask-evm@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-metamask-evm)
 - [@tronweb3/tronwallet-adapter-okxwallet-evm@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-okxwallet-evm)
-- [@tronweb3/tronwallet-adapter-tokenpocket-evm@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-tokenpocket-evm)
+- [@tronweb3/tronwallet-adapter-tokenpocket-evm@1.0.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-tokenpocket-evm)
 - [@tronweb3/tronwallet-adapter-tronlink-evm@1.2.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-tronlink-evm)
 - [@tronweb3/tronwallet-adapter-trust-evm@1.1.0](https://www.npmjs.com/package/@tronweb3/tronwallet-adapter-trust-evm)
 
