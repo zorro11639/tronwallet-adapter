@@ -74,6 +74,10 @@ export default defineConfig({
   },
   build: {
     minify: false,
+    cssMinify: false,
+    sourcemap: false,
+    cssCodeSplit: false,
+    target: 'esnext',
     rollupOptions: {},
   },
 });
