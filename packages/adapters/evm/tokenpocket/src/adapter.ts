@@ -27,8 +27,6 @@ export interface TokenPocketEvmAdapterOptions {
     openUrlWhenWalletNotFound?: boolean;
 }
 
-export { TokenPocketEvmAdapterName } from './metadata.js';
-
 export class TokenPocketEvmAdapter extends Adapter {
     name = METADATA.name;
     url = METADATA.url;
