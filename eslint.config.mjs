@@ -44,6 +44,7 @@ export default defineConfig(
             "**/out/**",
             "**/public/**",
             "**/*.tsbuildinfo",
+            "**/next-env.d.ts",
             "**/playwright-report/**",
             "**/test-results/**",
             "e2e/**",
