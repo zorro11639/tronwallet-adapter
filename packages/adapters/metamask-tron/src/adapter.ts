@@ -262,34 +262,36 @@ export class MetaMaskAdapter extends AddonAdapter {
             return;
         }
         this._switchingChain = true;
-        if (!this._scope) {
-            this._switchingChain = false;
-            throw new WalletDisconnectedError('Wallet not connected');
-        }
-
-        const newScope = chainIdToScope(chainId);
-        if (newScope === this._scope) {
-            // Still emit event to reconciliate divergent states between dapp and adapter
-            this.emit('chainChanged', { chainId });
-            this._switchingChain = false;
-            return;
-        }
-
-        let session = await this._client.getSession();
-        let isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
-        if (!isChainInSession) {
-            // Create session for the new scope
-            await this.createSession(newScope, this.address ? [this.address] : undefined);
-            session = await this._client.getSession();
-            isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
-            if (!isChainInSession) {
-                this._switchingChain = false;
-                throw new WalletConnectionError('Failed to switch chain');
+        // Reset the flag in `finally` so a throw from any step below cannot leave it
+        // stuck as true, which would make every later call return early without switching.
+        try {
+            if (!this._scope) {
+                throw new WalletDisconnectedError('Wallet not connected');
             }
-        }
 
-        this.setScope(newScope);
-        this._switchingChain = false;
+            const newScope = chainIdToScope(chainId);
+            if (newScope === this._scope) {
+                // Still emit event to reconciliate divergent states between dapp and adapter
+                this.emit('chainChanged', { chainId });
+                return;
+            }
+
+            let session = await this._client.getSession();
+            let isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
+            if (!isChainInSession) {
+                // Create session for the new scope
+                await this.createSession(newScope, this.address ? [this.address] : undefined);
+                session = await this._client.getSession();
+                isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
+                if (!isChainInSession) {
+                    throw new WalletConnectionError('Failed to switch chain');
+                }
+            }
+
+            this.setScope(newScope);
+        } finally {
+            this._switchingChain = false;
+        }
     }
 
     /**
