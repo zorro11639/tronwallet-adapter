@@ -16,12 +16,6 @@ import {
     openTokenPocketWithDeeplink,
 } from './utils.js';
 
-declare global {
-    interface Window {
-        tokenpocket?: any;
-    }
-}
-
 export interface TokenPocketEvmAdapterOptions {
     /**
      * Set if open TokenPocket app when in mobile device.
