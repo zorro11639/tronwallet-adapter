@@ -59,6 +59,7 @@ export class MetaMaskAdapter extends AddonAdapter {
     private _selectedAddressOnPageLoadPromise: Promise<string | undefined> | undefined;
     private _checkWalletPromise: Promise<void> | undefined;
     private _removeAccountsChangedListener: (() => void) | undefined;
+    private _disposeInitialAddressListener: (() => void) | undefined;
     private _transport: Transport;
     private _client: MultichainApiClient;
 
@@ -321,26 +322,62 @@ export class MetaMaskAdapter extends AddonAdapter {
     }
 
     /**
+     * Subscribes to accountChanged notifications and waits for the first one carrying an
+     * address, giving up after `timeoutMs`.
+     *
+     * The subscription starts immediately so notifications arriving during any subsequent
+     * awaited work are not missed. `dispose()` is idempotent and tears down both the
+     * subscription and the timer; it also settles the promise with `undefined`, so callers
+     * awaiting it can never hang. Call it on every path, including errors.
+     * @param timeoutMs - How long to wait for a notification before giving up.
+     */
+    private waitForSelectedAddress(timeoutMs = 2000): {
+        promise: Promise<string | undefined>;
+        dispose: () => void;
+    } {
+        let dispose!: () => void;
+
+        const promise = new Promise<string | undefined>((resolve) => {
+            let removeNotification: (() => void) | undefined;
+            let timer: ReturnType<typeof setTimeout> | undefined;
+
+            const settle = (address?: string) => {
+                if (timer !== undefined) {
+                    clearTimeout(timer);
+                    timer = undefined;
+                }
+                removeNotification?.();
+                removeNotification = undefined;
+                resolve(address);
+            };
+
+            removeNotification = this._client.onNotification((data: any) => {
+                if (!isAccountChangedEvent(data)) {
+                    return;
+                }
+                const address = data?.params?.notification?.params?.[0];
+                if (address) {
+                    settle(address);
+                }
+            });
+            timer = setTimeout(() => settle(undefined), timeoutMs);
+
+            dispose = () => settle(undefined);
+        });
+
+        return { promise, dispose };
+    }
+
+    /**
      * Listen for up to 2 seconds to the accountsChanged event emitted on page load.
      * @returns If any, the initial selected address.
      */
     protected getInitialSelectedAddress(): Promise<string | undefined> {
-        return new Promise((resolve) => {
-            const timeout = setTimeout(() => {
-                resolve(undefined);
-            }, 2000);
-            const handleAccountChange = (data: any) => {
-                if (isAccountChangedEvent(data)) {
-                    const address = data?.params?.notification?.params?.[0];
-                    if (address) {
-                        clearTimeout(timeout);
-                        removeNotification?.();
-                        resolve(address);
-                    }
-                }
-            };
-
-            const removeNotification = this._client.onNotification(handleAccountChange);
+        const { promise, dispose } = this.waitForSelectedAddress();
+        // Tracked so disconnecting inside the 2s window tears the subscription down early.
+        this._disposeInitialAddressListener = dispose;
+        return promise.finally(() => {
+            this._disposeInitialAddressListener = undefined;
         });
     }
 
@@ -415,46 +452,32 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @param addresses - Optional list of addresses to include in the session.
      */
     private async createSession(scope: Scope, addresses?: string[]): Promise<void> {
-        let resolvePromise: (value: string) => void;
-        const waitForAccountChangedPromise = new Promise<string>((resolve) => {
-            resolvePromise = resolve;
-        });
+        // If there are multiple accounts, wait for the first accountChanged event to know
+        // which one to use. Subscribe before createSession() so a notification arriving
+        // during the call is not missed.
+        const { promise: waitForAccountChanged, dispose } = this.waitForSelectedAddress();
 
-        // If there are multiple accounts, wait for the first accountChanged event to know which one to use
-        const handleAccountChange = (data: any) => {
-            if (!isAccountChangedEvent(data)) {
-                return;
-            }
-            const selectedAddress = data?.params?.notification?.params?.[0];
-
-            if (selectedAddress) {
-                removeNotification();
-                resolvePromise(selectedAddress);
-            }
-        };
-
-        const removeNotification = this._client.onNotification(handleAccountChange);
-
-        const session = await this._client.createSession({
-            optionalScopes: {
-                [scope]: {
-                    accounts: (addresses ? addresses.map((addr) => `${scope}:${addr}`) : []) as CaipAccountId[],
-                    methods: [],
-                    notifications: [],
+        try {
+            const session = await this._client.createSession({
+                optionalScopes: {
+                    [scope]: {
+                        accounts: (addresses ? addresses.map((addr) => `${scope}:${addr}`) : []) as CaipAccountId[],
+                        methods: [],
+                        notifications: [],
+                    },
                 },
-            },
-            sessionProperties: {
-                tron_accountChanged_notifications: true,
-            },
-        });
+                sessionProperties: {
+                    tron_accountChanged_notifications: true,
+                },
+            });
 
-        // Wait for the accountChanged event to know which one to use, timeout after 2000ms
-        const selectedAddress = await Promise.race([
-            waitForAccountChangedPromise,
-            new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), 2000)),
-        ]);
+            // Wait for the accountChanged event to know which one to use, timeout after 2000ms
+            const selectedAddress = await waitForAccountChanged;
 
-        this.updateSession(session, undefined, selectedAddress);
+            this.updateSession(session, undefined, selectedAddress);
+        } finally {
+            dispose();
+        }
     }
 
     /**
@@ -521,6 +544,8 @@ export class MetaMaskAdapter extends AddonAdapter {
     private stopListeners() {
         this._removeAccountsChangedListener?.();
         this._removeAccountsChangedListener = undefined;
+        this._disposeInitialAddressListener?.();
+        this._disposeInitialAddressListener = undefined;
     }
 
     /**
