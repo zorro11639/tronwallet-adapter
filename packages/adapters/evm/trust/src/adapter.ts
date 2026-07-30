@@ -16,7 +16,15 @@ import {
 } from './utils.js';
 
 export interface TrustEvmAdapterOptions {
+    /**
+     * Set if open Trust Wallet app when in mobile device.
+     * Default is true.
+     */
     useDeeplink?: boolean;
+    /**
+     * Set if open Wallet's website when wallet is not installed.
+     * Default is true.
+     */
     openUrlWhenWalletNotFound?: boolean;
 }
 

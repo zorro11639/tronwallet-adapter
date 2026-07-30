@@ -37,6 +37,11 @@ await adapter.sendTransaction(transaction);
          * Default is true.
          */
         useDeeplink?: boolean;
+        /**
+         * Set if open Wallet's website when wallet is not installed.
+         * Default is true.
+         */
+        openUrlWhenWalletNotFound?: boolean;
     }
     const adapter = new TokenPocketEvmAdapter({ useDeeplink: false });
     ```

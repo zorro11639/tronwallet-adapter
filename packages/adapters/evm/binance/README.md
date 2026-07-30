@@ -27,11 +27,23 @@ await adapter.sendTransaction(transaction);
 
 ### API
 
--   `Constructor()`
+-   `Constructor(config: BinanceEvmAdapterOptions)`
 
     ```typescript
     import { BinanceEvmAdapter } from '@tronweb3/tronwallet-adapter-binance-evm';
-    const adapter = new BinanceEvmAdapter();
+    interface BinanceEvmAdapterOptions {
+        /**
+         * Set if open Binance Wallet app when in mobile device.
+         * Default is true.
+         */
+        useDeeplink?: boolean;
+        /**
+         * Set if open Wallet's website when wallet is not installed.
+         * Default is true.
+         */
+        openUrlWhenWalletNotFound?: boolean;
+    }
+    const adapter = new BinanceEvmAdapter({ useDeeplink: false });
     ```
 
 ### Caveat

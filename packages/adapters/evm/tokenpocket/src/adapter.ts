@@ -23,7 +23,15 @@ declare global {
 }
 
 export interface TokenPocketEvmAdapterOptions {
+    /**
+     * Set if open TokenPocket app when in mobile device.
+     * Default is true.
+     */
     useDeeplink?: boolean;
+    /**
+     * Set if open Wallet's website when wallet is not installed.
+     * Default is true.
+     */
     openUrlWhenWalletNotFound?: boolean;
 }
 
@@ -114,12 +122,5 @@ export class TokenPocketEvmAdapter extends Adapter {
 
     protected getInjectedProvider(): EIP1193Provider | null {
         return getTokenPocketProvider();
-    }
-
-    async getProvider(): Promise<EIP1193Provider | null> {
-        if (isInMobileBrowser() && !isTokenPocketMobileWebView()) {
-            return null;
-        }
-        return super.getProvider();
     }
 }

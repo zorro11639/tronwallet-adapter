@@ -27,12 +27,21 @@ await adapter.sendTransaction(transaction);
 
 ### API
 
--   `Constructor()`
+-   `Constructor(config: TronLinkEvmAdapterOptions)`
 
     ```typescript
     import { TronLinkEvmAdapter } from '@tronweb3/tronwallet-adapter-tronlink-evm';
-    const tronLinkEvmAdapter = new TronLinkEvmAdapter();
+    interface TronLinkEvmAdapterOptions {
+        /**
+         * Set if open Wallet's website when wallet is not installed.
+         * Default is true.
+         */
+        openUrlWhenWalletNotFound?: boolean;
+    }
+    const tronLinkEvmAdapter = new TronLinkEvmAdapter({ openUrlWhenWalletNotFound: false });
     ```
+
+    Note: unlike other EVM adapters, `TronLinkEvmAdapter` does not support `useDeeplink`, since TronLink's mobile in-app browser already injects the provider directly.
 
 **Caveat** Currently TronLink wallet does not support `addChain()` and `signTypedData()`.
 

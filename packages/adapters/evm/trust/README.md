@@ -24,12 +24,24 @@ await adapter.sendTransaction(transaction);
 
 ### API
 
--   `Constructor()`
+-   `Constructor(config: TrustEvmAdapterOptions)`
 
     ```typescript
     import { TrustEvmAdapter } from '@tronweb3/tronwallet-adapter-trust-evm';
 
-    const trustWalletEvmAdapter = new TrustEvmAdapter();
+    interface TrustEvmAdapterOptions {
+        /**
+         * Set if open Trust Wallet app when in mobile device.
+         * Default is true.
+         */
+        useDeeplink?: boolean;
+        /**
+         * Set if open Wallet's website when wallet is not installed.
+         * Default is true.
+         */
+        openUrlWhenWalletNotFound?: boolean;
+    }
+    const trustWalletEvmAdapter = new TrustEvmAdapter({ useDeeplink: false });
     ```
 
 The adapter discovers the Trust Wallet extension using `EIP-6963` and supports the standard EVM wallet methods exposed by the shared abstract adapter.

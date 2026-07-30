@@ -18,7 +18,15 @@ declare global {
 }
 
 export interface OkxWalletEvmAdapterOptions {
+    /**
+     * Set if open OKX Wallet app when in mobile device.
+     * Default is true.
+     */
     useDeeplink?: boolean;
+    /**
+     * Set if open Wallet's website when wallet is not installed.
+     * Default is true.
+     */
     openUrlWhenWalletNotFound?: boolean;
 }
 
