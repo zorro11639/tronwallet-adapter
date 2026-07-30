@@ -16,12 +16,7 @@ const { execSync } = require('child_process');
 // ── Known exceptions (GHSA IDs) ──────────────────────────────────────────────
 // Add the GHSA advisory URL suffix here when a high/critical advisory cannot
 // be resolved and has been explicitly accepted.
-const KNOWN_EXCEPTIONS = new Set([
-    // brace-expansion <=5.0.7: advisory range covers v2.x but fix (>=5.0.8)
-    // is a different major. v2.1.2 is the latest in the v2 branch.
-    // GHSA-mh99-v99m-4gvg
-    1124334,
-]);
+const KNOWN_EXCEPTIONS = new Set([]);
 
 try {
     const output = execSync('pnpm audit --json', {
