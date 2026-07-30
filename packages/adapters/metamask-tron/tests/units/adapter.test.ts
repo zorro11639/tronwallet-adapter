@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, afterEach } from 'vitest';
-import { WalletDisconnectedError } from '@tronweb3/tronwallet-abstract-adapter';
+import { AdapterState, WalletDisconnectedError } from '@tronweb3/tronwallet-abstract-adapter';
 import { MetaMaskAdapter } from '../../src/adapter.js';
 import { Scope } from '../../src/types.js';
 
@@ -277,6 +277,126 @@ describe('MetaMaskAdapter', () => {
 
             await expect(pending).resolves.toBeUndefined();
             expect(client.listeners.size).toBe(0);
+        });
+    });
+
+    describe('connection state guards', () => {
+        afterEach(() => {
+            vi.restoreAllMocks();
+        });
+
+        function deferred<T>() {
+            let resolve!: (value: T) => void;
+            const promise = new Promise<T>((r) => {
+                resolve = r;
+            });
+            return { promise, resolve };
+        }
+
+        const TRANSACTION = {
+            raw_data: { contract: [{ type: 'TransferContract' }] },
+            raw_data_hex: '0a02fe',
+        } as any;
+
+        /**
+         * Adapter in a fully connected state with a stubbed client. `tryRestoringSession` is
+         * neutralised so the constructor's auto-restore cannot touch the stubbed client.
+         */
+        function createConnectedAdapterWithClient(client: Record<string, unknown>) {
+            const adapter = new MetaMaskAdapter();
+            const internals = adapter as unknown as {
+                _client: any;
+                _state: AdapterState;
+                _address: string | null;
+                _scope: Scope | undefined;
+                tryRestoringSession: () => Promise<void>;
+                handleEvents: (data: any) => Promise<void>;
+            };
+            internals.tryRestoringSession = vi.fn().mockResolvedValue(undefined);
+            internals._client = client;
+            internals._state = AdapterState.Connected;
+            internals._address = ADDRESS;
+            internals._scope = Scope.MAINNET;
+            return { adapter, internals };
+        }
+
+        function accountsChangedEvent(address: string) {
+            return {
+                method: 'wallet_notify',
+                params: { notification: { method: 'metamask_accountsChanged', params: [address] } },
+            };
+        }
+
+        test('a stale accountsChanged callback should not restore state after disconnect', async () => {
+            const NEW_ADDRESS = 'TQ2fBcAV5Y8dxbFmVCWLbYVQ4bqfCFPqPS';
+            const pendingSession = deferred<any>();
+            const { adapter, internals } = createConnectedAdapterWithClient({
+                getSession: () => pendingSession.promise,
+                revokeSession: vi.fn().mockResolvedValue(undefined),
+                onNotification: () => () => undefined,
+            });
+
+            // accountsChanged arrives and parks on getSession()
+            const inFlight = internals.handleEvents(accountsChangedEvent(NEW_ADDRESS));
+
+            await adapter.disconnect();
+            expect(adapter.state).toEqual(AdapterState.Disconnect);
+
+            // The wallet now answers with the pre-disconnect session
+            pendingSession.resolve({
+                sessionScopes: {
+                    [Scope.MAINNET]: { accounts: [`${Scope.MAINNET}:${NEW_ADDRESS}`] },
+                },
+            });
+            await inFlight;
+
+            expect(adapter.state).toEqual(AdapterState.Disconnect);
+            expect(adapter.address).toBeNull();
+            expect(internals._scope).toBeUndefined();
+        });
+
+        test('signTransaction/signMessage should reject when disconnected but scope is still set', async () => {
+            const invokeMethod = vi.fn();
+            const { adapter, internals } = createConnectedAdapterWithClient({
+                invokeMethod,
+                onNotification: () => () => undefined,
+            });
+            // The state a stale callback or aborted connect can leave behind
+            internals._state = AdapterState.Disconnect;
+
+            await expect(adapter.signTransaction(TRANSACTION)).rejects.toThrow(WalletDisconnectedError);
+            await expect(adapter.signMessage('hello')).rejects.toThrow(WalletDisconnectedError);
+            expect(invokeMethod).not.toHaveBeenCalled();
+        });
+
+        test('signTransaction/signMessage should reject when the address is empty but scope is set', async () => {
+            const invokeMethod = vi.fn();
+            const { adapter, internals } = createConnectedAdapterWithClient({
+                invokeMethod,
+                onNotification: () => () => undefined,
+            });
+            // updateSession() clears the address without clearing the scope
+            internals._address = null;
+
+            await expect(adapter.signTransaction(TRANSACTION)).rejects.toThrow(WalletDisconnectedError);
+            await expect(adapter.signMessage('hello')).rejects.toThrow(WalletDisconnectedError);
+            expect(invokeMethod).not.toHaveBeenCalled();
+        });
+
+        test('signTransaction/signMessage should invoke the wallet when fully connected', async () => {
+            const invokeMethod = vi.fn().mockResolvedValue({ signature: 'sig' });
+            const { adapter } = createConnectedAdapterWithClient({
+                invokeMethod,
+                onNotification: () => () => undefined,
+            });
+
+            await expect(adapter.signTransaction(TRANSACTION)).resolves.toMatchObject({ signature: ['sig'] });
+            await expect(adapter.signMessage('hello')).resolves.toEqual('sig');
+            expect(invokeMethod).toHaveBeenCalledTimes(2);
+            expect(invokeMethod.mock.calls[0][0]).toMatchObject({
+                scope: Scope.MAINNET,
+                request: { params: { address: ADDRESS } },
+            });
         });
     });
 });

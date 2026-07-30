@@ -60,6 +60,12 @@ export class MetaMaskAdapter extends AddonAdapter {
     private _checkWalletPromise: Promise<void> | undefined;
     private _removeAccountsChangedListener: (() => void) | undefined;
     private _disposeInitialAddressListener: (() => void) | undefined;
+    /**
+     * Bumped on every disconnect. Async work captures it before awaiting and re-checks
+     * afterwards, so a callback already in flight cannot apply its result to a connection
+     * that has since been torn down.
+     */
+    private _connectionGeneration = 0;
     private _transport: Transport;
     private _client: MultichainApiClient;
 
@@ -165,6 +171,9 @@ export class MetaMaskAdapter extends AddonAdapter {
             return;
         }
 
+        // Invalidate callbacks that are already awaiting, so they cannot restore
+        // address/scope after this teardown.
+        this._connectionGeneration++;
         this.stopListeners();
 
         this.setAddress(null);
@@ -176,15 +185,29 @@ export class MetaMaskAdapter extends AddonAdapter {
     }
 
     /**
+     * Asserts the adapter is fully connected before a signing method reaches the wallet.
+     *
+     * State, scope and address are checked together on purpose. `updateSession()` clears the
+     * address without clearing the scope when a session has no usable account, and an
+     * aborted `connect()` leaves the state disconnected, so checking the scope alone lets a
+     * null address through to the SDK.
+     * @returns The scope and address to sign with.
+     */
+    private requireConnected(): { scope: Scope; address: TronAddress } {
+        if (this._state !== AdapterState.Connected || !this._scope || !this._address) {
+            throw new WalletDisconnectedError('Wallet not connected');
+        }
+        return { scope: this._scope, address: this._address as TronAddress };
+    }
+
+    /**
      * Signs a transaction using the MetaMask wallet.
      * @param transaction - The transaction to sign.
      * @returns A promise that resolves to the signed transaction.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
-        if (!this._scope) {
-            throw new WalletDisconnectedError('Wallet not connected');
-        }
+        const { scope, address } = this.requireConnected();
         try {
             const contractType = transaction.raw_data.contract[0]?.type;
             if (!contractType) {
@@ -192,11 +215,11 @@ export class MetaMaskAdapter extends AddonAdapter {
             }
 
             const result = await this._client.invokeMethod({
-                scope: this._scope,
+                scope,
                 request: {
                     method: 'signTransaction',
                     params: {
-                        address: this._address as TronAddress,
+                        address,
                         transaction: {
                             rawDataHex: transaction.raw_data_hex,
                             type: contractType,
@@ -227,16 +250,14 @@ export class MetaMaskAdapter extends AddonAdapter {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signMessage(message: string): Promise<string> {
-        if (!this._scope) {
-            throw new WalletDisconnectedError('Wallet not connected');
-        }
+        const { scope, address } = this.requireConnected();
         try {
             const base64Message = Buffer.from(message).toString('base64');
             const result = await this._client.invokeMethod({
-                scope: this._scope,
+                scope,
                 request: {
                     method: 'signMessage',
-                    params: { message: base64Message, address: this._address as TronAddress },
+                    params: { message: base64Message, address },
                 },
             });
             return result.signature;
@@ -433,12 +454,16 @@ export class MetaMaskAdapter extends AddonAdapter {
      */
     private async tryRestoringSession(): Promise<void> {
         try {
+            const generation = this._connectionGeneration;
             const existingSession = await this._client.getSession();
             if (!existingSession) {
                 return;
             }
             // Get the address from accountChanged emitted on page load, if any
             const address = await this._selectedAddressOnPageLoadPromise;
+            if (this._connectionGeneration !== generation) {
+                return;
+            }
             const scope = this.restoreScope();
             this.updateSession(existingSession, scope, address);
         } catch (error) {
@@ -456,6 +481,7 @@ export class MetaMaskAdapter extends AddonAdapter {
         // which one to use. Subscribe before createSession() so a notification arriving
         // during the call is not missed.
         const { promise: waitForAccountChanged, dispose } = this.waitForSelectedAddress();
+        const generation = this._connectionGeneration;
 
         try {
             const session = await this._client.createSession({
@@ -473,6 +499,9 @@ export class MetaMaskAdapter extends AddonAdapter {
 
             // Wait for the accountChanged event to know which one to use, timeout after 2000ms
             const selectedAddress = await waitForAccountChanged;
+            if (this._connectionGeneration !== generation) {
+                return;
+            }
 
             this.updateSession(session, undefined, selectedAddress);
         } finally {
@@ -560,8 +589,9 @@ export class MetaMaskAdapter extends AddonAdapter {
                 await this.disconnect();
                 return;
             }
+            const generation = this._connectionGeneration;
             const session = await this._client.getSession();
-            if (!session) {
+            if (!session || this._connectionGeneration !== generation) {
                 return;
             }
             this.updateSession(session, this._scope, newAddressSelected);
