@@ -1,10 +1,11 @@
 import { describe, test, expect, vi, afterEach } from 'vitest';
-import { AdapterState, WalletDisconnectedError } from '@tronweb3/tronwallet-abstract-adapter';
+import { AdapterState, WalletDisconnectedError, WalletSwitchChainError } from '@tronweb3/tronwallet-abstract-adapter';
 import { MetaMaskAdapter } from '../../src/adapter.js';
 import { Scope } from '../../src/types.js';
 
 const MAINNET_CHAIN_ID = '0x2b6653dc';
 const NILE_CHAIN_ID = '0xcd8690dc';
+const SHASTA_CHAIN_ID = '0x94a9059e';
 const ADDRESS = 'TWmXsCSKGT5jGgcsFvHfLBAAsHvBRfDrnB';
 
 /**
@@ -17,7 +18,8 @@ function createConnectedAdapter(getSession: () => Promise<unknown>) {
         _scope: Scope;
         _address: string;
         _client: { getSession: () => Promise<unknown> };
-        _switchingChain: boolean;
+        _switchChainPromise: Promise<void> | null;
+        _switchingToScope: Scope | undefined;
     };
     internals._scope = Scope.MAINNET;
     internals._address = ADDRESS;
@@ -118,7 +120,7 @@ describe('MetaMaskAdapter', () => {
             const { adapter, internals } = createConnectedAdapter(getSession);
 
             await expect(adapter.switchChain(NILE_CHAIN_ID)).rejects.toThrow('getSession failed');
-            expect(internals._switchingChain).toBe(false);
+            expect(internals._switchChainPromise).toBeNull();
         });
 
         test('should release the mutex when setScope() throws', async () => {
@@ -128,7 +130,7 @@ describe('MetaMaskAdapter', () => {
             const { adapter, internals } = createConnectedAdapter(vi.fn().mockResolvedValue(sessionWithNileAccount()));
 
             await expect(adapter.switchChain(NILE_CHAIN_ID)).rejects.toThrow('localStorage is full');
-            expect(internals._switchingChain).toBe(false);
+            expect(internals._switchChainPromise).toBeNull();
             setItem.mockRestore();
         });
 
@@ -137,7 +139,7 @@ describe('MetaMaskAdapter', () => {
             internals._scope = undefined as unknown as Scope;
 
             await expect(adapter.switchChain(NILE_CHAIN_ID)).rejects.toThrow(WalletDisconnectedError);
-            expect(internals._switchingChain).toBe(false);
+            expect(internals._switchChainPromise).toBeNull();
         });
 
         test('should still switch chain on a retry after an earlier call failed', async () => {
@@ -162,7 +164,76 @@ describe('MetaMaskAdapter', () => {
             await adapter.switchChain(MAINNET_CHAIN_ID);
 
             expect(onChainChanged).toHaveBeenCalledWith({ chainId: MAINNET_CHAIN_ID });
-            expect(internals._switchingChain).toBe(false);
+            expect(internals._switchChainPromise).toBeNull();
+        });
+
+        test('parallel calls for the same chain should share one switch and all succeed', async () => {
+            let resolveSession!: (value: unknown) => void;
+            const getSession = vi.fn().mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        resolveSession = resolve;
+                    })
+            );
+            const { adapter, internals } = createConnectedAdapter(getSession);
+
+            // TronWallet issues several of these in parallel during initial connection.
+            const calls = [
+                adapter.switchChain(NILE_CHAIN_ID),
+                adapter.switchChain(NILE_CHAIN_ID),
+                adapter.switchChain(NILE_CHAIN_ID),
+            ];
+            resolveSession(sessionWithNileAccount());
+
+            await expect(Promise.all(calls)).resolves.toEqual([undefined, undefined, undefined]);
+            // One shared switch, not three concurrent createSession() calls.
+            expect(getSession).toHaveBeenCalledTimes(1);
+            expect(internals._scope).toEqual(Scope.NILE);
+            expect(internals._switchChainPromise).toBeNull();
+        });
+
+        test('parallel calls for the same chain should share a failure', async () => {
+            const getSession = vi.fn().mockRejectedValue(new Error('getSession failed'));
+            const { adapter } = createConnectedAdapter(getSession);
+
+            const first = adapter.switchChain(NILE_CHAIN_ID);
+            const second = adapter.switchChain(NILE_CHAIN_ID);
+
+            await expect(first).rejects.toThrow('getSession failed');
+            await expect(second).rejects.toThrow('getSession failed');
+        });
+
+        test('a parallel call for a different chain should be rejected', async () => {
+            let resolveSession!: (value: unknown) => void;
+            const getSession = vi.fn().mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        resolveSession = resolve;
+                    })
+            );
+            const { adapter, internals } = createConnectedAdapter(getSession);
+
+            const first = adapter.switchChain(NILE_CHAIN_ID);
+            await expect(adapter.switchChain(SHASTA_CHAIN_ID)).rejects.toThrow(WalletSwitchChainError);
+
+            resolveSession(sessionWithNileAccount());
+            await first;
+            expect(internals._scope).toEqual(Scope.NILE);
+        });
+
+        test('should accept a different chain once the previous switch settled', async () => {
+            const getSession = vi.fn().mockResolvedValue({
+                sessionScopes: {
+                    [Scope.NILE]: { accounts: [`${Scope.NILE}:${ADDRESS}`] },
+                    [Scope.SHASTA]: { accounts: [`${Scope.SHASTA}:${ADDRESS}`] },
+                },
+            });
+            const { adapter, internals } = createConnectedAdapter(getSession);
+
+            await adapter.switchChain(NILE_CHAIN_ID);
+            await adapter.switchChain(SHASTA_CHAIN_ID);
+
+            expect(internals._scope).toEqual(Scope.SHASTA);
         });
     });
 

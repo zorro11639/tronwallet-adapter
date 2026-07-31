@@ -18,6 +18,7 @@ import {
     WalletReadyState,
     WalletSignMessageError,
     WalletSignTransactionError,
+    WalletSwitchChainError,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type { AdapterName, Network, SignedTransaction, Transaction } from '@tronweb3/tronwallet-abstract-adapter';
 import { Scope } from './types.js';
@@ -53,7 +54,10 @@ export class MetaMaskAdapter extends AddonAdapter {
     private _readyState: WalletReadyState = WalletReadyState.NotFound;
     private _state: AdapterState = AdapterState.Disconnect;
     private _connecting = false;
-    private _switchingChain = false;
+    /** In-flight chain switch, used as the mutex for concurrent `switchChain()` calls. */
+    private _switchChainPromise: Promise<void> | null = null;
+    /** Target scope of the in-flight switch, so parallel callers can tell same from conflicting. */
+    private _switchingToScope: Scope | undefined;
     private _address: string | null = null;
     private _scope: Scope | undefined;
     private _selectedAddressOnPageLoadPromise: Promise<string | undefined> | undefined;
@@ -274,46 +278,63 @@ export class MetaMaskAdapter extends AddonAdapter {
 
     /**
      * Switches the chain for the MetaMask wallet.
-     * During the initial connection process by TronWallet, this method can be called multiple times in parallel.
-     * And if we call the createSession method multiple times in parallel, it fails.
-     * That's why we added a _switchingChain flag to avoid multiple simultaneous calls.
+     *
+     * During the initial connection process by TronWallet, this method can be called multiple
+     * times in parallel, and calling createSession() concurrently fails. Parallel calls for the
+     * same chain therefore share the in-flight switch and settle with its result, so a redundant
+     * caller observes the real outcome instead of a silent no-op. A call for a different chain
+     * while one is in flight is rejected.
      * @param chainId - The chain ID to switch to.
      */
     async switchChain(chainId: string): Promise<void> {
-        if (this._switchingChain) {
+        if (!this._scope) {
+            throw new WalletDisconnectedError('Wallet not connected');
+        }
+        const newScope = chainIdToScope(chainId);
+
+        if (this._switchChainPromise) {
+            if (this._switchingToScope === newScope) {
+                return this._switchChainPromise;
+            }
+            throw new WalletSwitchChainError('Already switching to a different chain');
+        }
+
+        this._switchingToScope = newScope;
+        // The promise is the mutex; `finally` releases it on both success and failure, so a
+        // throw from any step cannot leave later calls permanently blocked.
+        this._switchChainPromise = this._doSwitchChain(chainId, newScope).finally(() => {
+            this._switchChainPromise = null;
+            this._switchingToScope = undefined;
+        });
+        return this._switchChainPromise;
+    }
+
+    /**
+     * Performs the chain switch itself. Callers go through {@link switchChain}, which
+     * serialises concurrent calls.
+     * @param chainId - The chain ID to switch to, used for the chainChanged event.
+     * @param newScope - The scope resolved from `chainId`.
+     */
+    private async _doSwitchChain(chainId: string, newScope: Scope): Promise<void> {
+        if (newScope === this._scope) {
+            // Still emit event to reconciliate divergent states between dapp and adapter
+            this.emit('chainChanged', { chainId });
             return;
         }
-        this._switchingChain = true;
-        // Reset the flag in `finally` so a throw from any step below cannot leave it
-        // stuck as true, which would make every later call return early without switching.
-        try {
-            if (!this._scope) {
-                throw new WalletDisconnectedError('Wallet not connected');
-            }
 
-            const newScope = chainIdToScope(chainId);
-            if (newScope === this._scope) {
-                // Still emit event to reconciliate divergent states between dapp and adapter
-                this.emit('chainChanged', { chainId });
-                return;
-            }
-
-            let session = await this._client.getSession();
-            let isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
+        let session = await this._client.getSession();
+        let isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
+        if (!isChainInSession) {
+            // Create session for the new scope
+            await this.createSession(newScope, this.address ? [this.address] : undefined);
+            session = await this._client.getSession();
+            isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
             if (!isChainInSession) {
-                // Create session for the new scope
-                await this.createSession(newScope, this.address ? [this.address] : undefined);
-                session = await this._client.getSession();
-                isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
-                if (!isChainInSession) {
-                    throw new WalletConnectionError('Failed to switch chain');
-                }
+                throw new WalletSwitchChainError('Failed to switch chain');
             }
-
-            this.setScope(newScope);
-        } finally {
-            this._switchingChain = false;
         }
+
+        this.setScope(newScope);
     }
 
     /**
