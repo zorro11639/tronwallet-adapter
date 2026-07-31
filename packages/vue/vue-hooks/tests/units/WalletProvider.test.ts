@@ -2,8 +2,9 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { Adapter, AdapterState, WalletReadyState } from '@tronweb3/tronwallet-abstract-adapter';
 import type { AdapterName } from '@tronweb3/tronwallet-abstract-adapter';
-import { nextTick } from 'vue';
+import { defineComponent, h, nextTick } from 'vue';
 import { WalletProvider } from '../../src/WalletProvider.js';
+import { useWallet } from '../../src/useWallet.js';
 
 const ADAPTER_EVENTS = [
     'stateChanged',
@@ -109,5 +110,87 @@ describe('WalletProvider listener lifecycle', () => {
 
         expect(first.listenerTotal()).toBe(0);
         expect(second.listenerTotal()).toBe(0);
+    });
+});
+
+/** Adapter that mimics how the real ones report a disconnect triggered from the wallet UI. */
+class ConnectableAdapter extends FakeAdapter {
+    declare state: AdapterState;
+    declare connected: boolean;
+
+    connect = vi.fn(async () => {
+        this.address = '1';
+        this.connected = true;
+        this.state = AdapterState.Connected;
+        this.emit('connect', '1');
+        this.emit('stateChanged', this.state);
+        return undefined;
+    });
+
+    /** The wallet is disconnected outside the dapp. `setState()` emits `stateChanged`. */
+    disconnectExternally({ withAccountsChanged = false } = {}) {
+        this.address = null;
+        this.connected = false;
+        this.state = AdapterState.Disconnect;
+        this.emit('stateChanged', this.state);
+        if (withAccountsChanged) {
+            // TronLink reports the removed account as an empty string.
+            this.emit('accountsChanged', '', '1');
+        }
+        this.emit('disconnect');
+    }
+}
+
+describe('WalletProvider state on external disconnect', () => {
+    let seen: ReturnType<typeof useWallet>;
+
+    const Probe = defineComponent({
+        setup() {
+            seen = useWallet();
+            return () => 'probe';
+        },
+    });
+
+    beforeEach(() => {
+        localStorage.clear();
+        localStorage.setItem('tronAdapterName', JSON.stringify('Fake'));
+    });
+
+    async function mountConnected() {
+        const adapter = new ConnectableAdapter();
+        mount(WalletProvider, {
+            props: { adapters: [adapter], autoConnect: false },
+            slots: { default: () => h(Probe) },
+        });
+        await nextTick();
+        await adapter.connect();
+        await nextTick();
+        return adapter;
+    }
+
+    test('should report connected state after connecting', async () => {
+        await mountConnected();
+        expect(seen.connected.value).toBe(true);
+        expect(seen.address.value).toEqual('1');
+    });
+
+    test('should clear connected and address when the wallet disconnects', async () => {
+        const adapter = await mountConnected();
+
+        adapter.disconnectExternally();
+        await nextTick();
+
+        expect(seen.connected.value).toBe(false);
+        expect(seen.address.value).toBeNull();
+    });
+
+    test('should store null rather than an empty string when the account is removed', async () => {
+        const adapter = await mountConnected();
+
+        adapter.disconnectExternally({ withAccountsChanged: true });
+        await nextTick();
+
+        expect(seen.connected.value).toBe(false);
+        expect(seen.address.value).toBeNull();
     });
 });
