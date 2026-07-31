@@ -6,7 +6,18 @@ import type {
     WalletError,
     WalletReadyState,
 } from '@tronweb3/tronwallet-abstract-adapter';
-import { computed, defineComponent, markRaw, provide, reactive, readonly, ref, shallowReadonly, watch } from 'vue';
+import {
+    computed,
+    defineComponent,
+    markRaw,
+    onUnmounted,
+    provide,
+    reactive,
+    readonly,
+    ref,
+    shallowReadonly,
+    watch,
+} from 'vue';
 import type { Ref, PropType, UnwrapRef } from 'vue';
 import { useLocalStorage } from './useLocalStorage.js';
 import type { Wallet } from './useWallet.js';
@@ -93,13 +104,24 @@ export const WalletProvider = defineComponent({
             );
         }
 
+        // Adapters are usually created by the host app and outlive this component, so every
+        // listener attached below must be removed again. `onCleanup` only covers the source
+        // changing -- in Vue 3.4 it does not run when the watcher is stopped -- so the current
+        // remover is also kept here and invoked from `onUnmounted`.
+        let removeStateChangedListeners: (() => void) | undefined;
+        let removeAdapterListeners: (() => void) | undefined;
+
         watch(
             () => props.adapters,
-            (adapters, preAdapters) => {
-                preAdapters?.forEach((adapter) => adapter.off('stateChanged', handleStateChange, adapter));
+            (adapters, preAdapters, onCleanup) => {
                 adapters.forEach((adapter) => adapter.on('stateChanged', handleStateChange, adapter));
+                const remove = () => {
+                    adapters.forEach((adapter) => adapter.off('stateChanged', handleStateChange, adapter));
+                };
+                removeStateChangedListeners = remove;
+                onCleanup(remove);
                 setWallets(
-                    props.adapters.map((adapter) => ({
+                    adapters.map((adapter) => ({
                         adapter,
                         state: adapter.state,
                     }))
@@ -160,14 +182,10 @@ export const WalletProvider = defineComponent({
 
         watch(
             () => state.adapter,
-            (adapter, preAdapter) => {
+            (adapter, preAdapter, onCleanup) => {
+                // Disconnecting stays tied to the selection changing, deliberately outside
+                // `onCleanup`, so unmounting the provider does not disconnect the user's wallet.
                 if (preAdapter) {
-                    preAdapter.off('connect', handleConnect);
-                    preAdapter.off('error', handleError);
-                    preAdapter.off('accountsChanged', handleAccountChange);
-                    preAdapter.off('chainChanged', handleChainChanged);
-                    preAdapter.off('readyStateChanged', handleReadyStateChanged);
-                    preAdapter.off('disconnect', handleDisconnect);
                     preAdapter.disconnect();
                 }
                 if (adapter) {
@@ -177,6 +195,18 @@ export const WalletProvider = defineComponent({
                     adapter.on('chainChanged', handleChainChanged);
                     adapter.on('readyStateChanged', handleReadyStateChanged);
                     adapter.on('disconnect', handleDisconnect);
+                    const remove = () => {
+                        adapter.off('connect', handleConnect);
+                        adapter.off('error', handleError);
+                        adapter.off('accountsChanged', handleAccountChange);
+                        adapter.off('chainChanged', handleChainChanged);
+                        adapter.off('readyStateChanged', handleReadyStateChanged);
+                        adapter.off('disconnect', handleDisconnect);
+                    };
+                    removeAdapterListeners = remove;
+                    onCleanup(remove);
+                } else {
+                    removeAdapterListeners = undefined;
                 }
                 if (adapter !== preAdapter) {
                     emit('adapterChanged', adapter);
@@ -186,6 +216,13 @@ export const WalletProvider = defineComponent({
                 immediate: true,
             }
         );
+
+        onUnmounted(() => {
+            removeStateChangedListeners?.();
+            removeStateChangedListeners = undefined;
+            removeAdapterListeners?.();
+            removeAdapterListeners = undefined;
+        });
 
         const hasManuallySetName = ref(false);
         watch(
