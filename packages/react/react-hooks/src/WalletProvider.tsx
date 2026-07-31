@@ -165,13 +165,20 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
     );
     const handleAccountChange = useCallback(
         function (address: string, preAddr?: string) {
-            setState((state) => ({ ...state, address }));
+            // Adapters report "no account" as an empty string, while this state uses `null`
+            // for it, so normalise before storing. The callback still gets the raw value.
+            setState((state) => ({ ...state, address: address || null, connected: !!state.adapter?.connected }));
             onAccountsChanged?.(address, preAddr);
         },
         [onAccountsChanged]
     );
     const handleDisconnect = useCallback(
         function () {
+            setState((state) => ({
+                ...state,
+                address: state.adapter?.address ?? null,
+                connected: !!state.adapter?.connected,
+            }));
             onDisconnect?.();
         },
         [onDisconnect]

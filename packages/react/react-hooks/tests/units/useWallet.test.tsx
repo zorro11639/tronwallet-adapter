@@ -503,4 +503,52 @@ describe('useWallet', function () {
             expect(adapter1.disconnect).toHaveBeenCalledTimes(0);
         });
     });
+
+    describe('when the wallet is disconnected outside the dapp', function () {
+        beforeEach(async function () {
+            adapter1._state = AdapterState.Disconnect;
+            mountTest({} as WalletProviderProps);
+            await act(async function () {
+                ref.current?.getState().select(adapter1.name);
+                await Promise.resolve();
+            });
+            await act(async function () {
+                await ref.current?.getState().connect();
+                await Promise.resolve();
+            });
+        });
+
+        it('should be connected before the wallet disconnects', function () {
+            expect(ref.current?.getState().connected).toEqual(true);
+            expect(ref.current?.getState().address).toEqual('1');
+        });
+
+        it('should clear connected and address when the adapter emits disconnect', async function () {
+            // Real adapters update their own state before emitting.
+            await act(async function () {
+                adapter1._connected = false;
+                adapter1._state = AdapterState.Disconnect;
+                adapter1.address = null;
+                adapter1.emit('disconnect');
+                await Promise.resolve();
+            });
+
+            expect(ref.current?.getState().connected).toEqual(false);
+            expect(ref.current?.getState().address).toBeNull();
+        });
+
+        it('should store null rather than an empty string when accountsChanged reports no account', async function () {
+            // TronLink reports the account being removed as an empty string.
+            await act(async function () {
+                adapter1._connected = false;
+                adapter1._state = AdapterState.Disconnect;
+                adapter1.address = null;
+                adapter1.emit('accountsChanged', '', '1');
+                await Promise.resolve();
+            });
+
+            expect(ref.current?.getState().address).toBeNull();
+            expect(ref.current?.getState().connected).toEqual(false);
+        });
+    });
 });
