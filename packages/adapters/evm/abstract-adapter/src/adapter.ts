@@ -275,7 +275,7 @@ export abstract class Adapter<Name extends string = string>
             return this.getProviderPromise;
         }
 
-        this.getProviderPromise = new Promise((resolve) => {
+        const detection = new Promise<EIP1193Provider | null>((resolve) => {
             let handled = false;
             let interval: ReturnType<typeof setInterval> | null = null;
             let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -356,7 +356,20 @@ export abstract class Adapter<Name extends string = string>
             }
         });
 
-        return this.getProviderPromise;
+        this.getProviderPromise = detection;
+
+        // Only a successful detection is worth caching. A wallet can appear after this run --
+        // an extension injecting late, the user enabling it, a mobile WebView still starting up --
+        // and keeping the failed result would make the adapter report "not found" for good.
+        // Clearing it here rather than inside `finish()` matters: the assignment above happens
+        // after the executor returns, so a synchronous resolve would otherwise be overwritten.
+        void detection.then((provider) => {
+            if (!provider && this.getProviderPromise === detection) {
+                this.getProviderPromise = null;
+            }
+        });
+
+        return detection;
     }
     protected listenEvents(provider: EIP1193Provider) {
         provider.on('connect', (connectInfo) => {

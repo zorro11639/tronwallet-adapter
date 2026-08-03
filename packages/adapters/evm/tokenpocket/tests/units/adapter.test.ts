@@ -134,7 +134,12 @@ describe('TokenPocketEvmAdapter', () => {
             await flushPromises();
 
             expect(adapter.readyState).toEqual('NotFound');
-            await expect(adapter.getProvider()).resolves.toBeNull();
+
+            // A failed detection is not cached, so this call runs a fresh one.
+            const retry = adapter.getProvider();
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+            await expect(retry).resolves.toBeNull();
         });
 
         test('adapter should not match provider with wrong rdns', async () => {

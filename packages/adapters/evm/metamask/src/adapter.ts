@@ -132,7 +132,7 @@ export class MetaMaskEvmAdapter extends Adapter {
             return this.getProviderPromise;
         }
 
-        this.getProviderPromise = new Promise((resolve) => {
+        const detection = new Promise<EIP1193Provider | null>((resolve) => {
             let handled = false;
             let timeout: ReturnType<typeof setTimeout> | null = null;
             let eip6963Handler: ((event: Event) => void) | null = null;
@@ -173,14 +173,25 @@ export class MetaMaskEvmAdapter extends Adapter {
                 finish(announcedProvider);
             };
 
-            window.addEventListener('eip6963:announceProvider', eip6963Handler);
-            window.dispatchEvent(new Event('eip6963:requestProvider'));
-
+            // Created before the dispatch: a wallet may answer synchronously, and a timer
+            // created after that point would never be reached by `cleanup()`.
             timeout = setTimeout(() => {
                 finish(null);
             }, 3000);
+
+            window.addEventListener('eip6963:announceProvider', eip6963Handler);
+            window.dispatchEvent(new Event('eip6963:requestProvider'));
         });
 
-        return this.getProviderPromise;
+        this.getProviderPromise = detection;
+
+        // Only cache a successful detection: the wallet may show up after this run.
+        void detection.then((provider) => {
+            if (!provider && this.getProviderPromise === detection) {
+                this.getProviderPromise = null;
+            }
+        });
+
+        return detection;
     }
 }

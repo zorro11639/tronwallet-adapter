@@ -154,6 +154,46 @@ describe('#AbstractAdapter', () => {
             vi.useRealTimers();
         }
     });
+    test('#getProvider() should retry after a failed detection', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        let cleanup: (() => void) | undefined;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3001);
+            await expect(first).resolves.toBeNull();
+
+            // The wallet appears afterwards: a late extension, the user enabling it, a mobile
+            // WebView still starting up. The adapter must not stay stuck on the failed result.
+            const lateProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+            cleanup = installEIP6963Provider(lateProvider);
+
+            await expect(detectAdapter.getProvider()).resolves.toBe(lateProvider);
+        } finally {
+            // Registered on `window`, so it has to come off even when an assertion fails,
+            // otherwise the announcer leaks into the tests that follow.
+            cleanup?.();
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
+    test('#getProvider() should keep caching a successful detection', async () => {
+        const detectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        const cleanup = installEIP6963Provider(detectedProvider);
+
+        try {
+            const detectAdapter = new DetectAdapter();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+
+            // The successful result stays cached, so a second call answers from it.
+            expect((detectAdapter as unknown as { getProviderPromise: unknown }).getProviderPromise).not.toBeNull();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+        } finally {
+            cleanup();
+        }
+    });
     test('#getProvider() should still report an undetected provider after the timeout', async () => {
         const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
         vi.useFakeTimers();
