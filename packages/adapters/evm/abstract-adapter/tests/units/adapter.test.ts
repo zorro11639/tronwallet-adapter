@@ -179,6 +179,52 @@ describe('#AbstractAdapter', () => {
             consoleError.mockRestore();
         }
     });
+    test('#getProvider() should not wait out the grace period again on a retry', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3000);
+            await expect(first).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledTimes(1);
+
+            // The wallet is still missing. A retry must settle immediately rather than making
+            // the caller sit through another 3s window, and must not log again.
+            const retry = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(0);
+            await expect(retry).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledTimes(1);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
+    test('#getProvider() should still find a provider on an immediate retry', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        let cleanup: (() => void) | undefined;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3000);
+            await expect(first).resolves.toBeNull();
+
+            const lateProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+            cleanup = installEIP6963Provider(lateProvider);
+
+            // No grace period on the retry, but a synchronous announce still lands.
+            const retry = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(0);
+            await expect(retry).resolves.toBe(lateProvider);
+        } finally {
+            cleanup?.();
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
     test('#getProvider() should keep caching a successful detection', async () => {
         const detectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
         const cleanup = installEIP6963Provider(detectedProvider);

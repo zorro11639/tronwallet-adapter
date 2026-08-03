@@ -132,6 +132,13 @@ export class MetaMaskEvmAdapter extends Adapter {
             return this.getProviderPromise;
         }
 
+        // The first run gives a wallet that is still initialising time to appear. Any later run
+        // only happens because that one failed, so the page has been alive for a while and a
+        // wallet that exists answers `eip6963:requestProvider` right away. Retrying with the
+        // full window would make every connect() attempt on a missing wallet wait it out again.
+        const graceMs = this.hasRunInitialDetection ? 0 : 3000;
+        this.hasRunInitialDetection = true;
+
         const detection = new Promise<EIP1193Provider | null>((resolve) => {
             let handled = false;
             let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -175,9 +182,11 @@ export class MetaMaskEvmAdapter extends Adapter {
 
             // Created before the dispatch: a wallet may answer synchronously, and a timer
             // created after that point would never be reached by `cleanup()`.
+            // With `graceMs` at 0 this still runs after the dispatch below and after any
+            // microtask, so a wallet announcing on either is caught before giving up.
             timeout = setTimeout(() => {
                 finish(null);
-            }, 3000);
+            }, graceMs);
 
             window.addEventListener('eip6963:announceProvider', eip6963Handler);
             window.dispatchEvent(new Event('eip6963:requestProvider'));
