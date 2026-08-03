@@ -2,21 +2,12 @@
  * Pre-commit dependency audit check.
  *
  * Runs `pnpm audit --json` and exits non-zero when any Critical or High
- * advisory is found that is NOT in the known-exception list.
- *
- * Exceptions are advisories for which no patch exists (e.g. the upstream
- * library is unmaintained) or where the advisory range is imprecise
- * (e.g. brace-expansion <=5.0.7 matching v2.x which has no separate fix).
+ * advisory is found.
  *
  * Usage: node scripts/audit-high-risk.js
  */
 
 const { execSync } = require('child_process');
-
-// ── Known exceptions (GHSA IDs) ──────────────────────────────────────────────
-// Add the GHSA advisory URL suffix here when a high/critical advisory cannot
-// be resolved and has been explicitly accepted.
-const KNOWN_EXCEPTIONS = new Set([]);
 
 try {
     const output = execSync('pnpm audit --json', {
@@ -49,11 +40,9 @@ function checkAdvisories(data) {
     const failures = [];
 
     for (const [id, info] of Object.entries(advisories)) {
-        const numericId = Number(id);
-        if (KNOWN_EXCEPTIONS.has(numericId)) continue;
         if (dominated.includes(info.severity)) {
             failures.push({
-                id: numericId,
+                id: Number(id),
                 severity: info.severity,
                 module: info.module_name,
                 title: info.title,
@@ -74,6 +63,6 @@ function checkAdvisories(data) {
         console.error(`    ${f.url}\n`);
     }
     console.error(`Found ${failures.length} unresolved high-risk vulnerabilit${failures.length === 1 ? 'y' : 'ies'}.`);
-    console.error('Fix them, or add the advisory ID to KNOWN_EXCEPTIONS in scripts/audit-high-risk.js if accepted.');
+    console.error('Fix them before committing.');
     process.exit(1);
 }
