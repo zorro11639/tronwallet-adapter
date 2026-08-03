@@ -193,7 +193,13 @@ export const WalletProvider = defineComponent({
                 // Disconnecting stays tied to the selection changing, deliberately outside
                 // `onCleanup`, so unmounting the provider does not disconnect the user's wallet.
                 if (preAdapter) {
-                    preAdapter.disconnect();
+                    // The watcher cannot await, so the rejection has to be handled here or it
+                    // surfaces as an unhandled one. The listeners are already off by this point,
+                    // so a failure means the old adapter may still be connected with nothing
+                    // watching it -- worth a warning even though there is nothing left to retry.
+                    preAdapter.disconnect().catch((error) => {
+                        console.warn(`[${preAdapter.name}]: Failed to disconnect the previous wallet.`, error);
+                    });
                 }
                 if (adapter) {
                     adapter.on('connect', handleConnect);

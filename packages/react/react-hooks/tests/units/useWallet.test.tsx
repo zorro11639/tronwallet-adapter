@@ -551,4 +551,36 @@ describe('useWallet', function () {
             expect(ref.current?.getState().connected).toEqual(false);
         });
     });
+
+    describe('when the previous wallet fails to disconnect', function () {
+        it('should warn instead of leaving an unhandled rejection', async function () {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+            const disconnectError = new Error('user rejected disconnect');
+            adapter1._state = AdapterState.Disconnect;
+            adapter2._state = AdapterState.Disconnect;
+            mountTest({ autoConnect: false } as WalletProviderProps);
+
+            await act(async function () {
+                ref.current?.getState().select(adapter1.name);
+                await Promise.resolve();
+            });
+
+            // Switching wallets disconnects the previous one, and that call rejects.
+            adapter1.disconnectMethod = () => Promise.reject(disconnectError);
+            await act(async function () {
+                ref.current?.getState().select(adapter2.name);
+                await Promise.resolve();
+            });
+            await act(async function () {
+                await Promise.resolve();
+            });
+
+            expect(adapter1.disconnect).toHaveBeenCalled();
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('Failed to disconnect'), disconnectError);
+            // The switch itself still goes through.
+            expect(ref.current?.getState().wallet?.adapter.name).toEqual(adapter2.name);
+
+            warn.mockRestore();
+        });
+    });
 });

@@ -234,3 +234,47 @@ describe('WalletProvider state on external disconnect', () => {
         expect(seen.address.value).toBeNull();
     });
 });
+
+describe('WalletProvider disconnect failures when switching wallets', () => {
+    let seen: ReturnType<typeof useWallet>;
+
+    const Probe = defineComponent({
+        setup() {
+            seen = useWallet();
+            return () => 'probe';
+        },
+    });
+
+    beforeEach(() => {
+        localStorage.clear();
+        localStorage.setItem('tronAdapterName', JSON.stringify('Fake'));
+    });
+
+    test('should warn instead of leaving an unhandled rejection', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const disconnectError = new Error('user rejected disconnect');
+        const first = new FakeAdapter('Fake');
+        const second = new FakeAdapter('Other');
+        first.disconnect = vi.fn(async () => {
+            throw disconnectError;
+        });
+
+        mount(WalletProvider, {
+            props: { adapters: [first, second], autoConnect: false },
+            slots: { default: () => h(Probe) },
+        });
+        await nextTick();
+
+        // Switching wallets disconnects the previous one, and that call rejects.
+        seen.select('Other' as AdapterName);
+        await nextTick();
+        await Promise.resolve();
+
+        expect(first.disconnect).toHaveBeenCalled();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Failed to disconnect'), disconnectError);
+        // The switch itself still goes through.
+        expect(seen.wallet.value?.adapter.name).toEqual('Other');
+
+        warn.mockRestore();
+    });
+});

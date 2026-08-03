@@ -227,7 +227,13 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
     // disconnect the previous when wallet changes
     useEffect(() => {
         return () => {
-            adapter?.disconnect();
+            // Cleanup cannot await, so the rejection has to be handled here or it surfaces as
+            // an unhandled one. The listeners are already off by this point, so a failure means
+            // the old adapter may still be connected with nothing watching it -- worth a warning
+            // even though there is nothing left to retry against.
+            adapter?.disconnect().catch((error) => {
+                console.warn(`[${adapter.name}]: Failed to disconnect the previous wallet.`, error);
+            });
         };
     }, [adapter]);
 
