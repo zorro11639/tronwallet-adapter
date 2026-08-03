@@ -127,17 +127,37 @@ class ConnectableAdapter extends FakeAdapter {
         return undefined;
     });
 
-    /** The wallet is disconnected outside the dapp. `setState()` emits `stateChanged`. */
-    disconnectExternally({ withAccountsChanged = false } = {}) {
+    /** Bring the adapter's own fields to a disconnected state without emitting anything. */
+    private goOffline() {
         this.address = null;
         this.connected = false;
         this.state = AdapterState.Disconnect;
+    }
+
+    /** The wallet is disconnected outside the dapp. `setState()` emits `stateChanged`. */
+    disconnectExternally({ withAccountsChanged = false } = {}) {
+        this.goOffline();
         this.emit('stateChanged', this.state);
         if (withAccountsChanged) {
             // TronLink reports the removed account as an empty string.
             this.emit('accountsChanged', '', '1');
         }
         this.emit('disconnect');
+    }
+
+    /**
+     * Only `disconnect` is emitted. `setState()` skips `stateChanged` when the state did not
+     * actually change, so the provider cannot rely on that event arriving.
+     */
+    emitDisconnectOnly() {
+        this.goOffline();
+        this.emit('disconnect');
+    }
+
+    /** Only an empty `accountsChanged` is emitted -- this is what the Binance adapter does. */
+    emitEmptyAccountsChangedOnly() {
+        this.goOffline();
+        this.emit('accountsChanged', '', '1');
     }
 }
 
@@ -188,6 +208,26 @@ describe('WalletProvider state on external disconnect', () => {
         const adapter = await mountConnected();
 
         adapter.disconnectExternally({ withAccountsChanged: true });
+        await nextTick();
+
+        expect(seen.connected.value).toBe(false);
+        expect(seen.address.value).toBeNull();
+    });
+
+    test('should sync from a disconnect event that arrives without stateChanged', async () => {
+        const adapter = await mountConnected();
+
+        adapter.emitDisconnectOnly();
+        await nextTick();
+
+        expect(seen.connected.value).toBe(false);
+        expect(seen.address.value).toBeNull();
+    });
+
+    test('should sync from an empty accountsChanged that arrives without stateChanged', async () => {
+        const adapter = await mountConnected();
+
+        adapter.emitEmptyAccountsChangedOnly();
         await nextTick();
 
         expect(seen.connected.value).toBe(false);

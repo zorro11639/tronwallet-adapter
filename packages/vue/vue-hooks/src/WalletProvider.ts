@@ -167,10 +167,17 @@ export const WalletProvider = defineComponent({
             return error;
         };
         const handleAccountChange = (address: string, preAddr: string) => {
-            setState({ address });
+            // Adapters report "no account" as an empty string, while this state uses `null` for
+            // it. Read `connected` back from the adapter too: not every adapter emits
+            // `stateChanged` alongside this event, and that is the only other thing that would
+            // refresh it. The event keeps the raw value.
+            setState({ address: address || null, connected: !!state.adapter?.connected });
             emit('accountsChanged', address, preAddr);
         };
         const handleDisconnect = () => {
+            // Same reasoning: an adapter may emit only `disconnect`, so sync from it directly
+            // instead of relying on a `stateChanged` that may never arrive.
+            setState({ address: state.adapter?.address ?? null, connected: !!state.adapter?.connected });
             emit('disconnect');
         };
         const handleReadyStateChanged = (readyState: WalletReadyState) => {
