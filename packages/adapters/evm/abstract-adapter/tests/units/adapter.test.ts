@@ -102,6 +102,75 @@ describe('#AbstractAdapter', () => {
 
         await expect(detectAdapter.getProvider()).resolves.toBe(injectedProvider);
     });
+    test('#getProvider() should leave no timer behind when a wallet announces synchronously', async () => {
+        const detectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        const cleanup = installEIP6963Provider(detectedProvider);
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+
+            // Detection already succeeded, so neither the poll nor the timeout may survive.
+            expect(vi.getTimerCount()).toBe(0);
+
+            await vi.advanceTimersByTimeAsync(3001);
+            expect(consoleError).not.toHaveBeenCalled();
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+            cleanup();
+        }
+    });
+    test('#getProvider() should leave no timer behind when polling finds the injected provider', async () => {
+        const injectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(injectedProvider);
+            const pending = detectAdapter.getProvider();
+            // No wallet announces, so the 100ms poll is what finds the provider.
+            await vi.advanceTimersByTimeAsync(100);
+
+            await expect(pending).resolves.toBe(injectedProvider);
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+    test('#getProvider() should leave no timer behind without EIP-6963 support', async () => {
+        const injectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(injectedProvider);
+            detectAdapter.eip6963Info.support = false;
+
+            await expect(detectAdapter.getProvider()).resolves.toBe(injectedProvider);
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+    test('#getProvider() should still report an undetected provider after the timeout', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const pending = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3001);
+
+            await expect(pending).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledWith('[Detect]: Unable to detect provider.');
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
     test('#autoConnect() should swallow eth_accounts errors and reset address', async () => {
         provider.request = vi.fn(() => Promise.reject(new Error('eth_accounts failed')));
 
