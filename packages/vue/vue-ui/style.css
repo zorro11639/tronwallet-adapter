@@ -63,11 +63,16 @@
     padding: 40px 20px 20px;
     opacity: 0;
     pointer-events: none;
+    /* `pointer-events` only blocks the mouse: without this the closed modal stays in the tab
+       order and the accessibility tree. `visibility` transitions discretely, so the fade-out
+       still plays before it hides, and it turns visible immediately on the way in. */
+    visibility: hidden;
 }
 
 .adapter-modal-fade-in {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
     transform: scale(1);
 }
 

@@ -72,6 +72,21 @@ describe('WalletSelectModal', () => {
         expect(modal.isVisible()).toBe(false);
     });
 
+    test('should not render a stray class while fading out', async () => {
+        vi.useFakeTimers();
+        const modal = renderModal();
+        const classesOf = () =>
+            (modal.queryByTestId('wallet-select-modal')?.className ?? '').split(/\s+/).filter(Boolean);
+
+        expect(classesOf()).toContain('adapter-modal-fade-in');
+        expect(classesOf()).not.toContain('false');
+
+        await modal.setVisible(false);
+        // Still mounted for the fade-out, and `fadeIn && '...'` used to stringify to "false".
+        expect(classesOf()).not.toContain('adapter-modal-fade-in');
+        expect(classesOf()).not.toContain('false');
+    });
+
     test('should clear the fade-out timer on unmount', async () => {
         vi.useFakeTimers();
         // Other providers in the tree schedule their own timers, so track this one by id

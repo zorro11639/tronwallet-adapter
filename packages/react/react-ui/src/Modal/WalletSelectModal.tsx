@@ -61,7 +61,7 @@ export const WalletSelectModal: FC<ModalProps> = function ({ visible, onClose })
             <div
                 data-testid="wallet-select-modal"
                 ref={nodeRef}
-                className={`adapter-modal ${fadeIn && 'adapter-modal-fade-in'}`}
+                className={`adapter-modal${fadeIn ? ' adapter-modal-fade-in' : ''}`}
             >
                 <div className="adapter-modal-wrapper">
                     <div className="adapter-modal-header">
