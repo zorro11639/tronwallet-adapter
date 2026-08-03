@@ -137,6 +137,9 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @returns A promise that resolves when connected.
      */
     async connect(): Promise<void> {
+        // Captured before every await, `_beforeConnect()` included, so a disconnect() raised at
+        // any point of the attempt is noticed once the wallet finally answers.
+        const generation = this._connectionGeneration;
         try {
             if (!(await this._beforeConnect())) return;
             this._connecting = true;
@@ -146,6 +149,13 @@ export class MetaMaskAdapter extends AddonAdapter {
                 // Otherwise create a session on Mainnet by default
                 if (!this.address) {
                     await this.createSession(Scope.MAINNET);
+                }
+                if (this._connectionGeneration !== generation) {
+                    // The caller disconnected midway. Drop anything the awaited steps managed
+                    // to set and stop short of reporting a connection.
+                    this.setAddress(null);
+                    this.setScope(undefined, false);
+                    return;
                 }
                 // In case user didn't select any Tron scope/account, return
                 if (!this.address) {
@@ -171,13 +181,17 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @returns A promise that resolves when disconnected.
      */
     async disconnect(): Promise<void> {
+        // Bumped before the state check on purpose. While connect() is waiting on the wallet
+        // the state is still Disconnect, and that attempt has to be cancelled too -- otherwise
+        // approving the prompt afterwards would connect a wallet the caller already dropped.
+        // It also invalidates callbacks that are mid-await, so they cannot restore
+        // address/scope after the teardown below.
+        this._connectionGeneration++;
+
         if (this.state !== AdapterState.Connected) {
             return;
         }
 
-        // Invalidate callbacks that are already awaiting, so they cannot restore
-        // address/scope after this teardown.
-        this._connectionGeneration++;
         this.stopListeners();
 
         this.setAddress(null);

@@ -1,5 +1,10 @@
 import { describe, test, expect, vi, afterEach } from 'vitest';
-import { AdapterState, WalletDisconnectedError, WalletSwitchChainError } from '@tronweb3/tronwallet-abstract-adapter';
+import {
+    AdapterState,
+    WalletDisconnectedError,
+    WalletReadyState,
+    WalletSwitchChainError,
+} from '@tronweb3/tronwallet-abstract-adapter';
 import { MetaMaskAdapter } from '../../src/adapter.js';
 import { Scope } from '../../src/types.js';
 
@@ -468,6 +473,96 @@ describe('MetaMaskAdapter', () => {
                 scope: Scope.MAINNET,
                 request: { params: { address: ADDRESS } },
             });
+        });
+    });
+
+    describe('disconnect during an in-flight connect', () => {
+        afterEach(() => {
+            vi.restoreAllMocks();
+        });
+
+        /**
+         * Adapter whose session creation is held open, standing in for MetaMask still showing
+         * its approval prompt.
+         */
+        function createConnectingAdapter() {
+            const adapter = new MetaMaskAdapter();
+            let approve!: () => void;
+            const walletPrompt = new Promise<void>((resolve) => {
+                approve = resolve;
+            });
+            const internals = adapter as unknown as {
+                _client: any;
+                _readyState: WalletReadyState;
+                _address: string | null;
+                _scope: Scope | undefined;
+                _beforeConnect: () => Promise<boolean>;
+                tryRestoringSession: () => Promise<void>;
+                createSession: (scope: Scope) => Promise<void>;
+                startListeners: () => void;
+                checkSecurity: () => Promise<void>;
+            };
+            internals._readyState = WalletReadyState.Found;
+            internals.checkSecurity = vi.fn().mockResolvedValue(undefined);
+            // Skip the wallet-availability probe, which otherwise waits on a real timeout.
+            internals._beforeConnect = vi.fn().mockResolvedValue(true);
+            internals.tryRestoringSession = vi.fn().mockResolvedValue(undefined);
+            internals.startListeners = vi.fn();
+            internals._client = { revokeSession: vi.fn().mockResolvedValue(undefined) };
+            // Resolves only once the prompt is approved, then reports a selected account.
+            internals.createSession = vi.fn(async () => {
+                await walletPrompt;
+                internals._address = ADDRESS;
+                internals._scope = Scope.MAINNET;
+            });
+            return { adapter, internals, approve };
+        }
+
+        test('should not connect when disconnect() is called while the prompt is open', async () => {
+            const { adapter, approve } = createConnectingAdapter();
+
+            const connecting = adapter.connect();
+            // Let connect() get past `_beforeConnect()` and reach the wallet prompt.
+            await Promise.resolve();
+            expect(adapter.connecting).toBe(true);
+
+            // The caller changes their mind before the wallet answers.
+            await adapter.disconnect();
+
+            // The user approves anyway.
+            approve();
+            await connecting;
+
+            expect(adapter.state).toEqual(AdapterState.Disconnect);
+            expect(adapter.connected).toBe(false);
+            expect(adapter.address).toBeNull();
+        });
+
+        test('should not emit connect when the attempt was cancelled', async () => {
+            const { adapter, approve } = createConnectingAdapter();
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+
+            const connecting = adapter.connect();
+            await adapter.disconnect();
+            approve();
+            await connecting;
+
+            expect(onConnect).not.toHaveBeenCalled();
+        });
+
+        test('should still connect when no disconnect happens', async () => {
+            const { adapter, approve } = createConnectingAdapter();
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+
+            const connecting = adapter.connect();
+            approve();
+            await connecting;
+
+            expect(adapter.state).toEqual(AdapterState.Connected);
+            expect(adapter.address).toEqual(ADDRESS);
+            expect(onConnect).toHaveBeenCalledWith(ADDRESS);
         });
     });
 });
