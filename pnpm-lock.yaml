@@ -191,7 +191,7 @@ importers:
         specifier: ^1.1.1
         version: link:../../packages/adapters/binance
       '@tronweb3/tronwallet-adapter-binance-evm':
-        specifier: ^1.2.1
+        specifier: ^1.2.2
         version: link:../../packages/adapters/evm/binance
       '@tronweb3/tronwallet-adapter-bitkeep':
         specifier: ^1.2.0
@@ -215,13 +215,13 @@ importers:
         specifier: ^1.1.15
         version: link:../../packages/adapters/ledger
       '@tronweb3/tronwallet-adapter-metamask-evm':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../../packages/adapters/evm/metamask
       '@tronweb3/tronwallet-adapter-okxwallet':
         specifier: ^1.1.0
         version: link:../../packages/adapters/okxwallet
       '@tronweb3/tronwallet-adapter-okxwallet-evm':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../../packages/adapters/evm/okxwallet
       '@tronweb3/tronwallet-adapter-tokenpocket':
         specifier: ^1.1.0
@@ -233,7 +233,7 @@ importers:
         specifier: ^1.2.0
         version: link:../../packages/adapters/tronlink
       '@tronweb3/tronwallet-adapter-tronlink-evm':
-        specifier: ^1.2.0
+        specifier: ^1.2.1
         version: link:../../packages/adapters/evm/tronlink
       '@tronweb3/tronwallet-adapter-trust':
         specifier: ^1.1.0
