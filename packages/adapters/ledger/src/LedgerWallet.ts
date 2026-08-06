@@ -4,11 +4,6 @@ import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import type { BaseAdapterConfig, SignedTransaction, Transaction } from '@tronweb3/tronwallet-abstract-adapter';
 import { openConnectingModal, openSelectAccountModal, openVerifyAddressModal } from './Modal/openModal.js';
 
-async function wait(timeout: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, timeout);
-    });
-}
 function isFunction(fn: unknown) {
     return typeof fn === 'function';
 }
@@ -90,7 +85,12 @@ export class LedgerWallet {
     private accounts: Account[];
     private app: Trx | null = null;
     private transport: Transport | null = null;
-    private fetchState: 'Initial' | 'Fetching' | 'Finished' = 'Initial';
+    /**
+     * Ledger can not handle concurrent requests, so every device operation is
+     * chained onto this promise. A rejected operation is contained here, so a
+     * failure can never leave the chain blocked.
+     */
+    private queue: Promise<unknown> = Promise.resolve();
     private selectedIndex = 0;
     private config: LedgerWalletConfig;
 
@@ -145,17 +145,12 @@ export class LedgerWallet {
             } else {
                 closeConnectingModal = openConnectingModal();
             }
-            await this.makeApp();
-
-            const firstAccount = await this.getAccount(0);
-            this.accounts[0] = firstAccount;
-
-            await this.cleanUp();
-            if (accountNumber > 1) {
-                await this.getAccounts(1, accountNumber);
-            }
+            const accounts = await this.getAccounts(0, accountNumber);
+            // Close the "connecting" modal before opening the account picker so the
+            // two modals never overlap. Null it out so the finally-block fallback
+            // (which only fires on the error path) does not close it a second time.
             closeConnectingModal?.();
-            const accounts = this.accounts.slice(0, accountNumber);
+            closeConnectingModal = null;
             const selectedAccount = await selectAccount!({
                 accounts,
                 ledgerUtils,
@@ -164,7 +159,11 @@ export class LedgerWallet {
             this.selectedIndex = selectedAccount.index;
             this._address = selectedAccount.address;
         } finally {
-            await this.cleanUp();
+            // On the error path (getAccounts threw before the success close above)
+            // the connecting modal is still open — close it here so it does not
+            // linger on screen. The transport is owned by the queued operations,
+            // each of which cleans up in its own finally block.
+            closeConnectingModal?.();
         }
     }
     disconnect() {
@@ -189,16 +188,17 @@ export class LedgerWallet {
     }
 
     private async _withApp<T>(action: (app: Trx, path: string) => Promise<T>): Promise<T> {
-        await this.waitForIdle();
-        try {
+        return this.enqueue(async () => {
             const index = this.selectedIndex;
             const path = this.getPathForIndex(index);
-            await this.makeApp();
-            // this.app is guaranteed to be non-null here by makeApp
-            return await action(this.app!, path);
-        } finally {
-            await this.cleanUp();
-        }
+            try {
+                await this.makeApp();
+                // this.app is guaranteed to be non-null here by makeApp
+                return await action(this.app!, path);
+            } finally {
+                await this.cleanUp();
+            }
+        });
     }
 
     private _mergeSignature(transaction: Transaction | SignedTransaction, signedResponse: string): SignedTransaction {
@@ -221,38 +221,34 @@ export class LedgerWallet {
         if (from >= to) {
             throw new Error('getAccount parameter error: from cannot be bigger than to.');
         }
-        if (this.fetchState === 'Fetching') {
-            await wait(500);
-            return this.getAccounts(from, to);
-        }
-        this.fetchState = 'Fetching';
-
-        // ledger can not get address concurrently.
-        await this.makeApp();
-        try {
-            const obj: Record<string, Account> = {};
-            for (let i = from; i < to; i++) {
-                const account = await this.getAccount(i);
-                obj[account.index] = account;
+        return this.enqueue(async () => {
+            try {
+                await this.makeApp();
+                const obj: Record<string, Account> = {};
+                for (let i = from; i < to; i++) {
+                    const account = await this.getAccount(i);
+                    obj[account.index] = account;
+                }
+                Object.keys(obj).forEach((key) => {
+                    this.accounts[+key] = obj[key];
+                });
+                return this.accounts.slice(from, to);
+            } finally {
+                await this.cleanUp();
             }
-            Object.keys(obj).forEach((key) => {
-                this.accounts[+key] = obj[key];
-            });
-            return this.accounts.slice(from, to);
-        } finally {
-            this.fetchState = 'Initial';
-            await this.cleanUp();
-        }
+        });
     };
 
     public getAddress = async (index: number, display = false): Promise<{ publicKey: string; address: string }> => {
-        try {
+        return this.enqueue(async () => {
             const path = this.getPathForIndex(index);
-            await this.makeApp();
-            return await this.app!.getAddress(path, display);
-        } finally {
-            await this.cleanUp();
-        }
+            try {
+                await this.makeApp();
+                return await this.app!.getAddress(path, display);
+            } finally {
+                await this.cleanUp();
+            }
+        });
     };
 
     private async getAccount(index: number) {
@@ -265,12 +261,17 @@ export class LedgerWallet {
         };
     }
 
-    private async waitForIdle() {
-        if (this.fetchState === 'Fetching') {
-            await wait(300);
-            await this.waitForIdle();
-        }
+    /**
+     * Queue a device operation. Waiting is done by chaining onto the previous
+     * operation instead of polling, so a caller can never wait forever on a
+     * state flag that was never reset.
+     */
+    private enqueue<T>(action: () => Promise<T>): Promise<T> {
+        const result = this.queue.then(action);
+        this.queue = result.catch(() => undefined);
+        return result;
     }
+
     private getPathForIndex(index: number) {
         return this.config.getDerivationPath ? this.config.getDerivationPath(index) : `44'/195'/${index}'/0/0`;
     }
@@ -283,8 +284,15 @@ export class LedgerWallet {
     }
 
     private async cleanUp() {
-        this.app = null as unknown as Trx;
-        await this.transport?.close();
-        this.transport = null as unknown as Transport;
+        const transport = this.transport;
+        this.app = null;
+        this.transport = null;
+        try {
+            await transport?.close();
+        } catch {
+            // The transport may already be gone (device unplugged, permission
+            // revoked). References are dropped above, so the next operation
+            // creates a fresh transport either way.
+        }
     }
 }

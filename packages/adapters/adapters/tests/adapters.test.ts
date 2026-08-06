@@ -22,4 +22,5 @@ test('this library should expose all adapters', () => {
     expect(Adapters.TronLinkEvmAdapter).not.toBeUndefined();
     expect(Adapters.TrustEvmAdapter).not.toBeUndefined();
     expect(Adapters.BinanceEvmAdapter).not.toBeUndefined();
+    expect(Adapters.TokenPocketEvmAdapter).not.toBeUndefined();
 });

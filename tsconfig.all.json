@@ -84,6 +84,9 @@
         },
         {
             "path": "./packages/adapters/evm/ledger/tsconfig.all.json"
+        },
+        {
+            "path": "./packages/adapters/evm/tokenpocket/tsconfig.all.json"
         }
     ]
 }

@@ -31,23 +31,20 @@ export const WalletSelectModal: FC<ModalProps> = function ({ visible, onClose })
         },
         [select, onClose]
     );
-    function show() {
-        setRender(true);
-        setFadeIn(true);
-    }
-    function close() {
-        setFadeIn(false);
-        // setRender(false)
-        setTimeout(() => setRender(false), 200);
-    }
-
+    // The unmount is delayed so the fade-out can play. Clearing the timer on cleanup matters:
+    // it runs both before the next effect and on unmount, so reopening within those 200ms
+    // cancels the pending `setRender(false)` instead of letting it hide the reopened modal.
     useEffect(
         function () {
             if (visible) {
-                show();
-            } else {
-                close();
+                setRender(true);
+                setFadeIn(true);
+                return;
             }
+
+            setFadeIn(false);
+            const timer = setTimeout(() => setRender(false), 200);
+            return () => clearTimeout(timer);
         },
         [visible]
     );
@@ -64,7 +61,7 @@ export const WalletSelectModal: FC<ModalProps> = function ({ visible, onClose })
             <div
                 data-testid="wallet-select-modal"
                 ref={nodeRef}
-                className={`adapter-modal ${fadeIn && 'adapter-modal-fade-in'}`}
+                className={`adapter-modal${fadeIn ? ' adapter-modal-fade-in' : ''}`}
             >
                 <div className="adapter-modal-wrapper">
                     <div className="adapter-modal-header">

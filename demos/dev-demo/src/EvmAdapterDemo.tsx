@@ -1,9 +1,9 @@
 import type { SelectChangeEvent } from '@mui/material';
 import { Alert, Box, Button, Input, MenuItem, Select, Stack, Typography, styled } from '@mui/material';
 import type { Adapter, Chain, LegacyTransaction, EIP1559Transaction, Transaction, Address, Quantity, Hex } from '@tronweb3/abstract-adapter-evm';
-import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
+import { WalletError, WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
-import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter } from '@tronweb3/tronwallet-adapters';
+import { TronLinkEvmAdapter, BinanceEvmAdapter, MetaMaskEvmAdapter, TrustEvmAdapter, OkxWalletEvmAdapter, TokenPocketEvmAdapter } from '@tronweb3/tronwallet-adapters';
 import { LedgerEvmAdapter } from '@tronweb3/tronwallet-adapter-ledger-evm';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
@@ -120,7 +120,10 @@ const SectionButton = styled(Button)({
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
-  const adapters = useMemo(() => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter(), new LedgerEvmAdapter()], []);
+  const adapters = useMemo(
+    () => [new BinanceEvmAdapter(), new MetaMaskEvmAdapter(), new TronLinkEvmAdapter(), new TrustEvmAdapter(), new OkxWalletEvmAdapter(), new TokenPocketEvmAdapter(), new LedgerEvmAdapter()],
+    []
+  );
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
@@ -161,6 +164,13 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
     });
     adapter.on('connect', async () => {
       log('connect: ', adapter.address);
+      if (adapter.address) {
+        adapter
+          // @ts-ignore
+          .network()
+          .then((res: any) => setChainId(res))
+          .catch(() => {});
+      }
     });
     adapter.on('accountsChanged', (accounts) => {
       log('accountsChanged:', accounts);
@@ -204,6 +214,13 @@ export const EvmAdapterDemo = memo(function EvmAdapterDemo() {
     const address = await adapter.connect();
     log('connected address:', address);
     setAccount(address);
+    if (address) {
+      adapter
+        // @ts-ignore
+        .network()
+        .then((res: any) => setChainId(res))
+        .catch(() => {});
+    }
   }
 
   return (
@@ -270,94 +287,100 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
   const [message, setMessage] = useState('Hello, Adapter');
   const [signedMessage, setSignedMessage] = useState('');
   const [receiver, setReceiver] = useState('');
+  const [signResult, setSignResult] = useState('');
 
   async function onSignTransaction() {
-    const cid = await adapter.network();
-
-    // ── Type 0x0: Legacy transaction ──────────────────────────────────────
-    // const tx: LegacyTransaction = {
-    //   ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-    //   from: adapter.address as Address,
-    //   to: receiver as Address,
-    //   value: ('0x' + Number(11).toString(16)) as Quantity,
-    //   chainId: cid as Quantity,
-    //   type: '0x0',
-    //   gasPrice: '0x3B9ACA00' as Quantity, // 1 Gwei
-    // };
-
-    // ── Type 0x1: EIP-2930 transaction (gasPrice + optional accessList) ───
-    // import EIP2930Transaction, AccessList from '@tronweb3/abstract-adapter-evm' when uncommenting
-    // const tx: EIP2930Transaction = {
-    //   ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-    //   from: adapter.address as Address,
-    //   to: receiver as Address,
-    //   value: ('0x' + Number(11).toString(16)) as Quantity,
-    //   chainId: cid as Quantity,
-    //   type: '0x1',
-    //   gasPrice: '0x3B9ACA00' as Quantity,
-    //   accessList: [], // e.g. [{ address: '0x...', storageKeys: ['0x...'] }]
-    // };
-
-    // ── Type 0x2: EIP-1559 transaction (maxFeePerGas + maxPriorityFeePerGas)
-    const tx: Transaction = {
-      from: adapter.address as Address,
-      to: receiver as Address,
-      value: ('0x' + Number(11).toString(16)) as Quantity,
-      chainId: cid as Quantity,
-      ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
-      type: '0x2',
-      maxFeePerGas: '0x3B9ACA00', // 1 Gwei
-      maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
-    };
-
-    await adapter.sendTransaction(tx);
+    try {
+      setSignResult('Sending transaction...');
+      const cid = await adapter.network();
+      const tx: Transaction = {
+        from: adapter.address as Address,
+        to: receiver as Address,
+        value: ('0x' + Number(11).toString(16)) as Quantity,
+        chainId: cid as Quantity,
+        ...(adapter.name === 'Trust Wallet' ? { data: '0x' as Hex } : {}),
+        // type: '0x2',
+        // maxFeePerGas: '0x3B9ACA00', // 1 Gwei
+        // maxPriorityFeePerGas: '0x77359400' as Quantity, // 2 Gwei
+      };
+      const hash = await adapter.sendTransaction(tx);
+      console.log('hash: ', hash);
+      setSignResult(`Transaction success!\nHash: ${hash}`);
+    } catch (e: any) {
+      console.log(e instanceof WalletError);
+      setSignResult(`Transaction error: ${e?.message || e}`);
+    }
   }
 
   const onSignMessage = useCallback(async () => {
-    const res = await adapter.signMessage({ message, address: adapter.address! });
-    setSignedMessage(res);
-    console.log('Sign string signature:', res);
+    try {
+      setSignResult('Signing message...');
+      const res = await adapter.signMessage({ message, address: adapter.address! });
+      setSignedMessage(res);
+      console.log('Sign string signature:', res);
+      setSignResult(`Sign Message success!\nSignature: ${res}`);
+    } catch (e: any) {
+      setSignResult(`Sign Message error: ${e?.message || e}`);
+    }
   }, [adapter, message]);
 
   const onVerifyMessage = useCallback(async () => {
-    // ethers.verifyMessage handles the EIP-191 prefix/hash and returns a
-    // standard EVM address, so EVM message/typedData/tx verification all use ethers.
-    const recovered = ethers.verifyMessage(message, signedMessage);
-    console.log('Signature is valid:', recovered.toLowerCase() === adapter.address!.toLowerCase());
+    try {
+      const recovered = ethers.verifyMessage(message, signedMessage);
+      const isMatch = recovered.toLowerCase() === adapter.address!.toLowerCase();
+      console.log('Signature is valid:', isMatch);
+      if (isMatch) {
+        setSignResult(`Verify Message success!\nRecovered address matches current account:\n${recovered}`);
+      } else {
+        setSignResult(`Verify Message failed!\nRecovered: ${recovered}\nExpected: ${adapter.address}`);
+      }
+    } catch (e: any) {
+      setSignResult(`Verify Message error: ${e?.message || e}`);
+    }
   }, [message, signedMessage, adapter]);
 
   const onSignTypedData = useCallback(async () => {
-    const cid = await adapter.network();
-    const typedData = {
-      types: {
-        EIP712Domain: [
-          { name: 'name', type: 'string' },
-          { name: 'version', type: 'string' },
-          { name: 'chainId', type: 'uint256' },
-          { name: 'verifyingContract', type: 'address' },
-        ],
-        Person: [
-          { name: 'name', type: 'string' },
-          { name: 'wallet', type: 'address' },
-        ],
-        Mail: [
-          { name: 'from', type: 'Person' },
-          { name: 'to', type: 'Person' },
-          { name: 'contents', type: 'string' },
-        ],
-      },
-      primaryType: 'Mail',
-      domain: { name: 'Ether Mail', version: '1', chainId: Number(cid), verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC' },
-      message: {
-        from: { name: 'Cow', wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826' },
-        to: { name: 'Bob', wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB' },
-        contents: 'Hello, Bob!你好""abc123……&*））《》',
-      },
-    };
-    const signature = await adapter.signTypedData({ address: adapter.address || '', typedData });
-    console.log('SignTypedData signature:', signature);
-    const isValid = await verifyEip712Signature({ Person: typedData.types.Person, Mail: typedData.types.Mail }, typedData.domain, typedData.message, signature, adapter.address || '');
-    console.log('SignTypedData isValid:', isValid);
+    try {
+      setSignResult('Signing typed data...');
+      const cid = await adapter.network();
+      const typedData = {
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' },
+          ],
+          Person: [
+            { name: 'name', type: 'string' },
+            { name: 'wallet', type: 'address' },
+          ],
+          Mail: [
+            { name: 'from', type: 'Person' },
+            { name: 'to', type: 'Person' },
+            { name: 'contents', type: 'string' },
+          ],
+        },
+        primaryType: 'Mail',
+        domain: { name: 'Ether Mail', version: '1', chainId: Number(cid), verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC' },
+        message: {
+          from: { name: 'Cow', wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826' },
+          to: { name: 'Bob', wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB' },
+          contents: 'Hello, Bob!你好""abc123……&*））《》',
+        },
+      };
+      const signature = await adapter.signTypedData({ address: adapter.address || '', typedData });
+      console.log('SignTypedData signature:', signature);
+      const isValid = await verifyEip712Signature({ Person: typedData.types.Person, Mail: typedData.types.Mail }, typedData.domain, typedData.message, signature, adapter.address || '');
+      console.log('SignTypedData isValid:', isValid);
+      if (isValid) {
+        setSignResult(`Sign Typed Data success!\nSignature: ${signature}\nVerification: Valid ✅`);
+      } else {
+        setSignResult(`Sign Typed Data success!\nSignature: ${signature}\nVerification: Invalid ❌ (Recovered signer mismatch)`);
+      }
+    } catch (e: any) {
+      setSignResult(`Sign Typed Data error: ${e?.message || e}`);
+    }
   }, [adapter]);
 
   return (
@@ -375,6 +398,23 @@ const SectionSign = memo(function SectionSign({ adapter, connected, supportsSend
       <SectionButton disabled={!connected || !receiver || !supportsSendTransaction} onClick={onSignTransaction}>
         Transfer
       </SectionButton>
+      {signResult && (
+        <Typography
+          sx={{
+            color: 'white',
+            fontSize: 12,
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+            background: 'rgba(0, 0, 0, 0.2)',
+            padding: '12px',
+            borderRadius: '10px',
+            marginTop: '10px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          {signResult}
+        </Typography>
+      )}
     </SectionCard>
   );
 });
@@ -447,45 +487,71 @@ const SectionLedgerSignTransaction = memo(function SectionLedgerSignTransaction(
 const SectionTriggerContract = function ({ adapter, connected, supportsSendTransaction }: { adapter: Adapter; connected: boolean; supportsSendTransaction: boolean }) {
   const [number, setNumber] = useState('0');
   const [contractAddress, setContractAddress] = useState('');
+  const defaultByteCode =
+    '0x608060405234801561001057600080fd5b506101c0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80632e64cec11461003b5780636057361d14610059575b600080fd5b610043610075565b60405161005091906100ae565b60405180910390f35b610073600480360381019061006e91906100fa565b61008b565b005b600060016000546100869190610156565b905090565b8060008190555050565b6000819050919050565b6100a881610095565b82525050565b60006020820190506100c3600083018461009f565b92915050565b600080fd5b6100d781610095565b81146100e257600080fd5b50565b6000813590506100f4816100ce565b92915050565b6000602082840312156101105761010f6100c9565b5b600061011e848285016100e5565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061016182610095565b915061016c83610095565b925082820190508082111561018457610183610127565b5b9291505056fea26469706673582212209410fe094761ba1df4dc51e0ffea2cfd9c83dba2f7a18f4c4812a9a67234f15664736f6c63430008120033';
+  const [deployData, setDeployData] = useState(defaultByteCode);
+  const [toAddressOption, setToAddressOption] = useState<'none' | 'zero'>('none');
+  const [contractResult, setContractResult] = useState('');
 
   async function deployContract() {
-    const byteCode =
-      '0x608060405234801561001057600080fd5b506101c0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80632e64cec11461003b5780636057361d14610059575b600080fd5b610043610075565b60405161005091906100ae565b60405180910390f35b610073600480360381019061006e91906100fa565b61008b565b005b600060016000546100869190610156565b905090565b8060008190555050565b6000819050919050565b6100a881610095565b82525050565b60006020820190506100c3600083018461009f565b92915050565b600080fd5b6100d781610095565b81146100e257600080fd5b50565b6000813590506100f4816100ce565b92915050565b6000602082840312156101105761010f6100c9565b5b600061011e848285016100e5565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061016182610095565b915061016c83610095565b925082820190508082111561018457610183610127565b5b9291505056fea26469706673582212209410fe094761ba1df4dc51e0ffea2cfd9c83dba2f7a18f4c4812a9a67234f15664736f6c63430008120033';
-    const provider1 = await adapter.getProvider();
-    if (!provider1) return;
-    const cid = await adapter.network();
-    const baseDeployTx: EIP1559Transaction = {
-      from: adapter.address as Address,
-      // TronLinkEvm requires an explicit zero address for contract deployment
-      ...(adapter.name === 'TronLinkEvm' ? { to: '0x0000000000000000000000000000000000000000' as Address } : {}),
-      data: byteCode as Hex,
-      chainId: cid as Quantity,
-    };
-    console.log(baseDeployTx);
-    const tx = await adapter.sendTransaction(baseDeployTx);
-    console.log('transaction hash:', tx);
+    try {
+      setContractResult('Deploying contract...');
+      const provider1 = await adapter.getProvider();
+      if (!provider1) {
+        setContractResult('Error: Provider not found');
+        return;
+      }
+      const cid = await adapter.network();
+      const baseDeployTx: EIP1559Transaction = {
+        from: adapter.address as Address,
+        ...(toAddressOption === 'zero' ? { to: '0x0000000000000000000000000000000000000000' as Address } : {}),
+        data: deployData as Hex,
+        chainId: cid as Quantity,
+      };
+      console.log(baseDeployTx);
+      const tx = await adapter.sendTransaction(baseDeployTx);
+      console.log('transaction hash:', tx);
+      setContractResult(`Deploy success!\nTransaction Hash: ${tx}`);
+    } catch (e: any) {
+      setContractResult(`Deploy error: ${e?.message || e}`);
+    }
   }
 
   async function triggerContract() {
-    const selector = `${keccak256(toUtf8Bytes('store(uint256)')).slice(0, 10)}`;
-    const param1 = Number(number).toString(16).padStart(64, '0');
-    const tx: LegacyTransaction = {
-      from: adapter.address as Address,
-      to: contractAddress as Address,
-      data: (selector + param1) as Hex,
-      gas: '0x19023' as Quantity,
-    };
-    const result = await adapter.sendTransaction(tx);
-    console.log('signedTransaction', result);
+    try {
+      setContractResult('Storing number...');
+      const selector = `${keccak256(toUtf8Bytes('store(uint256)')).slice(0, 10)}`;
+      const param1 = Number(number).toString(16).padStart(64, '0');
+      const tx: LegacyTransaction = {
+        from: adapter.address as Address,
+        to: contractAddress as Address,
+        data: (selector + param1) as Hex,
+        gas: '0x19023' as Quantity,
+      };
+      const result = await adapter.sendTransaction(tx);
+      console.log('signedTransaction', result);
+      setContractResult(`Store Number success!\nTransaction Hash: ${result}`);
+    } catch (e: any) {
+      setContractResult(`Store Number error: ${e?.message || e}`);
+    }
   }
 
   async function readContract() {
-    const provider1 = await adapter.getProvider();
-    if (!provider1) return;
-    const provider = new ethers.BrowserProvider(provider1);
-    const contract = new ethers.Contract(contractAddress, ['function retrieve() view returns (uint256)'], provider);
-    const result = await contract.retrieve();
-    console.log('read contract result:', result);
+    try {
+      setContractResult('Reading number...');
+      const provider1 = await adapter.getProvider();
+      if (!provider1) {
+        setContractResult('Error: Provider not found');
+        return;
+      }
+      const provider = new ethers.BrowserProvider(provider1);
+      const contract = new ethers.Contract(contractAddress, ['function retrieve() view returns (uint256)'], provider);
+      const result = await contract.retrieve();
+      console.log('read contract result:', result);
+      setContractResult(`Get Number success!\nValue: ${result}`);
+    } catch (e: any) {
+      setContractResult(`Get Number error: ${e?.message || e}`);
+    }
   }
 
   return (
@@ -493,6 +559,23 @@ const SectionTriggerContract = function ({ adapter, connected, supportsSendTrans
       <Typography variant="h6" fontWeight={700} color="white">
         Smart Contract
       </Typography>
+      <DarkInput placeholder="Deploy Data (bytecode)" disableUnderline value={deployData} onChange={(e) => setDeployData(e.target.value)} />
+      <Select
+        value={toAddressOption}
+        size="small"
+        onChange={(e) => setToAddressOption(e.target.value as 'none' | 'zero')}
+        sx={{
+          backgroundColor: 'rgba(20, 18, 118, 0.7)',
+          color: 'white',
+          borderRadius: '10px',
+          height: '46px',
+          '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+          '& .MuiSvgIcon-root': { color: 'white' },
+        }}
+      >
+        <MenuItem value="none">No 'to' address (Default)</MenuItem>
+        <MenuItem value="zero">Include 'to' address (0x0000...0000)</MenuItem>
+      </Select>
       <SectionButton disabled={!connected || !supportsSendTransaction} onClick={deployContract}>
         Deploy Contract
       </SectionButton>
@@ -504,6 +587,23 @@ const SectionTriggerContract = function ({ adapter, connected, supportsSendTrans
       <SectionButton disabled={!connected || !contractAddress || !supportsSendTransaction} onClick={readContract}>
         Get Number
       </SectionButton>
+      {contractResult && (
+        <Typography
+          sx={{
+            color: 'white',
+            fontSize: 12,
+            wordBreak: 'break-all',
+            whiteSpace: 'pre-wrap',
+            background: 'rgba(0, 0, 0, 0.2)',
+            padding: '12px',
+            borderRadius: '10px',
+            marginTop: '10px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          {contractResult}
+        </Typography>
+      )}
     </SectionCard>
   );
 };
@@ -537,6 +637,7 @@ const SectionSwitchChain = memo(function SectionSwitchChain({ adapter, connected
         <MenuItem value="0xc7">BitTorrent Chain Mainnet</MenuItem>
         <MenuItem value="0x405">BitTorrent Chain Donau</MenuItem>
         <MenuItem value="0xa4b1">Arbitrum One</MenuItem>
+        <MenuItem value="0x5aff">Oasis Sapphire Testnet</MenuItem>
         <MenuItem value="0x539">Localhost Test</MenuItem>
       </Select>
       <SectionButton disabled={!connected} onClick={() => adapter.switchChain(selectedChainId).catch((e) => console.error('switchChain error:', e))}>

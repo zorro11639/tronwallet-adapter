@@ -1,6 +1,6 @@
 {
     "name": "@tronweb3/tronwallet-adapter-trust-evm",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Wallet adapter for Trust Wallet on EVM-compatible chains.",
     "keywords": [
         "EVM",

@@ -15,6 +15,7 @@ const EVM_PKGS = [
     '@tronweb3/tronwallet-adapter-okxwallet-evm',
     '@tronweb3/tronwallet-adapter-trust-evm',
     '@tronweb3/tronwallet-adapter-ledger-evm',
+    '@tronweb3/tronwallet-adapter-tokenpocket-evm',
 ];
 const DIRS = [
     path.resolve(__dirname, '../packages/adapters'),

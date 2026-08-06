@@ -266,6 +266,9 @@ export abstract class Adapter<Name extends string = string>
     }
 
     protected getProviderPromise: Promise<EIP1193Provider | null> | null = null;
+    /** Whether the grace period below has already been spent once. */
+    protected hasRunInitialDetection = false;
+
     async getProvider(): Promise<EIP1193Provider | null> {
         if (typeof window === 'undefined') {
             return null;
@@ -275,7 +278,15 @@ export abstract class Adapter<Name extends string = string>
             return this.getProviderPromise;
         }
 
-        this.getProviderPromise = new Promise((resolve) => {
+        // The first run gives a wallet that is still initialising time to appear. Any later run
+        // only happens because that one failed, by which point the page has been alive for a
+        // while: a wallet that exists has injected itself and answers `eip6963:requestProvider`
+        // right away. Retrying with the full window would make every connect() attempt on a
+        // missing wallet wait it out again, so later runs just check once.
+        const graceMs = this.hasRunInitialDetection ? 0 : 3000;
+        this.hasRunInitialDetection = true;
+
+        const detection = new Promise<EIP1193Provider | null>((resolve) => {
             let handled = false;
             let interval: ReturnType<typeof setInterval> | null = null;
             let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -308,12 +319,41 @@ export abstract class Adapter<Name extends string = string>
                 resolve(provider);
             };
 
+            // Create every releasable resource before detection can succeed, so `cleanup()` is
+            // always complete. A wallet may answer `eip6963:requestProvider` synchronously, which
+            // resolves this promise while `dispatchEvent` is still on the stack -- timers created
+            // after that point would never be cleared, leaving a permanent 100ms poll and a
+            // spurious "Unable to detect provider" error for an adapter that did find its provider.
+            if (graceMs > 0) {
+                interval = setInterval(() => {
+                    const provider = this.getInjectedProvider();
+                    if (provider) {
+                        finish(provider);
+                    }
+                }, 100);
+            }
+
+            // With `graceMs` at 0 this still runs after the dispatch below and after any
+            // microtask, so a wallet announcing on either is caught before giving up.
+            timeout = setTimeout(() => {
+                const provider = this.getInjectedProvider();
+                if (provider) {
+                    finish(provider);
+                } else {
+                    if (graceMs > 0) {
+                        console.error(`[${this.name}]: Unable to detect provider.`);
+                    }
+                    finish(null);
+                }
+            }, graceMs);
+
             if (this.eip6963Info.support) {
                 eip6963Handler = (event: Event) => {
                     const customEvent = event as CustomEvent<{
                         info?: EIP6963ProviderInfo;
                         provider?: EIP1193Provider;
                     }>;
+
                     const announcedProvider = customEvent.detail?.provider;
 
                     if (!announcedProvider || !this.isEIP6963Provider(announcedProvider, customEvent.detail?.info)) {
@@ -329,29 +369,24 @@ export abstract class Adapter<Name extends string = string>
                 const injectedProvider = this.getInjectedProvider();
                 if (injectedProvider) {
                     finish(injectedProvider);
-                    return;
                 }
             }
-
-            interval = setInterval(() => {
-                const provider = this.getInjectedProvider();
-                if (provider) {
-                    finish(provider);
-                }
-            }, 100);
-
-            timeout = setTimeout(() => {
-                const provider = this.getInjectedProvider();
-                if (provider) {
-                    finish(provider);
-                } else {
-                    console.error(`[${this.name}]: Unable to detect provider.`);
-                    finish(null);
-                }
-            }, 3000);
         });
 
-        return this.getProviderPromise;
+        this.getProviderPromise = detection;
+
+        // Only a successful detection is worth caching. A wallet can appear after this run --
+        // an extension injecting late, the user enabling it, a mobile WebView still starting up --
+        // and keeping the failed result would make the adapter report "not found" for good.
+        // Clearing it here rather than inside `finish()` matters: the assignment above happens
+        // after the executor returns, so a synchronous resolve would otherwise be overwritten.
+        void detection.then((provider) => {
+            if (!provider && this.getProviderPromise === detection) {
+                this.getProviderPromise = null;
+            }
+        });
+
+        return detection;
     }
     protected listenEvents(provider: EIP1193Provider) {
         provider.on('connect', (connectInfo) => {

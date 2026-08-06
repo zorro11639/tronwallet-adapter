@@ -165,13 +165,20 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
     );
     const handleAccountChange = useCallback(
         function (address: string, preAddr?: string) {
-            setState((state) => ({ ...state, address }));
+            // Adapters report "no account" as an empty string, while this state uses `null`
+            // for it, so normalise before storing. The callback still gets the raw value.
+            setState((state) => ({ ...state, address: address || null, connected: !!state.adapter?.connected }));
             onAccountsChanged?.(address, preAddr);
         },
         [onAccountsChanged]
     );
     const handleDisconnect = useCallback(
         function () {
+            setState((state) => ({
+                ...state,
+                address: state.adapter?.address ?? null,
+                connected: !!state.adapter?.connected,
+            }));
             onDisconnect?.();
         },
         [onDisconnect]
@@ -220,7 +227,13 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
     // disconnect the previous when wallet changes
     useEffect(() => {
         return () => {
-            adapter?.disconnect();
+            // Cleanup cannot await, so the rejection has to be handled here or it surfaces as
+            // an unhandled one. The listeners are already off by this point, so a failure means
+            // the old adapter may still be connected with nothing watching it -- worth a warning
+            // even though there is nothing left to retry against.
+            adapter?.disconnect().catch((error) => {
+                console.warn(`[${adapter.name}]: Failed to disconnect the previous wallet.`, error);
+            });
         };
     }, [adapter]);
 

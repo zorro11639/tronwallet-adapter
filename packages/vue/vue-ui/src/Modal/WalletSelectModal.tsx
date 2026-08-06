@@ -52,7 +52,7 @@ export const WalletSelectModal = defineComponent({
             <VuePortal wrapperId={wrapperId}>
                 <div
                     data-testid="wallet-select-modal"
-                    class={`adapter-modal ${props.visible && 'adapter-modal-fade-in'}`}
+                    class={['adapter-modal', props.visible && 'adapter-modal-fade-in']}
                 >
                     <div class="adapter-modal-wrapper">
                         <div class="adapter-modal-header">

@@ -2,10 +2,11 @@ import { ref, computed, watch } from 'vue';
 const { TronLinkEvmAdapter } = window['@tronweb3/tronwallet-adapter-tronlink-evm'];
 const { MetaMaskEvmAdapter } = window['@tronweb3/tronwallet-adapter-metamask-evm'];
 const { OkxWalletEvmAdapter } = window['@tronweb3/tronwallet-adapter-okxwallet-evm'];
+const { TokenPocketEvmAdapter } = window['@tronweb3/tronwallet-adapter-tokenpocket-evm'];
 
 export default {
     setup() {
-        const options = [new TronLinkEvmAdapter(), new MetaMaskEvmAdapter(), new OkxWalletEvmAdapter()];
+        const options = [new TronLinkEvmAdapter(), new MetaMaskEvmAdapter(), new OkxWalletEvmAdapter(), new TokenPocketEvmAdapter()];
 
         const queryString = window.location.search || '';
         const params = new URLSearchParams(queryString);

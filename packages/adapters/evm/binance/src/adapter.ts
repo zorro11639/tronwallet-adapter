@@ -11,7 +11,15 @@ import {
 import { BINANCE_RDNS, getBinanceEvmProvider, openBinanceWithDeeplink, supportBinanceEvm } from './utils.js';
 
 export interface BinanceEvmAdapterOptions {
+    /**
+     * Set if open Binance Wallet app when in mobile device.
+     * Default is true.
+     */
     useDeeplink?: boolean;
+    /**
+     * Set if open Wallet's website when wallet is not installed.
+     * Default is true.
+     */
     openUrlWhenWalletNotFound?: boolean;
 }
 export const BinanceEvmAdapterName = 'Binance' as AdapterName<'Binance'>;

@@ -6,7 +6,7 @@ export const Collapse = defineComponent({
             type: Boolean,
             default: false,
         },
-        telePortId: { type: String, default: '' },
+        telePortId: { type: String, required: true },
         className: { type: String, default: '' },
         transition: { type: String, default: 'height 250ms ease-out' },
     },

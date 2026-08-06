@@ -18,6 +18,7 @@ import {
     WalletReadyState,
     WalletSignMessageError,
     WalletSignTransactionError,
+    WalletSwitchChainError,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type { AdapterName, Network, SignedTransaction, Transaction } from '@tronweb3/tronwallet-abstract-adapter';
 import { Scope } from './types.js';
@@ -53,12 +54,22 @@ export class MetaMaskAdapter extends AddonAdapter {
     private _readyState: WalletReadyState = WalletReadyState.NotFound;
     private _state: AdapterState = AdapterState.Disconnect;
     private _connecting = false;
-    private _switchingChain = false;
+    /** In-flight chain switch, used as the mutex for concurrent `switchChain()` calls. */
+    private _switchChainPromise: Promise<void> | null = null;
+    /** Target scope of the in-flight switch, so parallel callers can tell same from conflicting. */
+    private _switchingToScope: Scope | undefined;
     private _address: string | null = null;
     private _scope: Scope | undefined;
     private _selectedAddressOnPageLoadPromise: Promise<string | undefined> | undefined;
     private _checkWalletPromise: Promise<void> | undefined;
     private _removeAccountsChangedListener: (() => void) | undefined;
+    private _disposeInitialAddressListener: (() => void) | undefined;
+    /**
+     * Bumped on every disconnect. Async work captures it before awaiting and re-checks
+     * afterwards, so a callback already in flight cannot apply its result to a connection
+     * that has since been torn down.
+     */
+    private _connectionGeneration = 0;
     private _transport: Transport;
     private _client: MultichainApiClient;
 
@@ -126,6 +137,9 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @returns A promise that resolves when connected.
      */
     async connect(): Promise<void> {
+        // Captured before every await, `_beforeConnect()` included, so a disconnect() raised at
+        // any point of the attempt is noticed once the wallet finally answers.
+        const generation = this._connectionGeneration;
         try {
             if (!(await this._beforeConnect())) return;
             this._connecting = true;
@@ -135,6 +149,13 @@ export class MetaMaskAdapter extends AddonAdapter {
                 // Otherwise create a session on Mainnet by default
                 if (!this.address) {
                     await this.createSession(Scope.MAINNET);
+                }
+                if (this._connectionGeneration !== generation) {
+                    // The caller disconnected midway. Drop anything the awaited steps managed
+                    // to set and stop short of reporting a connection.
+                    this.setAddress(null);
+                    this.setScope(undefined, false);
+                    return;
                 }
                 // In case user didn't select any Tron scope/account, return
                 if (!this.address) {
@@ -160,6 +181,13 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @returns A promise that resolves when disconnected.
      */
     async disconnect(): Promise<void> {
+        // Bumped before the state check on purpose. While connect() is waiting on the wallet
+        // the state is still Disconnect, and that attempt has to be cancelled too -- otherwise
+        // approving the prompt afterwards would connect a wallet the caller already dropped.
+        // It also invalidates callbacks that are mid-await, so they cannot restore
+        // address/scope after the teardown below.
+        this._connectionGeneration++;
+
         if (this.state !== AdapterState.Connected) {
             return;
         }
@@ -175,15 +203,29 @@ export class MetaMaskAdapter extends AddonAdapter {
     }
 
     /**
+     * Asserts the adapter is fully connected before a signing method reaches the wallet.
+     *
+     * State, scope and address are checked together on purpose. `updateSession()` clears the
+     * address without clearing the scope when a session has no usable account, and an
+     * aborted `connect()` leaves the state disconnected, so checking the scope alone lets a
+     * null address through to the SDK.
+     * @returns The scope and address to sign with.
+     */
+    private requireConnected(): { scope: Scope; address: TronAddress } {
+        if (this._state !== AdapterState.Connected || !this._scope || !this._address) {
+            throw new WalletDisconnectedError('Wallet not connected');
+        }
+        return { scope: this._scope, address: this._address as TronAddress };
+    }
+
+    /**
      * Signs a transaction using the MetaMask wallet.
      * @param transaction - The transaction to sign.
      * @returns A promise that resolves to the signed transaction.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signTransaction(transaction: Transaction): Promise<SignedTransaction> {
-        if (!this._scope) {
-            throw new WalletDisconnectedError('Wallet not connected');
-        }
+        const { scope, address } = this.requireConnected();
         try {
             const contractType = transaction.raw_data.contract[0]?.type;
             if (!contractType) {
@@ -191,11 +233,11 @@ export class MetaMaskAdapter extends AddonAdapter {
             }
 
             const result = await this._client.invokeMethod({
-                scope: this._scope,
+                scope,
                 request: {
                     method: 'signTransaction',
                     params: {
-                        address: this._address as TronAddress,
+                        address,
                         transaction: {
                             rawDataHex: transaction.raw_data_hex,
                             type: contractType,
@@ -226,16 +268,14 @@ export class MetaMaskAdapter extends AddonAdapter {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signMessage(message: string): Promise<string> {
-        if (!this._scope) {
-            throw new WalletDisconnectedError('Wallet not connected');
-        }
+        const { scope, address } = this.requireConnected();
         try {
             const base64Message = Buffer.from(message).toString('base64');
             const result = await this._client.invokeMethod({
-                scope: this._scope,
+                scope,
                 request: {
                     method: 'signMessage',
-                    params: { message: base64Message, address: this._address as TronAddress },
+                    params: { message: base64Message, address },
                 },
             });
             return result.signature;
@@ -252,26 +292,47 @@ export class MetaMaskAdapter extends AddonAdapter {
 
     /**
      * Switches the chain for the MetaMask wallet.
-     * During the initial connection process by TronWallet, this method can be called multiple times in parallel.
-     * And if we call the createSession method multiple times in parallel, it fails.
-     * That's why we added a _switchingChain flag to avoid multiple simultaneous calls.
+     *
+     * During the initial connection process by TronWallet, this method can be called multiple
+     * times in parallel, and calling createSession() concurrently fails. Parallel calls for the
+     * same chain therefore share the in-flight switch and settle with its result, so a redundant
+     * caller observes the real outcome instead of a silent no-op. A call for a different chain
+     * while one is in flight is rejected.
      * @param chainId - The chain ID to switch to.
      */
     async switchChain(chainId: string): Promise<void> {
-        if (this._switchingChain) {
-            return;
-        }
-        this._switchingChain = true;
         if (!this._scope) {
-            this._switchingChain = false;
             throw new WalletDisconnectedError('Wallet not connected');
         }
-
         const newScope = chainIdToScope(chainId);
+
+        if (this._switchChainPromise) {
+            if (this._switchingToScope === newScope) {
+                return this._switchChainPromise;
+            }
+            throw new WalletSwitchChainError('Already switching to a different chain');
+        }
+
+        this._switchingToScope = newScope;
+        // The promise is the mutex; `finally` releases it on both success and failure, so a
+        // throw from any step cannot leave later calls permanently blocked.
+        this._switchChainPromise = this._doSwitchChain(chainId, newScope).finally(() => {
+            this._switchChainPromise = null;
+            this._switchingToScope = undefined;
+        });
+        return this._switchChainPromise;
+    }
+
+    /**
+     * Performs the chain switch itself. Callers go through {@link switchChain}, which
+     * serialises concurrent calls.
+     * @param chainId - The chain ID to switch to, used for the chainChanged event.
+     * @param newScope - The scope resolved from `chainId`.
+     */
+    private async _doSwitchChain(chainId: string, newScope: Scope): Promise<void> {
         if (newScope === this._scope) {
             // Still emit event to reconciliate divergent states between dapp and adapter
             this.emit('chainChanged', { chainId });
-            this._switchingChain = false;
             return;
         }
 
@@ -283,13 +344,11 @@ export class MetaMaskAdapter extends AddonAdapter {
             session = await this._client.getSession();
             isChainInSession = session?.sessionScopes[newScope]?.accounts?.includes(`${newScope}:${this._address}`);
             if (!isChainInSession) {
-                this._switchingChain = false;
-                throw new WalletConnectionError('Failed to switch chain');
+                throw new WalletSwitchChainError('Failed to switch chain');
             }
         }
 
         this.setScope(newScope);
-        this._switchingChain = false;
     }
 
     /**
@@ -319,26 +378,62 @@ export class MetaMaskAdapter extends AddonAdapter {
     }
 
     /**
+     * Subscribes to accountChanged notifications and waits for the first one carrying an
+     * address, giving up after `timeoutMs`.
+     *
+     * The subscription starts immediately so notifications arriving during any subsequent
+     * awaited work are not missed. `dispose()` is idempotent and tears down both the
+     * subscription and the timer; it also settles the promise with `undefined`, so callers
+     * awaiting it can never hang. Call it on every path, including errors.
+     * @param timeoutMs - How long to wait for a notification before giving up.
+     */
+    private waitForSelectedAddress(timeoutMs = 2000): {
+        promise: Promise<string | undefined>;
+        dispose: () => void;
+    } {
+        let dispose!: () => void;
+
+        const promise = new Promise<string | undefined>((resolve) => {
+            let removeNotification: (() => void) | undefined;
+            let timer: ReturnType<typeof setTimeout> | undefined;
+
+            const settle = (address?: string) => {
+                if (timer !== undefined) {
+                    clearTimeout(timer);
+                    timer = undefined;
+                }
+                removeNotification?.();
+                removeNotification = undefined;
+                resolve(address);
+            };
+
+            removeNotification = this._client.onNotification((data: any) => {
+                if (!isAccountChangedEvent(data)) {
+                    return;
+                }
+                const address = data?.params?.notification?.params?.[0];
+                if (address) {
+                    settle(address);
+                }
+            });
+            timer = setTimeout(() => settle(undefined), timeoutMs);
+
+            dispose = () => settle(undefined);
+        });
+
+        return { promise, dispose };
+    }
+
+    /**
      * Listen for up to 2 seconds to the accountsChanged event emitted on page load.
      * @returns If any, the initial selected address.
      */
     protected getInitialSelectedAddress(): Promise<string | undefined> {
-        return new Promise((resolve) => {
-            const timeout = setTimeout(() => {
-                resolve(undefined);
-            }, 2000);
-            const handleAccountChange = (data: any) => {
-                if (isAccountChangedEvent(data)) {
-                    const address = data?.params?.notification?.params?.[0];
-                    if (address) {
-                        clearTimeout(timeout);
-                        removeNotification?.();
-                        resolve(address);
-                    }
-                }
-            };
-
-            const removeNotification = this._client.onNotification(handleAccountChange);
+        const { promise, dispose } = this.waitForSelectedAddress();
+        // Tracked so disconnecting inside the 2s window tears the subscription down early.
+        this._disposeInitialAddressListener = dispose;
+        return promise.finally(() => {
+            this._disposeInitialAddressListener = undefined;
         });
     }
 
@@ -394,12 +489,16 @@ export class MetaMaskAdapter extends AddonAdapter {
      */
     private async tryRestoringSession(): Promise<void> {
         try {
+            const generation = this._connectionGeneration;
             const existingSession = await this._client.getSession();
             if (!existingSession) {
                 return;
             }
             // Get the address from accountChanged emitted on page load, if any
             const address = await this._selectedAddressOnPageLoadPromise;
+            if (this._connectionGeneration !== generation) {
+                return;
+            }
             const scope = this.restoreScope();
             this.updateSession(existingSession, scope, address);
         } catch (error) {
@@ -413,46 +512,36 @@ export class MetaMaskAdapter extends AddonAdapter {
      * @param addresses - Optional list of addresses to include in the session.
      */
     private async createSession(scope: Scope, addresses?: string[]): Promise<void> {
-        let resolvePromise: (value: string) => void;
-        const waitForAccountChangedPromise = new Promise<string>((resolve) => {
-            resolvePromise = resolve;
-        });
+        // If there are multiple accounts, wait for the first accountChanged event to know
+        // which one to use. Subscribe before createSession() so a notification arriving
+        // during the call is not missed.
+        const { promise: waitForAccountChanged, dispose } = this.waitForSelectedAddress();
+        const generation = this._connectionGeneration;
 
-        // If there are multiple accounts, wait for the first accountChanged event to know which one to use
-        const handleAccountChange = (data: any) => {
-            if (!isAccountChangedEvent(data)) {
+        try {
+            const session = await this._client.createSession({
+                optionalScopes: {
+                    [scope]: {
+                        accounts: (addresses ? addresses.map((addr) => `${scope}:${addr}`) : []) as CaipAccountId[],
+                        methods: [],
+                        notifications: [],
+                    },
+                },
+                sessionProperties: {
+                    tron_accountChanged_notifications: true,
+                },
+            });
+
+            // Wait for the accountChanged event to know which one to use, timeout after 2000ms
+            const selectedAddress = await waitForAccountChanged;
+            if (this._connectionGeneration !== generation) {
                 return;
             }
-            const selectedAddress = data?.params?.notification?.params?.[0];
 
-            if (selectedAddress) {
-                removeNotification();
-                resolvePromise(selectedAddress);
-            }
-        };
-
-        const removeNotification = this._client.onNotification(handleAccountChange);
-
-        const session = await this._client.createSession({
-            optionalScopes: {
-                [scope]: {
-                    accounts: (addresses ? addresses.map((addr) => `${scope}:${addr}`) : []) as CaipAccountId[],
-                    methods: [],
-                    notifications: [],
-                },
-            },
-            sessionProperties: {
-                tron_accountChanged_notifications: true,
-            },
-        });
-
-        // Wait for the accountChanged event to know which one to use, timeout after 2000ms
-        const selectedAddress = await Promise.race([
-            waitForAccountChangedPromise,
-            new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), 2000)),
-        ]);
-
-        this.updateSession(session, undefined, selectedAddress);
+            this.updateSession(session, undefined, selectedAddress);
+        } finally {
+            dispose();
+        }
     }
 
     /**
@@ -519,6 +608,8 @@ export class MetaMaskAdapter extends AddonAdapter {
     private stopListeners() {
         this._removeAccountsChangedListener?.();
         this._removeAccountsChangedListener = undefined;
+        this._disposeInitialAddressListener?.();
+        this._disposeInitialAddressListener = undefined;
     }
 
     /**
@@ -533,8 +624,9 @@ export class MetaMaskAdapter extends AddonAdapter {
                 await this.disconnect();
                 return;
             }
+            const generation = this._connectionGeneration;
             const session = await this._client.getSession();
-            if (!session) {
+            if (!session || this._connectionGeneration !== generation) {
                 return;
             }
             this.updateSession(session, this._scope, newAddressSelected);

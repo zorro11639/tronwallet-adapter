@@ -218,6 +218,22 @@ describe('public properties should work fine', () => {
         expect(_getAddress).toHaveBeenCalledTimes(2);
         expect(_getAddress).toHaveBeenLastCalledWith("44'/195'/1'/0/0");
     });
+    test('getAccounts() should still work after a failed transport creation', async () => {
+        const _getAddress = vi.fn(() => {
+            return {
+                address: 'address',
+                publicKey: 'publicKey',
+            };
+        });
+        addPropertyToTrx('_getAddress', _getAddress);
+        (TransportWebHID.create as any).mockRejectedValueOnce(new Error('HID permission denied'));
+        const wallet = new LedgerWallet();
+        await expect(wallet.getAccounts(0, 1)).rejects.toThrow('HID permission denied');
+        // The failed attempt must not keep the device busy: later operations used
+        // to wait forever on a state flag that was never reset.
+        const accounts = await wallet.getAccounts(0, 1);
+        expect(accounts).toHaveLength(1);
+    });
     test('getAddress() should work fine', async () => {
         const _getAddress = vi.fn(() => {
             return {
