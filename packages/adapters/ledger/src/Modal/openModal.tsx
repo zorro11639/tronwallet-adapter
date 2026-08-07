@@ -10,7 +10,7 @@ import { modalStyleSheetContent } from './style.js';
 function prepareDomNode() {
     const div = document.createElement('div');
     const style = document.createElement('style');
-    style.innerHTML = modalStyleSheetContent;
+    style.textContent = modalStyleSheetContent;
     document.body.append(style);
     document.body.append(div);
     function onClose() {

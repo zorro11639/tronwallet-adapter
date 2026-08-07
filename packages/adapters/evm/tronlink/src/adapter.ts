@@ -25,6 +25,10 @@ declare global {
 export const TronLinkEvmAdapterName = 'TronLink' as AdapterName<'TronLink'>;
 
 export interface TronLinkEvmAdapterOptions {
+    /**
+     * Set if open Wallet's website when wallet is not installed.
+     * Default is true.
+     */
     openUrlWhenWalletNotFound?: boolean;
 }
 

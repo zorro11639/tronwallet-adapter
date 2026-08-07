@@ -1,17 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import legacy from '@vitejs/plugin-legacy';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     mode: 'development',
-    plugins: [
-        react(),
-        legacy({
-            targets: ['>0.3%', 'defaults'],
-        }),
-    ],
+    plugins: [react()],
     define: {
         global: 'window',
     },
@@ -19,6 +12,9 @@ export default defineConfig({
         // Set false to speed up build process, should change to `true` for production mode.
         minify: false,
         cssMinify: false,
+        sourcemap: false,
+        cssCodeSplit: false,
+        target: 'esnext',
     },
     server: {
         host: '0.0.0.0',

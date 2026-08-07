@@ -102,6 +102,161 @@ describe('#AbstractAdapter', () => {
 
         await expect(detectAdapter.getProvider()).resolves.toBe(injectedProvider);
     });
+    test('#getProvider() should leave no timer behind when a wallet announces synchronously', async () => {
+        const detectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        const cleanup = installEIP6963Provider(detectedProvider);
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+
+            // Detection already succeeded, so neither the poll nor the timeout may survive.
+            expect(vi.getTimerCount()).toBe(0);
+
+            await vi.advanceTimersByTimeAsync(3001);
+            expect(consoleError).not.toHaveBeenCalled();
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+            cleanup();
+        }
+    });
+    test('#getProvider() should leave no timer behind when polling finds the injected provider', async () => {
+        const injectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(injectedProvider);
+            const pending = detectAdapter.getProvider();
+            // No wallet announces, so the 100ms poll is what finds the provider.
+            await vi.advanceTimersByTimeAsync(100);
+
+            await expect(pending).resolves.toBe(injectedProvider);
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+    test('#getProvider() should leave no timer behind without EIP-6963 support', async () => {
+        const injectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(injectedProvider);
+            detectAdapter.eip6963Info.support = false;
+
+            await expect(detectAdapter.getProvider()).resolves.toBe(injectedProvider);
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+    test('#getProvider() should retry after a failed detection', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        let cleanup: (() => void) | undefined;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3001);
+            await expect(first).resolves.toBeNull();
+
+            // The wallet appears afterwards: a late extension, the user enabling it, a mobile
+            // WebView still starting up. The adapter must not stay stuck on the failed result.
+            const lateProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+            cleanup = installEIP6963Provider(lateProvider);
+
+            await expect(detectAdapter.getProvider()).resolves.toBe(lateProvider);
+        } finally {
+            // Registered on `window`, so it has to come off even when an assertion fails,
+            // otherwise the announcer leaks into the tests that follow.
+            cleanup?.();
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
+    test('#getProvider() should not wait out the grace period again on a retry', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3000);
+            await expect(first).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledTimes(1);
+
+            // The wallet is still missing. A retry must settle immediately rather than making
+            // the caller sit through another 3s window, and must not log again.
+            const retry = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(0);
+            await expect(retry).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledTimes(1);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
+    test('#getProvider() should still find a provider on an immediate retry', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        let cleanup: (() => void) | undefined;
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const first = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3000);
+            await expect(first).resolves.toBeNull();
+
+            const lateProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+            cleanup = installEIP6963Provider(lateProvider);
+
+            // No grace period on the retry, but a synchronous announce still lands.
+            const retry = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(0);
+            await expect(retry).resolves.toBe(lateProvider);
+        } finally {
+            cleanup?.();
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
+    test('#getProvider() should keep caching a successful detection', async () => {
+        const detectedProvider = { request: vi.fn() } as unknown as EIP1193Provider;
+        const cleanup = installEIP6963Provider(detectedProvider);
+
+        try {
+            const detectAdapter = new DetectAdapter();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+
+            // The successful result stays cached, so a second call answers from it.
+            expect((detectAdapter as unknown as { getProviderPromise: unknown }).getProviderPromise).not.toBeNull();
+            await expect(detectAdapter.getProvider()).resolves.toBe(detectedProvider);
+        } finally {
+            cleanup();
+        }
+    });
+    test('#getProvider() should still report an undetected provider after the timeout', async () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.useFakeTimers();
+
+        try {
+            const detectAdapter = new DetectAdapter(null);
+            const pending = detectAdapter.getProvider();
+            await vi.advanceTimersByTimeAsync(3001);
+
+            await expect(pending).resolves.toBeNull();
+            expect(consoleError).toHaveBeenCalledWith('[Detect]: Unable to detect provider.');
+            expect(vi.getTimerCount()).toBe(0);
+        } finally {
+            vi.useRealTimers();
+            consoleError.mockRestore();
+        }
+    });
     test('#autoConnect() should swallow eth_accounts errors and reset address', async () => {
         provider.request = vi.fn(() => Promise.reject(new Error('eth_accounts failed')));
 

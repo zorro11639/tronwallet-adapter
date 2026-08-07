@@ -68,6 +68,9 @@
             "path": "../evm/ledger/tsconfig.all.json"
         },
         {
+            "path": "../evm/tokenpocket/tsconfig.all.json"
+        },
+        {
             "path": "./tsconfig.cjs.json"
         },
         {

@@ -1,11 +1,15 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { OkxWalletEvmAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
 import { MetaMaskEvmAdapter } from '@tronweb3/tronwallet-adapter-metamask-evm';
+import { TokenPocketEvmAdapter } from '@tronweb3/tronwallet-adapter-tokenpocket-evm';
 import type { Adapter } from '@tronweb3/abstract-adapter-evm';
 import { Button } from '@tronweb3/tronwallet-adapter-react-ui';
 
 export function EvmDemo() {
-    const adapters = useMemo(() => [new OkxWalletEvmAdapter(), new MetaMaskEvmAdapter()], []);
+    const adapters = useMemo(
+        () => [new OkxWalletEvmAdapter(), new MetaMaskEvmAdapter(), new TokenPocketEvmAdapter()],
+        []
+    );
     const [selectedName, setSelectedName] = useState('OKX Wallet');
     const adapter = useMemo(
         () => adapters.find((a) => a.name === selectedName) || adapters[0],

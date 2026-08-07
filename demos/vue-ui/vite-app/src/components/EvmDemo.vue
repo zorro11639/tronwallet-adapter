@@ -2,10 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { OkxWalletEvmAdapter } from '@tronweb3/tronwallet-adapter-okxwallet-evm';
 import { MetaMaskEvmAdapter } from '@tronweb3/tronwallet-adapter-metamask-evm';
+import { TokenPocketEvmAdapter } from '@tronweb3/tronwallet-adapter-tokenpocket-evm';
 import type { Adapter } from '@tronweb3/abstract-adapter-evm';
 import { ElButton, ElOption, ElSelect } from 'element-plus';
 
-const adapters: Adapter[] = [new OkxWalletEvmAdapter(), new MetaMaskEvmAdapter()];
+const adapters: Adapter[] = [new OkxWalletEvmAdapter(), new MetaMaskEvmAdapter(), new TokenPocketEvmAdapter()];
 
 const selectedIndex = ref(0);
 const connected = ref(false);
@@ -81,7 +82,7 @@ onUnmounted(() => {
 
 <template>
     <div class="evm-demo">
-        <h2>EVM Adapter Demo (OKXWallet + MetaMask)</h2>
+        <h2>EVM Adapter Demo (OKXWallet + MetaMask + TokenPocket)</h2>
         <p class="evm-row">
             <span>Select EVM Adapter:</span>
             <ElSelect v-model="selectedIndex" size="default" class="evm-select" @change="onAdapterChange">
