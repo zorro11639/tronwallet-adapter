@@ -50,6 +50,9 @@
             "path": "../backpack/tsconfig.all.json"
         },
         {
+            "path": "../safepal/tsconfig.all.json"
+        },
+        {
             "path": "../evm/metamask/tsconfig.all.json"
         },
         {
