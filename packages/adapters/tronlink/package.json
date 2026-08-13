@@ -1,6 +1,6 @@
 {
     "name": "@tronweb3/tronwallet-adapter-tronlink",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Wallet adapter for TronLink Wallet extension and TronLink app.",
     "keywords": [
         "TRON",

@@ -240,6 +240,10 @@ export class OkxWalletAdapter extends AddonAdapter {
     }
 
     private messageHandler = async (e: TronLinkMessageEvent) => {
+        if (e.origin !== window.location.origin) {
+            return;
+        }
+
         const message = e.data?.message;
         if (!message) {
             return;
@@ -248,7 +252,6 @@ export class OkxWalletAdapter extends AddonAdapter {
             setTimeout(async () => {
                 const preAddr = this.address || '';
                 if ((this._wallet as TronLinkWallet)?.ready) {
-                    // Gate the connect transition with the security check.
                     try {
                         await this.checkSecurity();
                     } catch {
@@ -297,7 +300,6 @@ export class OkxWalletAdapter extends AddonAdapter {
             this.emit('disconnect');
         }
     };
-
     private checkIfOpenOkxWallet() {
         if (this.config.openAppWithDeeplink === false) {
             return;
@@ -348,8 +350,8 @@ export class OkxWalletAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state;
+        let address;
         if (supportOkxWallet()) {
             this._wallet = window.okxwallet!.tronLink;
             this._listenEvent();

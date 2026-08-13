@@ -240,6 +240,9 @@ export class BybitWalletAdapter extends AddonAdapter {
     }
 
     private messageHandler = async (e: TronLinkMessageEvent) => {
+        if (e.origin !== window.location.origin) {
+            return;
+        }
         const message = e.data?.message;
         if (!message) {
             return;
@@ -348,8 +351,8 @@ export class BybitWalletAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state;
+        let address;
         if (supportBybitWallet()) {
             this._wallet = window.bybitWallet!.tronLink;
             this._listenEvent();
