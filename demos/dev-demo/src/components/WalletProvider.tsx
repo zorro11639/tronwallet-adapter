@@ -84,6 +84,22 @@ export default function WalletProvider({ children }: PropsWithChildren) {
     chainId: '',
   });
 
+  // Not every adapter exposes `network()`; those that do resolve it asynchronously, so the chainId
+  // always lands a bit after `connected` flips to true.
+  const refreshChainId = useCallback((target: Adapter | undefined) => {
+    (target as unknown as Adapters.TronLinkAdapter | undefined)
+      ?.network?.()
+      .then((network) => {
+        setConnectionState((preState) => ({
+          ...preState,
+          chainId: network.chainId,
+        }));
+      })
+      .catch((e: unknown) => {
+        console.error('[DevDemo] Failed to get network info', e);
+      });
+  }, []);
+
   function onReadyStateChanged(readyState: WalletReadyState) {
     setConnectionState((preState) => ({
       ...preState,
@@ -99,12 +115,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       connected: true,
       address: adapter?.address || '',
     }));
-    (adapter as unknown as Adapters.TronLinkAdapter)?.network?.().then((network) => {
-      setConnectionState((preState) => ({
-        ...preState,
-        chainId: network.chainId,
-      }));
-    });
+    refreshChainId(adapter);
   }
 
   function onAccountsChanged(account: string) {
@@ -112,6 +123,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       ...preState,
       address: account,
     }));
+    if (account) refreshChainId(adapter);
   }
 
   function onDisconnect() {
@@ -120,6 +132,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       ...preState,
       connected: false,
       address: '',
+      chainId: '',
     }));
   }
   function onChainChanged(chainData: unknown) {
@@ -135,6 +148,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       connecting: adapter?.connecting || false,
       address: adapter?.address || '',
       readyState: adapter?.readyState || WalletReadyState.NotFound,
+      chainId: '',
     }));
 
     if (adapter) {
@@ -144,12 +158,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       adapter.on('disconnect', onDisconnect);
       adapter.on('chainChanged', onChainChanged);
       if (adapter?.connected) {
-        (adapter as unknown as Adapters.TronLinkAdapter)?.network?.().then((network) => {
-          setConnectionState((preState) => ({
-            ...preState,
-            chainId: network.chainId,
-          }));
-        });
+        refreshChainId(adapter);
       }
     }
 
@@ -177,6 +186,9 @@ export default function WalletProvider({ children }: PropsWithChildren) {
         connecting: false,
         address: adapter?.address || '',
       }));
+      if (adapter?.connected) {
+        refreshChainId(adapter);
+      }
     } catch (e: unknown) {
       console.error('Connect Error', e);
       // Close QR modal on error (only for Binance)
