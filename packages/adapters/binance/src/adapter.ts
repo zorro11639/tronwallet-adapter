@@ -304,12 +304,19 @@ export class BinanceWalletAdapter extends AddonAdapter {
             await this.checkSecurity();
             try {
                 const { address } = await this._provider.getAccount();
+                // A resolved getAccount() with no address is not a connection. Flipping the
+                // state to Connected here would leave `connected === true` with a null
+                // address, and every later signMessage/signTransaction would pass the
+                // guard only to fail inside the provider.
+                if (!address) {
+                    throw new WalletConnectionError('[BinanceWalletAdapter] Wallet returned an empty address.');
+                }
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
                 this.emit('connect', address);
                 this._listenEvent();
             } catch (error: any) {
-                throw new WalletConnectionError(error?.message, error);
+                throw error instanceof WalletError ? error : new WalletConnectionError(error?.message, error);
             }
         } catch (error: any) {
             const err = error instanceof WalletError ? error : new WalletConnectionError(error?.message, error);
@@ -436,10 +443,31 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
     }
 
+    /**
+     * Keep address and state in step.
+     *
+     * `connected` is derived from `state === AdapterState.Connected`, so updating only
+     * `_address` lets the two drift apart permanently: after the wallet reports an
+     * empty account list the adapter would hold no address while still claiming to be
+     * connected. An empty list also has to normalize to `null` rather than the
+     * `undefined` that `address[0]` yields.
+     */
     private _onAccountsChanged = (address: string[] | string) => {
         const preAddr = this.address || '';
-        this.setAddress(Array.isArray(address) ? address[0] : address);
-        this.emit('accountsChanged', this.address || '', preAddr);
+        const nextAddr = (Array.isArray(address) ? address[0] : address) || null;
+
+        this.setAddress(nextAddr);
+        this.setState(nextAddr ? AdapterState.Connected : AdapterState.Disconnect);
+
+        const curAddr = this.address || '';
+        if (curAddr !== preAddr) {
+            this.emit('accountsChanged', curAddr, preAddr);
+        }
+        if (!preAddr && curAddr) {
+            this.emit('connect', curAddr);
+        } else if (preAddr && !curAddr) {
+            this.emit('disconnect');
+        }
     };
     private _listenEvent() {
         this._stopListenEvent();
@@ -483,20 +511,18 @@ export class BinanceWalletAdapter extends AddonAdapter {
     }
 
     private _updateProvider = () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
 
         if (window.binancew3w?.tron) {
             this._provider = window.binancew3w.tron;
-            address = null; // Will be set when connected
             state = AdapterState.Disconnect;
         } else {
             this._provider = null;
-            address = null;
             state = AdapterState.NotFound;
         }
 
-        this.setAddress(address);
+        // The address is only known once connected.
+        this.setAddress(null);
         this.setState(state);
     };
 
