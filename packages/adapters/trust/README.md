@@ -46,6 +46,8 @@ interface TrustAdapterConfig {
     /**
      * Timeout in millisecond for checking if Trust is supported.
      * Default is 2 * 1000ms
+     * Must be a finite number between 0 and 600000 (10 minutes);
+     * anything else throws at construction.
      */
     checkTimeout?: number;
 

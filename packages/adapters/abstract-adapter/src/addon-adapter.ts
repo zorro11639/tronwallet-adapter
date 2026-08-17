@@ -2,9 +2,9 @@ import type { BaseAdapterConfig } from './adapter.js';
 import { Adapter } from './adapter.js';
 import { WalletNotFoundError } from './errors.js';
 import type { SecurityOptions } from './security.js';
-import { defaultSecurityOptions, fetchJsonWithCache } from './security.js';
+import { defaultSecurityOptions, fetchJsonWithCache, validateSecurityOptions } from './security.js';
 import { WalletReadyState } from './types.js';
-import { isInBrowser } from './utils.js';
+import { isInBrowser, validateCheckTimeout } from './utils.js';
 
 /**
  * Class to provide security check for wallets.
@@ -18,23 +18,18 @@ export abstract class AddonAdapter extends Adapter {
     };
     constructor(params?: BaseAdapterConfig) {
         super();
+        // Drop explicit `undefined`s before merging: spreading them would overwrite
+        // the defaults with `undefined` and make `Required<BaseAdapterConfig>` a lie,
+        // which matters because callers routinely spread optional config objects.
+        const overrides = Object.fromEntries(
+            Object.entries(params ?? {}).filter(([, value]) => value !== undefined)
+        ) as BaseAdapterConfig;
         this.commonConfig = {
             ...this.commonConfig,
-            ...params,
+            ...overrides,
         };
-        if (typeof this.commonConfig.checkTimeout !== 'number') {
-            throw new Error(`[WalletAdapter] config.checkTimeout should be a number`);
-        }
-        AddonAdapter._validateSecurityOptions(this.commonConfig.securityOptions);
-    }
-
-    private static _validateSecurityOptions(securityOptions: SecurityOptions): void {
-        const { enabled, configUrls } = securityOptions;
-        if (enabled && (!configUrls || configUrls.length === 0)) {
-            throw new Error(
-                `[WalletAdapter] config.securityOptions.configUrls is required when securityOptions.enabled is true`
-            );
-        }
+        validateCheckTimeout(this.commonConfig.checkTimeout);
+        validateSecurityOptions(this.commonConfig.securityOptions);
     }
 
     /**
@@ -47,7 +42,7 @@ export abstract class AddonAdapter extends Adapter {
             ...this.commonConfig.securityOptions,
             ...securityOptions,
         };
-        AddonAdapter._validateSecurityOptions(merged);
+        validateSecurityOptions(merged);
         this.commonConfig.securityOptions = merged;
         this._securityCheckCache = null;
     }
