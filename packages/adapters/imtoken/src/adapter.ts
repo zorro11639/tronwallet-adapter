@@ -10,6 +10,7 @@ import {
     AddonAdapter,
     WalletError,
     WalletConnectionError,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
 import type { TronLinkWallet } from '@tronweb3/tronwallet-adapter-tronlink';
@@ -109,7 +110,7 @@ export class ImTokenAdapter extends AddonAdapter {
             if (!(await this._beforeConnect())) return;
             this._connecting = true;
             const wallet = this._wallet as TronLinkWallet;
-            const address = wallet.tronWeb.defaultAddress?.base58 || '';
+            const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this.emit('connect', this.address || '');
@@ -273,8 +274,8 @@ export class ImTokenAdapter extends AddonAdapter {
         return openImTokenApp();
     }
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportImToken()) {
             this._wallet = {
                 ready: window.tronWeb?.ready || false,

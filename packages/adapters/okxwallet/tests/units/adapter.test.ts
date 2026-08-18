@@ -1,5 +1,6 @@
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { OkxWalletAdapter } from '../../src/index.js';
+import { AdapterState, WalletReadyState, WalletConnectionError } from '@tronweb3/tronwallet-abstract-adapter';
 
 window.open = vi.fn();
 beforeEach(function () {
@@ -37,5 +38,57 @@ describe('OkxWalletAdapter', function () {
             expect(adapter).toHaveProperty('on');
             expect(adapter).toHaveProperty('off');
         });
+    });
+});
+
+describe('#connect() empty-account regression', () => {
+    const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+
+    function makeAdapter(defaultAddress: unknown) {
+        const adapter = new OkxWalletAdapter();
+        (adapter as any)._readyState = WalletReadyState.Found;
+        (adapter as any)._wallet = {
+            request: vi.fn().mockResolvedValue({ code: 200 }),
+            tronWeb: { defaultAddress },
+            on: vi.fn(),
+            removeListener: vi.fn(),
+        };
+        adapter.on('error', () => {});
+        return adapter;
+    }
+
+    /**
+     * A success code from the account request does not mean an address is
+     * available yet. Going to Connected here leaves `connected === true` with no
+     * address, and emits `connect('')` to the dapp.
+     */
+    test.each([
+        ['base58 is missing', {}],
+        ['base58 is an empty string', { base58: '' }],
+        ['base58 is false', { base58: false }],
+        ['defaultAddress is undefined', undefined],
+    ])('rejects when %s', async (_label, defaultAddress) => {
+        const adapter = makeAdapter(defaultAddress);
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+
+        await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+        expect(adapter.address).toBeNull();
+        expect(adapter.state).not.toBe(AdapterState.Connected);
+        expect(adapter.connected).toBe(false);
+        expect(onConnect).not.toHaveBeenCalled();
+    });
+
+    test('connects when a real address is available', async () => {
+        const adapter = makeAdapter({ base58: ADDRESS });
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+
+        await adapter.connect();
+
+        expect(adapter.address).toBe(ADDRESS);
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(adapter.connected).toBe(true);
+        expect(onConnect).toHaveBeenCalledWith(ADDRESS);
     });
 });

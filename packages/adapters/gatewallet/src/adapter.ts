@@ -203,9 +203,11 @@ export class GateWalletAdapter extends AddonAdapter {
                 address = wallet.tronWeb.defaultAddress?.base58 || '';
             }
 
-            if (isInGateApp() && !address) {
-                // On mobile (GateWallet App), only treat the wallet as connected when an
-                // address was actually returned; an empty address means it didn't succeed.
+            if (!address) {
+                // Only treat the wallet as connected when an address was actually
+                // returned; an empty address means the request did not succeed. The
+                // extension path needs this as much as the app path does, and it has to
+                // undo the Connected state that `_updateWallet()` above may have set.
                 this.setAddress(null);
                 this.setState(AdapterState.Disconnect);
                 throw new WalletConnectionError('Request connect error.');
@@ -396,8 +398,8 @@ export class GateWalletAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportGateWallet()) {
             this._wallet = isInGateApp() ? window.gatewallet!.tronLink : window.gatewallet!.tron;
             this._listenEvent();

@@ -11,6 +11,7 @@ import {
     isInMobileBrowser,
     WalletError,
     AddonAdapter,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
 import type { Tron, TronLinkWallet } from '@tronweb3/tronwallet-adapter-tronlink';
@@ -134,8 +135,9 @@ export class BitKeepAdapter extends AddonAdapter {
                     );
                 }
             }
-            const address =
-                wallet?.tronWeb.defaultAddress?.base58 || window.bitkeep?.tronWeb?.defaultAddress?.base58 || '';
+            const address = assertConnectAddress(
+                wallet?.tronWeb.defaultAddress?.base58 || window.bitkeep?.tronWeb?.defaultAddress?.base58
+            );
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this.emit('connect', this.address || '');
@@ -288,8 +290,8 @@ export class BitKeepAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportBitgetWallet()) {
             if (isInMobileBrowser()) {
                 const tron = window.bitkeep?.tronLink as unknown as TronLinkWallet;

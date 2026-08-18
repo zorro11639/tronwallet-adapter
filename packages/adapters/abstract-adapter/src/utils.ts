@@ -1,3 +1,5 @@
+import { WalletConnectionError } from './errors.js';
+
 /**
  * Upper bound for `config.checkTimeout`, in milliseconds.
  *
@@ -32,6 +34,29 @@ export function validateCheckTimeout(value: unknown, prefix = '[WalletAdapter]')
             `${prefix} config.checkTimeout should be a finite number between 0 and ${MAX_CHECK_TIMEOUT}, but got ${value}`
         );
     }
+}
+
+/**
+ * Guard the transition into `AdapterState.Connected`.
+ *
+ * A resolved account request is not the same thing as a connection. Wallets
+ * answer `tron_requestAccounts`/`eth_requestAccounts` with a success code while
+ * still returning an empty account list, and injected `tronWeb.defaultAddress`
+ * is frequently not populated yet at the moment the request resolves. Treating
+ * either as "connected" leaves the adapter reporting `connected === true` with
+ * no address, and emits `connect('')` to the dapp; every later signMessage or
+ * signTransaction then passes the state guard only to fail inside the provider.
+ *
+ * @param address the address the adapter is about to store. `false` is accepted
+ * because tronweb types `tronWeb.defaultAddress.base58` as `string | false`.
+ * @returns the same address, narrowed to a non-empty string
+ * @throws {WalletConnectionError} when no usable address was obtained
+ */
+export function assertConnectAddress(address: string | false | null | undefined): string {
+    if (!address) {
+        throw new WalletConnectionError('Request connect error.');
+    }
+    return address;
 }
 
 /**

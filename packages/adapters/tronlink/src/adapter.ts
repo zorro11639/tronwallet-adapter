@@ -16,6 +16,7 @@ import {
     WalletError,
     TIP6963AnnounceProviderEventName,
     TIP6963RequestProviderEventName,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -207,7 +208,7 @@ export class TronLinkAdapter extends AddonAdapter {
                 const wallet = this._wallet as Tron;
                 try {
                     const res = await wallet.request({ method: 'eth_requestAccounts' });
-                    const address = res[0];
+                    const address = assertConnectAddress(res?.[0]);
                     this.setAddress(address);
                     this.setState(AdapterState.Connected);
                     this._listenTronEvent();
@@ -242,12 +243,12 @@ export class TronLinkAdapter extends AddonAdapter {
                     throw new WalletConnectionError('The user rejected connection.');
                 }
 
-                const address = wallet.tronWeb.defaultAddress?.base58 || '';
+                const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
             } else if (window.tronWeb) {
                 const wallet = this._wallet as TronLinkWallet;
-                const address = wallet.tronWeb.defaultAddress?.base58 || '';
+                const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
             } else {
@@ -538,8 +539,8 @@ export class TronLinkAdapter extends AddonAdapter {
 
     private _updateWallet = async () => {
         this._supportNewTronProtocol = false;
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (isInMobileBrowser()) {
             if (window.tronLink) {
                 this._wallet = window.tronLink;
@@ -573,8 +574,6 @@ export class TronLinkAdapter extends AddonAdapter {
                 state = address ? AdapterState.Connected : AdapterState.Disconnect;
             } catch (e) {
                 console.error('Unknown error: ' + e, ' Please install TronLink extension wallet.');
-                address = null;
-                state = AdapterState.Disconnect;
                 this._readyState = WalletReadyState.NotFound;
                 this.emit('readyStateChanged', this.readyState);
                 return;

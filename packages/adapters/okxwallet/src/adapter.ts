@@ -10,6 +10,7 @@ import {
     WalletGetNetworkError,
     AddonAdapter,
     WalletError,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -135,7 +136,7 @@ export class OkxWalletAdapter extends AddonAdapter {
                 throw new WalletConnectionError('The user rejected connection.');
             }
 
-            const address = wallet.tronWeb.defaultAddress?.base58 || '';
+            const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this._listenEvent();
