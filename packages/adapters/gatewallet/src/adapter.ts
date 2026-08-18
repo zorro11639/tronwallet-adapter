@@ -313,22 +313,47 @@ export class GateWalletAdapter extends AddonAdapter {
     }
 
     private _stopListenEvent() {
+        // Cancel deferred work before the early return below, which would otherwise
+        // skip it entirely inside the Gate app.
+        this._eventGeneration++;
+        if (this._accountsChangedTimer) {
+            clearTimeout(this._accountsChangedTimer);
+            this._accountsChangedTimer = null;
+        }
         if (isInGateApp()) return;
         (this._wallet as TronWallet)?.off?.('accountsChanged', this.onGateAccountChange);
     }
 
+    private _accountsChangedTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Incremented whenever the listening session ends. Deferred `accountsChanged`
+     * work captures the value at schedule time and abandons itself if it no longer
+     * matches, so an event queued before `disconnect()` cannot write state after it.
+     */
+    private _eventGeneration = 0;
+
     private onGateAccountChange = (res: GateAccountChangeEventRes) => {
-        setTimeout(async () => {
+        if (this._accountsChangedTimer) {
+            clearTimeout(this._accountsChangedTimer);
+        }
+        const generation = this._eventGeneration;
+        this._accountsChangedTimer = setTimeout(async () => {
+            this._accountsChangedTimer = null;
+            if (generation !== this._eventGeneration) return;
             const preAddr = this.address || '';
             if (res.length !== 0) {
                 // The wallet just connected / switched accounts — gate it with the security check.
                 try {
                     await this.checkSecurity();
                 } catch {
+                    if (generation !== this._eventGeneration) return;
                     this.setAddress(null);
                     this.setState(AdapterState.Disconnect);
                     return;
                 }
+                // `checkSecurity()` was awaited, so the session may have ended while it
+                // was pending — re-check before writing any state.
+                if (generation !== this._eventGeneration) return;
                 const address = res[0];
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);

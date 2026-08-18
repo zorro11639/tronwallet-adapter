@@ -1,4 +1,4 @@
-import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, test, expect, beforeEach, afterEach } from 'vitest';
 import { OkxWalletAdapter } from '../../src/index.js';
 import { AdapterState, WalletReadyState, WalletConnectionError } from '@tronweb3/tronwallet-abstract-adapter';
 
@@ -90,5 +90,121 @@ describe('#connect() empty-account regression', () => {
         expect(adapter.state).toBe(AdapterState.Connected);
         expect(adapter.connected).toBe(true);
         expect(onConnect).toHaveBeenCalledWith(ADDRESS);
+    });
+});
+
+describe('#accountsChanged stale-timer regression', function () {
+    const ADDR_A = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+    const STALE = 'TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS';
+
+    function makeConnected() {
+        const adapter = new OkxWalletAdapter();
+        (adapter as any)._wallet = { ready: true, tronWeb: { defaultAddress: { base58: ADDR_A } } };
+        (adapter as any)._address = ADDR_A;
+        (adapter as any)._state = AdapterState.Connected;
+        adapter.on('error', () => {});
+        (adapter as any)._listenEvent();
+        return adapter;
+    }
+
+    function fireAccountsChanged(address: string) {
+        window.dispatchEvent(
+            new MessageEvent('message', {
+                origin: window.location.origin,
+                data: { message: { action: 'accountsChanged', data: { address } } },
+            })
+        );
+    }
+
+    /**
+     * The handler deferred its state update by 200ms without keeping the timer, so
+     * `disconnect()` removed the listener but could not stop work already queued.
+     * The callback then rewrote the address and flipped the adapter back to
+     * Connected after the disconnect had settled.
+     */
+    it('does not resurrect state after disconnect', async () => {
+        vi.useFakeTimers();
+        try {
+            const adapter = makeConnected();
+            fireAccountsChanged(STALE);
+            await adapter.disconnect();
+
+            expect(adapter.state).toBe(AdapterState.Disconnect);
+            expect(adapter.address).toBeNull();
+
+            await vi.advanceTimersByTimeAsync(1000);
+
+            expect(adapter.state).toBe(AdapterState.Disconnect);
+            expect(adapter.address).toBeNull();
+            expect(adapter.connected).toBe(false);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('does not emit connect for an event cancelled by disconnect', async () => {
+        vi.useFakeTimers();
+        try {
+            const adapter = makeConnected();
+            const onConnect = vi.fn();
+            const onAccountsChanged = vi.fn();
+            adapter.on('connect', onConnect);
+            adapter.on('accountsChanged', onAccountsChanged);
+
+            fireAccountsChanged(STALE);
+            await adapter.disconnect();
+            await vi.advanceTimersByTimeAsync(1000);
+
+            expect(onConnect).not.toHaveBeenCalled();
+            expect(onAccountsChanged).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    /**
+     * The callback awaits `checkSecurity()`, so a disconnect landing during that
+     * await must also be honoured — clearing the timer alone cannot cover it.
+     */
+    it('abandons an in-flight callback when disconnect lands during checkSecurity', async () => {
+        vi.useFakeTimers();
+        try {
+            const adapter = makeConnected();
+            let releaseSecurity: () => void = () => {};
+            vi.spyOn(adapter as any, 'checkSecurity').mockImplementation(
+                () => new Promise<void>((resolve) => (releaseSecurity = resolve))
+            );
+
+            fireAccountsChanged(STALE);
+            // let the timer fire so the callback is parked on checkSecurity()
+            await vi.advanceTimersByTimeAsync(200);
+
+            await adapter.disconnect();
+            releaseSecurity();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(adapter.state).toBe(AdapterState.Disconnect);
+            expect(adapter.address).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('still applies an account change during a live session', async () => {
+        vi.useFakeTimers();
+        try {
+            const adapter = makeConnected();
+            const onAccountsChanged = vi.fn();
+            adapter.on('accountsChanged', onAccountsChanged);
+
+            fireAccountsChanged(STALE);
+            await vi.advanceTimersByTimeAsync(1000);
+
+            expect(adapter.address).toBe(STALE);
+            expect(adapter.state).toBe(AdapterState.Connected);
+            expect(onAccountsChanged).toHaveBeenCalledWith(STALE, ADDR_A);
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });

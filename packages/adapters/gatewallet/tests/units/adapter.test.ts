@@ -91,3 +91,89 @@ describe('#connect() empty-account regression', function () {
         expect(onConnect).toHaveBeenCalledWith(ADDRESS);
     });
 });
+
+describe('#accountsChanged stale-timer regression', function () {
+    const ADDR_A = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+    const STALE = 'TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS';
+
+    function makeConnected() {
+        const adapter = new GateWalletAdapter();
+        (adapter as any)._wallet = {
+            tronWeb: { defaultAddress: { base58: ADDR_A } },
+            on: vi.fn(),
+            off: vi.fn(),
+        };
+        (adapter as any)._address = ADDR_A;
+        (adapter as any)._state = AdapterState.Connected;
+        adapter.on('error', () => {});
+        return adapter;
+    }
+
+    /**
+     * `onGateAccountChange` deferred its state update by 200ms without keeping the
+     * timer, so `disconnect()` detached the provider listener but could not stop
+     * work already queued — it then rewrote the address and went back to Connected.
+     */
+    test('does not resurrect state after disconnect', async () => {
+        const adapter = makeConnected();
+
+        (adapter as any).onGateAccountChange([STALE]);
+        await adapter.disconnect();
+
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.address).toBeNull();
+
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.address).toBeNull();
+        expect(adapter.connected).toBe(false);
+    });
+
+    test('does not emit connect for an event cancelled by disconnect', async () => {
+        const adapter = makeConnected();
+        const onConnect = vi.fn();
+        const onAccountsChanged = vi.fn();
+        adapter.on('connect', onConnect);
+        adapter.on('accountsChanged', onAccountsChanged);
+
+        (adapter as any).onGateAccountChange([STALE]);
+        await adapter.disconnect();
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(onConnect).not.toHaveBeenCalled();
+        expect(onAccountsChanged).not.toHaveBeenCalled();
+    });
+
+    /** A disconnect landing during the awaited security check must also be honoured. */
+    test('abandons an in-flight callback when disconnect lands during checkSecurity', async () => {
+        const adapter = makeConnected();
+        let releaseSecurity: () => void = () => {};
+        vi.spyOn(adapter as any, 'checkSecurity').mockImplementation(
+            () => new Promise<void>((resolve) => (releaseSecurity = resolve))
+        );
+
+        (adapter as any).onGateAccountChange([STALE]);
+        await vi.advanceTimersByTimeAsync(200);
+
+        await adapter.disconnect();
+        releaseSecurity();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.address).toBeNull();
+    });
+
+    test('still applies an account change during a live session', async () => {
+        const adapter = makeConnected();
+        const onAccountsChanged = vi.fn();
+        adapter.on('accountsChanged', onAccountsChanged);
+
+        (adapter as any).onGateAccountChange([STALE]);
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(adapter.address).toBe(STALE);
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(onAccountsChanged).toHaveBeenCalledWith(STALE, ADDR_A);
+    });
+});
