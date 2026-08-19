@@ -352,6 +352,11 @@ export class TrustAdapter extends AddonAdapter {
 
     private _checkPromise: Promise<boolean> | null = null;
     /**
+     * Detection polls for the full `checkTimeout` only once. Later attempts re-check a
+     * single time, so retrying is free when the wallet is genuinely absent.
+     */
+    private _hasRunInitialDetection = false;
+    /**
      * check if wallet exists by interval, the promise only resolve when wallet detected or timeout
      * @returns if trustwallet exists
      */
@@ -363,10 +368,11 @@ export class TrustAdapter extends AddonAdapter {
             return this._checkPromise;
         }
         const interval = 100;
-        const maxTimes = Math.floor(this.config.checkTimeout / interval);
+        const maxTimes = this._hasRunInitialDetection ? 0 : Math.floor(this.config.checkTimeout / interval);
+        this._hasRunInitialDetection = true;
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = supportTrust();
@@ -381,7 +387,16 @@ export class TrustAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection. The extension may inject late, be switched on at
+        // runtime, or a mobile WebView may still be initialising — in all of those cases the
+        // next call has to look again instead of replaying the old negative answer.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {

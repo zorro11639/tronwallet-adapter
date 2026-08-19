@@ -435,7 +435,7 @@ export class TronLinkAdapter extends AddonAdapter {
 
         if (isInBrowser() && !isInMobileBrowser()) {
             // Desktop: use TIP-6963 event-based discovery with fallback
-            this._checkPromise = new Promise((resolve) => {
+            const detection = new Promise<boolean>((resolve) => {
                 let handled = false;
                 let timer: ReturnType<typeof setTimeout> | null = null;
                 let interval: ReturnType<typeof setInterval> | null = null;
@@ -511,7 +511,17 @@ export class TronLinkAdapter extends AddonAdapter {
                 window.addEventListener(TIP6963AnnounceProviderEventName, handler);
                 window.dispatchEvent(new Event(TIP6963RequestProviderEventName));
             });
-            return this._checkPromise;
+            this._checkPromise = detection;
+            // Never cache a failed detection: the wallet may inject late or be enabled at
+            // runtime. Unlike the polling adapters this keeps the full detection window on a
+            // retry, because the TIP-6963 announce is asynchronous and a shortened window
+            // would race it.
+            void detection.then((found) => {
+                if (!found && this._checkPromise === detection) {
+                    this._checkPromise = null;
+                }
+            });
+            return detection;
         }
 
         // Mobile: use legacy polling detection
@@ -519,7 +529,7 @@ export class TronLinkAdapter extends AddonAdapter {
         const maxTimes = Math.floor(this.config.checkTimeout / interval);
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 this._updateWallet();
@@ -534,7 +544,17 @@ export class TronLinkAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection: the wallet may inject late or be enabled at
+        // runtime. Unlike the polling adapters this keeps the full detection window on a
+        // retry, because the TIP-6963 announce is asynchronous and a shortened window
+        // would race it.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {

@@ -246,3 +246,70 @@ describe('#connect() concurrency', function () {
         expect(adapter.state).toBe(AdapterState.Connected);
     });
 });
+
+describe('#_checkWallet() re-detection', function () {
+    const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+
+    afterEach(() => {
+        (window as any).bybitWallet = undefined;
+    });
+
+    function injectWallet() {
+        (window as any).bybitWallet = {
+            tronLink: {
+                ready: true,
+                tronWeb: { defaultAddress: { base58: ADDRESS } },
+                request: vi.fn().mockResolvedValue({ code: 200 }),
+            },
+        };
+    }
+
+    /**
+     * A negative detection used to be cached in `_checkPromise` for the adapter's whole
+     * life, so an extension that injected a moment too late could never be picked up —
+     * the dapp had to reload the page or build a new adapter.
+     */
+    it('detects a wallet injected after the first attempt timed out', async () => {
+        const adapter = new BybitWalletAdapter({ checkTimeout: 200 });
+        adapter.on('error', () => {});
+
+        const first = (adapter as any)._checkWallet();
+        await vi.advanceTimersByTimeAsync(300);
+        expect(await first).toBe(false);
+        expect(adapter.readyState).toBe(WalletReadyState.NotFound);
+
+        injectWallet();
+
+        expect(await (adapter as any)._checkWallet()).toBe(true);
+        expect(adapter.readyState).toBe(WalletReadyState.Found);
+    });
+
+    /**
+     * The retry must not poll for another full `checkTimeout`, or every failed connect
+     * on a machine without the wallet would stall. Resolving here without advancing any
+     * timer is what proves it is a single immediate check.
+     */
+    it('re-checks once rather than polling again', async () => {
+        const adapter = new BybitWalletAdapter({ checkTimeout: 5000 });
+        adapter.on('error', () => {});
+
+        const first = (adapter as any)._checkWallet();
+        await vi.advanceTimersByTimeAsync(6000);
+        expect(await first).toBe(false);
+
+        injectWallet();
+        await expect((adapter as any)._checkWallet()).resolves.toBe(true);
+    });
+
+    it('keeps caching a successful detection', async () => {
+        injectWallet();
+        const adapter = new BybitWalletAdapter({ checkTimeout: 200 });
+        adapter.on('error', () => {});
+
+        expect(await (adapter as any)._checkWallet()).toBe(true);
+
+        // Once found, the wallet disappearing must not re-trigger detection work.
+        (window as any).bybitWallet = undefined;
+        expect(await (adapter as any)._checkWallet()).toBe(true);
+    });
+});
