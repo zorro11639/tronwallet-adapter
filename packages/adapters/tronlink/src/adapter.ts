@@ -198,7 +198,7 @@ export class TronLinkAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             // lower version only support window.tronWeb, no window.tronLink

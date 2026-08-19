@@ -125,7 +125,7 @@ export class TokenPocketAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             this._securityPassed = true;
@@ -409,8 +409,8 @@ export class TokenPocketAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportTokenPocket()) {
             try {
                 await this.checkSecurity();

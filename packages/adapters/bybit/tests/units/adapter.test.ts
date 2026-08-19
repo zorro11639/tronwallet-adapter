@@ -208,3 +208,41 @@ describe('#accountsChanged stale-timer regression', function () {
         }
     });
 });
+
+describe('#connect() concurrency', function () {
+    const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+
+    /**
+     * Two connect() calls in the same tick used to both reach the wallet, because
+     * `_connecting` is only raised after `await this._beforeConnect()` resolves.
+     * The user saw a second authorisation popup and the provider answered the
+     * second request with a 4000 "pending request" error.
+     */
+    it('requests accounts once for two simultaneous calls', async () => {
+        // The suite-wide beforeEach installs fake timers; this test needs the real ones
+        // so the mocked approval delay actually elapses.
+        vi.useRealTimers();
+        const request = vi.fn(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            return { code: 200 };
+        });
+        const adapter = new BybitWalletAdapter();
+        (adapter as any)._readyState = WalletReadyState.Found;
+        (adapter as any)._wallet = {
+            request,
+            ready: true,
+            tronWeb: { defaultAddress: { base58: ADDRESS } },
+            on: vi.fn(),
+            removeListener: vi.fn(),
+        };
+        adapter.on('error', () => {});
+
+        const [first, second] = [adapter.connect(), adapter.connect()];
+        expect(second).toBe(first);
+        await Promise.all([first, second]);
+
+        expect(request).toHaveBeenCalledTimes(1);
+        expect(adapter.address).toBe(ADDRESS);
+        expect(adapter.state).toBe(AdapterState.Connected);
+    });
+});

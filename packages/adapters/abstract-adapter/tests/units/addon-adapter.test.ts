@@ -45,8 +45,13 @@ class TestAddonAdapter extends AddonAdapter {
         return this.mockAddress;
     }
 
-    async connect(): Promise<void> {
-        await this._beforeConnect();
+    /** Mirrors a real adapter: the provider is only touched after `_beforeConnect()`. */
+    connectCalls = 0;
+    protected async _connect(): Promise<void> {
+        if (!(await this._beforeConnect())) return;
+        this.connectCalls++;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        this.mockConnecting = false;
     }
     async signMessage(): Promise<string> {
         return '';
@@ -995,5 +1000,65 @@ describe('AddonAdapter', () => {
             expect(adapter1.getCommonConfig().checkTimeout).toBe(1000);
             expect(adapter2.getCommonConfig().checkTimeout).toBe(5000);
         });
+    });
+});
+
+describe('connect concurrency', () => {
+    let adapter: TestAddonAdapter;
+
+    beforeEach(() => {
+        clearCache();
+        adapter = new TestAddonAdapter();
+        adapter.setWalletExistence(true);
+        adapter.on('error', () => undefined);
+    });
+
+    /**
+     * `connecting` alone cannot serialise this. Subclasses raise it only after
+     * `await this._beforeConnect()` resolves, and `_beforeConnect()` itself awaits
+     * wallet discovery and the security check — so two calls issued in the same tick
+     * both pass the guard while it is still false and both reach the wallet, which
+     * shows the user a second authorisation popup.
+     */
+    it('should run the wallet request once for simultaneous calls', async () => {
+        await Promise.all([adapter.connect(), adapter.connect()]);
+
+        expect(adapter.connectCalls).toBe(1);
+    });
+
+    it('should give every concurrent caller the same promise', () => {
+        const first = adapter.connect();
+        const second = adapter.connect();
+
+        expect(second).toBe(first);
+        return first;
+    });
+
+    it('should propagate a failure to every concurrent caller', async () => {
+        adapter.setWalletExistence(false);
+
+        const results = await Promise.allSettled([adapter.connect(), adapter.connect()]);
+
+        expect(results.map((r) => r.status)).toEqual(['rejected', 'rejected']);
+        expect(adapter.connectCalls).toBe(0);
+    });
+
+    /** The guard must be released in `finally`, or the adapter could never reconnect. */
+    it('should release the guard once the attempt settles', async () => {
+        await adapter.connect();
+        expect(adapter.connectCalls).toBe(1);
+
+        await adapter.connect();
+        expect(adapter.connectCalls).toBe(2);
+    });
+
+    it('should release the guard after a failed attempt', async () => {
+        adapter.setWalletExistence(false);
+        await expect(adapter.connect()).rejects.toBeTruthy();
+
+        adapter.setWalletExistence(true);
+        await adapter.connect();
+
+        expect(adapter.connectCalls).toBe(1);
     });
 });

@@ -78,7 +78,7 @@ export class BackpackAdapter extends AddonAdapter {
         return this._connecting;
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             const wallet = this._wallet;
@@ -294,7 +294,8 @@ export class BackpackAdapter extends AddonAdapter {
 
     private async _checkExistingConnection(): Promise<void> {
         if (!this._wallet) return;
-        let accounts: string[] = [];
+        // Every path below either assigns this or returns first.
+        let accounts: string[];
         try {
             accounts = (await this._wallet.request({
                 method: 'tron_accounts',

@@ -136,7 +136,7 @@ export class MetaMaskAdapter extends AddonAdapter {
      * Connects to the MetaMask wallet.
      * @returns A promise that resolves when connected.
      */
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         // Captured before every await, `_beforeConnect()` included, so a disconnect() raised at
         // any point of the attempt is noticed once the wallet finally answers.
         const generation = this._connectionGeneration;

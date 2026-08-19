@@ -47,6 +47,46 @@ export abstract class AddonAdapter extends Adapter {
         this._securityCheckCache = null;
     }
 
+    private _connectPromise: Promise<void> | null = null;
+
+    /**
+     * Serialise `connect()` so that concurrent callers cannot each reach the wallet.
+     *
+     * The `connecting` flag alone cannot do this. Subclasses only raise it *after*
+     * `await this._beforeConnect()` resolves, and `_beforeConnect()` itself awaits
+     * wallet discovery and the security check — so two calls made in the same tick
+     * both pass the guard while it is still `false`, and both go on to call
+     * `tron_requestAccounts`. That produces a second authorisation popup, a `4000`
+     * "pending request" error from the provider, and duplicated connect events.
+     *
+     * Claiming the in-flight promise here is synchronous — there is no `await`
+     * between the check and the assignment — so a second caller always observes it
+     * and simply shares the first call's result. Because the whole subclass
+     * `_connect()` runs inside it, discovery, the security check and the provider
+     * request are all in the same critical section.
+     */
+    connect(options?: Record<string, unknown>): Promise<void> {
+        if (this._connectPromise) {
+            return this._connectPromise;
+        }
+        // Deliberately not `async`: that would wrap the shared promise in a fresh one
+        // per caller. The IIFE still turns a synchronous throw from `_connect()` into
+        // a rejection, so callers never see one thrown at them directly.
+        const promise = (async () => this._connect(options))().finally(() => {
+            if (this._connectPromise === promise) {
+                this._connectPromise = null;
+            }
+        });
+        this._connectPromise = promise;
+        return promise;
+    }
+
+    /**
+     * The adapter's actual connect flow. Implement this instead of `connect()`,
+     * which wraps it to guarantee only one attempt runs at a time.
+     */
+    protected abstract _connect(options?: Record<string, unknown>): Promise<void>;
+
     /**
      * Run the pre-connect pipeline (wallet discovery, deeplink/url fallback,
      * security check).

@@ -117,7 +117,7 @@ export class BybitWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             if (!this._wallet) return;

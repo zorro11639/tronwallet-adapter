@@ -206,7 +206,7 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (this.connected || this.connecting) return;
             await this._checkWallet();

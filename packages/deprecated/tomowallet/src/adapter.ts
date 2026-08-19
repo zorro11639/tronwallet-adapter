@@ -128,7 +128,7 @@ export class TomoWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             if (!this._wallet) return;
@@ -294,8 +294,8 @@ export class TomoWalletAdapter extends AddonAdapter {
     };
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (isInMobileBrowser()) {
             if (window.tomo_wallet?.tron) {
                 this._wallet = window.tomo_wallet.tron;
