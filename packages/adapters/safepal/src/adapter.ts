@@ -131,6 +131,10 @@ export class SafepalAdapter extends AddonAdapter {
             if (!(await this._beforeConnect())) return;
             this._securityPassed = true;
             const wallet = this._wallet;
+            // Unreachable while the adapter is mobile-only: `supportSafepalWallet()` no
+            // longer detects the PC extension, so `_beforeConnect()` throws
+            // WalletNotFoundError before reaching this point. Kept for the day extension
+            // support is restored — see the note in utils.ts.
             if (!isInMobileBrowser()) {
                 if (!wallet) return;
                 this._connecting = true;
@@ -325,6 +329,10 @@ export class SafepalAdapter extends AddonAdapter {
                 // PC browser extension: no auto-reconnect.
                 // Use defaultAddress.base58 to reflect connection state within the session,
                 // but the constructor never emits 'connect' for this path.
+                //
+                // Unreachable while the adapter is mobile-only — `supportSafepalWallet()`
+                // does not detect the extension, so this `else` never runs. Kept for the
+                // day extension support is restored; see the note in utils.ts.
                 const tron = window.safepalTronProvider as unknown as TronLinkWallet;
                 this._wallet = { tron, tronWeb: tron?.tronWeb };
                 const address = this._wallet.tronWeb?.defaultAddress?.base58 || null;
