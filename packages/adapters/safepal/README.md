@@ -1,16 +1,10 @@
 # `@tronweb3/tronwallet-adapter-safepal`
 
-This package provides an adapter to enable TRON DApps to connect to the [SafePal Wallet App](https://safepal.com/).
+This package provides an adapter to enable TRON DApps to connect to the [SafePal Wallet](https://safepal.com/),
+both the **PC browser extension** and the **mobile app** (through its in-app dApp browser).
 
-> ### ⚠️ Mobile app only
->
-> This adapter supports the **SafePal mobile app** (its in-app dApp browser). The **PC browser
-> extension is not supported**, because its `signTransaction()` throws — connecting to a wallet
-> that cannot sign is worse than reporting it unavailable.
->
-> On desktop the adapter therefore reports `readyState: NotFound` even when the extension is
-> installed, and `connect()` rejects with `WalletNotFoundError`. Extension support will be
-> restored once SafePal fixes signing.
+> **Note:** older builds of the PC extension had a `signTransaction()` that threw. Make sure the
+> extension is up to date if transaction signing fails.
 
 ## Demo
 
@@ -90,10 +84,7 @@ await tronWeb.trx.sendRawTransaction(signedTransaction);
 -   **Auto-reconnect after page refresh is not supported.** The user must manually reconnect on each page load.
 -   **Switching networks (`switchChain()`) is not supported.** Network changes must be made directly inside the SafePal wallet.
 -   **`signTypedData()` is not supported** by SafePal wallet.
--   **`multiSign()` is not supported** by the SafePal App.
+-   **`multiSign()` is not supported** by SafePal App and Extension.
 -   **Deeplink only opens the SafePal app** — it does not navigate directly to the dApp browser or load the current page URL automatically.
--   **The PC browser extension is not supported.** Its `signTransaction()` throws, so the adapter
-    does not detect it at all: on desktop `readyState` stays `NotFound` and `connect()` rejects with
-    `WalletNotFoundError`, even when the extension is installed. Use the SafePal mobile app.
 
 For more information about tronwallet adapters, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters)

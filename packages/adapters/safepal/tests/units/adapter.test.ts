@@ -26,7 +26,7 @@ describe('SafepalAdapter', () => {
     });
 });
 
-describe('SafepalAdapter mobile-only support', () => {
+describe('SafepalAdapter platform support', () => {
     const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
     const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)';
     const DESKTOP_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
@@ -51,14 +51,18 @@ describe('SafepalAdapter mobile-only support', () => {
     });
 
     /**
-     * The PC extension's `signTransaction()` throws, so this release does not support
-     * it. Detecting it anyway would connect the user to a wallet that cannot sign —
-     * worse than reporting it unavailable.
+     * Both platforms are supported, but they inject different globals, so the desktop
+     * extension needs its own detection and its own explicit account request.
      */
-    test('ignores the PC extension even when it is installed', async () => {
+    test('connects through the PC extension', async () => {
         setUserAgent(DESKTOP_UA);
-        const request = vi.fn();
-        const tronWeb = { defaultAddress: { base58: ADDRESS }, ready: true };
+        // A freshly installed extension exposes no address until the site is authorised;
+        // granting access is what `tron_requestAccounts` does.
+        const tronWeb: any = { defaultAddress: {}, ready: true };
+        const request = vi.fn(async () => {
+            tronWeb.defaultAddress = { base58: ADDRESS };
+            return { code: 200 };
+        });
         (window as any).safepalTronProvider = { tronWeb, request };
         (window as any).tronWeb = tronWeb;
 
@@ -66,12 +70,47 @@ describe('SafepalAdapter mobile-only support', () => {
         adapter.on('error', () => {});
         await new Promise((resolve) => setTimeout(resolve, 50));
 
+        expect(adapter.readyState).toBe(WalletReadyState.Found);
+        expect(adapter.connected).toBe(false);
+
+        await adapter.connect();
+
+        expect(request).toHaveBeenCalledWith({ method: 'tron_requestAccounts' });
+        expect(adapter.address).toBe(ADDRESS);
+        expect(adapter.state).toBe(AdapterState.Connected);
+    });
+
+    /**
+     * When the extension already has the site authorised it exposes an address straight
+     * away, so the adapter reflects that on construction without emitting `connect`.
+     */
+    test('reflects an already-authorised extension without a request', async () => {
+        setUserAgent(DESKTOP_UA);
+        const tronWeb = { defaultAddress: { base58: ADDRESS }, ready: true };
+        const request = vi.fn();
+        (window as any).safepalTronProvider = { tronWeb, request };
+        (window as any).tronWeb = tronWeb;
+
+        const adapter = new SafepalAdapter({ checkTimeout: 0 });
+        adapter.on('error', () => {});
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(adapter.readyState).toBe(WalletReadyState.Found);
+        expect(adapter.address).toBe(ADDRESS);
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(request).not.toHaveBeenCalled();
+    });
+
+    test('reports NotFound on desktop when the extension is absent', async () => {
+        setUserAgent(DESKTOP_UA);
+
+        const adapter = new SafepalAdapter({ checkTimeout: 0 });
+        adapter.on('error', () => {});
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
         expect(adapter.readyState).toBe(WalletReadyState.NotFound);
         await expect(adapter.connect()).rejects.toBeInstanceOf(WalletNotFoundError);
-        // The extension provider must never be asked to connect.
-        expect(request).not.toHaveBeenCalled();
         expect(adapter.address).toBeNull();
-        expect(adapter.state).not.toBe(AdapterState.Connected);
     });
 
     test('still connects inside the SafePal mobile app', async () => {
