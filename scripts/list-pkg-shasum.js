@@ -518,19 +518,33 @@ function findLastJsonObject(text) {
     return last;
 }
 
+// npm >= 10 nests the `--json` publish payload under the package spec:
+//
+//   { "@scope/name": { id, name, version, shasum, integrity, ... } }
+//
+// Older npm put those fields at the top level. Accept both so the script keeps
+// working across npm majors.
+function unwrapPublishPayload(json) {
+    if (!json || typeof json !== 'object') return json;
+    if (json.shasum) return json;
+    return Object.values(json).find((value) => value && typeof value === 'object' && value.shasum) || json;
+}
+
 function normalizePublishJson(json, dir) {
-    if (!json || !json.name || !json.version || !json.shasum) {
+    const payload = unwrapPublishPayload(json);
+
+    if (!payload || !payload.name || !payload.version || !payload.shasum) {
         throw new Error(`Unable to parse npm publish JSON for ${dir}`);
     }
     return {
-        name: json.name,
-        version: json.version,
-        shasum: json.shasum,
-        integrity: json.integrity,
-        filename: json.filename,
-        size: json.size,
-        unpackedSize: json.unpackedSize,
-        entryCount: json.entryCount,
+        name: payload.name,
+        version: payload.version,
+        shasum: payload.shasum,
+        integrity: payload.integrity,
+        filename: payload.filename,
+        size: payload.size,
+        unpackedSize: payload.unpackedSize,
+        entryCount: payload.entryCount,
     };
 }
 
@@ -763,11 +777,13 @@ async function publishManifest(file, registry = REGISTRY) {
 
     for (const { pkg, name, version, shasum } of publishQueue) {
         const id = `${name}@${version}`;
-        let publishInfo = null;
-        let registryShasum = null;
+        // No initialisers: every read below is preceded by an assignment, because each
+        // failing branch `continue`s out of the loop first.
+        let publishInfo;
+        let registryShasum;
         console.log(`Publishing ${id}...`);
 
-        let existingVersion = null;
+        let existingVersion;
         try {
             existingVersion = await getRegistryVersion(name, version, registry);
         } catch (e) {
@@ -942,7 +958,7 @@ async function main() {
         } catch (e) {
             console.log('failed');
             console.warn(`  ! failed to dry-run publish ${pkg.dir}: ${e.message || e}`);
-            rows.push({ ...pkg, shasum: '(error)' });
+            rows.push({ ...pkg, shasum: '(error)', integrity: '(error)' });
         }
     });
 
@@ -954,8 +970,8 @@ async function main() {
     }
 
     printTable(
-        ['Package', 'Version', 'Shasum'],
-        rows.map(({ name, version, shasum }) => [name, version, shasum])
+        ['Package', 'Version', 'Shasum', 'Integrity'],
+        rows.map(({ name, version, shasum, integrity }) => [name, version, shasum, integrity || '(missing)'])
     );
 
     if (rows.some((row) => row.shasum === '(error)')) {
