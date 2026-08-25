@@ -3,9 +3,6 @@
 This package provides an adapter to enable TRON DApps to connect to the [SafePal Wallet](https://safepal.com/),
 both the **PC browser extension** and the **mobile app** (through its in-app dApp browser).
 
-> **Note:** older builds of the PC extension had a `signTransaction()` that threw. Make sure the
-> extension is up to date if transaction signing fails.
-
 ## Demo
 
 ```typescript
