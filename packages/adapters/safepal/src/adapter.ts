@@ -86,8 +86,17 @@ export class SafepalAdapter extends AddonAdapter {
                 }
             });
         } else {
-            // PC extension or wallet not yet injected: detect only, no auto-reconnect
-            this._checkWallet();
+            // PC extension, or the wallet has not been injected yet. The extension drops
+            // its authorisation on a page reload, so in practice detection lands in
+            // `Disconnect` here and nothing is emitted. Emit `connect` anyway for the case
+            // where the provider does expose an address at detection time: reporting
+            // `connected === true` without the event would leave a dapp that only listens
+            // for `connect` unaware that it is connected.
+            this._checkWallet().then(() => {
+                if (this.connected) {
+                    this.emit('connect', this.address || '');
+                }
+            });
         }
     }
 
@@ -258,13 +267,15 @@ export class SafepalAdapter extends AddonAdapter {
         let times = 0,
             timer: ReturnType<typeof setInterval>;
         const detection = new Promise<boolean>((resolve) => {
-            const check = () => {
+            const check = async () => {
                 times++;
                 const isSupport = supportSafepalWallet();
                 if (isSupport || times > maxTimes) {
                     timer && clearInterval(timer);
                     this._readyState = isSupport ? WalletReadyState.Found : WalletReadyState.NotFound;
-                    this._updateWallet();
+                    // Awaited: `_updateWallet()` is what settles the address and state, and
+                    // callers act on those the moment detection resolves.
+                    await this._updateWallet();
                     this.emit('readyStateChanged', this.readyState);
                     resolve(isSupport);
                 }
@@ -329,9 +340,12 @@ export class SafepalAdapter extends AddonAdapter {
                     this.checkForWalletReady();
                 }
             } else {
-                // PC browser extension: no auto-reconnect.
-                // Use defaultAddress.base58 to reflect connection state within the session,
-                // but the constructor never emits 'connect' for this path.
+                // PC browser extension. `defaultAddress.base58` is the only signal the
+                // provider gives, so it decides the state. A page reload clears the
+                // extension's authorisation, so on a fresh load there is no address and
+                // this ends in `Disconnect` — the user has to call `connect()`. When an
+                // address *is* present the adapter reports `Connected` and the constructor
+                // emits `connect` to match.
                 const tron = window.safepalTronProvider as unknown as TronLinkWallet;
                 this._wallet = { tron, tronWeb: tron?.tronWeb };
                 const address = this._wallet.tronWeb?.defaultAddress?.base58 || null;
@@ -341,12 +355,12 @@ export class SafepalAdapter extends AddonAdapter {
                     this.setState(AdapterState.Disconnect);
                     return;
                 }
-                // The extension keeps its authorisation across a page reload, so this path
-                // reaches `Connected` without going through `connect()` — and therefore
-                // without `_beforeConnect()`'s security check. Run it here as well, or
-                // `securityOptions` would be bypassed on every desktop refresh. The result
-                // is cached briefly, so the check that follows in `connect()` is not a
-                // second network round trip.
+                // This path reaches `Connected` without going through `connect()` — and
+                // therefore without `_beforeConnect()`'s security check — whenever the
+                // provider already exposes an address at detection time. Run the check here
+                // as well, or `securityOptions` is bypassed on that path. The result is
+                // cached briefly, so the check that follows in `connect()` is not a second
+                // network round trip.
                 try {
                     await this.checkSecurity();
                     this._securityPassed = true;

@@ -87,7 +87,7 @@ describe('SafepalAdapter platform support', () => {
 
     /**
      * When the extension already has the site authorised it exposes an address straight
-     * away, so the adapter reflects that on construction without emitting `connect`.
+     * away, so the adapter reflects that on construction without asking for accounts again.
      */
     test('reflects an already-authorised extension without a request', async () => {
         setUserAgent(DESKTOP_UA);
@@ -104,6 +104,27 @@ describe('SafepalAdapter platform support', () => {
         expect(adapter.address).toBe(ADDRESS);
         expect(adapter.state).toBe(AdapterState.Connected);
         expect(request).not.toHaveBeenCalled();
+    });
+
+    /**
+     * Detection landing in `Connected` must announce itself. A dapp that only listens for
+     * `connect` would otherwise never learn it is connected, even though `adapter.connected`
+     * already reads `true`.
+     */
+    test('emits connect when the extension is already authorised', async () => {
+        setUserAgent(DESKTOP_UA);
+        const tronWeb = { defaultAddress: { base58: ADDRESS }, ready: true };
+        (window as any).safepalTronProvider = { tronWeb, request: vi.fn() };
+        (window as any).tronWeb = tronWeb;
+
+        const adapter = new SafepalAdapter({ checkTimeout: 0 });
+        adapter.on('error', () => {});
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(onConnect).toHaveBeenCalledWith(ADDRESS);
     });
 
     test('reports NotFound on desktop when the extension is absent', async () => {
@@ -142,9 +163,9 @@ describe('SafepalAdapter platform support', () => {
     });
 
     /**
-     * The desktop extension keeps its authorisation across a reload, so it can reach
-     * `Connected` without ever calling `connect()`. The security check has to run on that
-     * path too, or `securityOptions` is bypassed on every refresh.
+     * An extension that already exposes an address reaches `Connected` without ever going
+     * through `connect()`. The security check has to run on that path too, or
+     * `securityOptions` is bypassed there.
      */
     test('runs the security check on the already-authorised extension path', async () => {
         setUserAgent(DESKTOP_UA);
