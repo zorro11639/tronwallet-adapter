@@ -12,6 +12,7 @@ import {
     AddonAdapter,
     WalletError,
     WalletNotFoundError,
+    omitUndefined,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -107,7 +108,10 @@ export class BinanceWalletAdapter extends AddonAdapter {
             ...this.commonConfig,
             useWalletConnectWhenWalletNotFound: false,
             openAppWithDeeplink: true,
-            ...config,
+            // Sanitised: an explicit `checkTimeout: undefined` here would survive into
+            // `_checkWallet()` and make its polling bound `NaN`, so detection would never
+            // terminate. `commonConfig` has already been validated by the base class.
+            ...omitUndefined(config),
         };
         this._connecting = false;
         this._provider = null;

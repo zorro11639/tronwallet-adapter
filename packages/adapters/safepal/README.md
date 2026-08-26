@@ -79,6 +79,7 @@ await tronWeb.trx.sendRawTransaction(signedTransaction);
 ### Caveats
 
 -   **Auto-reconnect after page refresh is not supported.** The user must manually reconnect on each page load.
+-   **Switching the active account reloads the page.** SafePal reloads the dApp itself when the user selects a different account in the wallet, so the adapter never emits `accountsChanged` — the new account is picked up by the fresh page load instead. Any unsaved dApp state is lost, so do not rely on an `accountsChanged` listener to follow account changes with this wallet.
 -   **Switching networks (`switchChain()`) is not supported.** Network changes must be made directly inside the SafePal wallet.
 -   **`signTypedData()` is not supported** by SafePal wallet.
 -   **`multiSign()` is not supported** by SafePal App and Extension.

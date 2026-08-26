@@ -9,6 +9,7 @@ import {
     WalletGetNetworkError,
     WalletError,
     AddonAdapter,
+    omitUndefined,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -74,7 +75,10 @@ export class OneKeyAdapter extends AddonAdapter {
 
         this.config = {
             ...this.commonConfig,
-            ...config,
+            // Sanitised: an explicit `checkTimeout: undefined` here would survive into
+            // `_checkWallet()` and make its polling bound `NaN`, so detection would never
+            // terminate. `commonConfig` has already been validated by the base class.
+            ...omitUndefined(config),
         };
         this._connecting = false;
         this._wallet = null;

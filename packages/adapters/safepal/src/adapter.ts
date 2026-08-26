@@ -10,6 +10,7 @@ import {
     WalletConnectionError,
     WalletGetNetworkError,
     isInMobileBrowser,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
 import type { Tron, TronLinkWallet } from '@tronweb3/tronwallet-adapter-tronlink';
@@ -142,7 +143,11 @@ export class SafepalAdapter extends AddonAdapter {
                     throw new WalletConnectionError(e.message, e);
                 }
             }
-            const address = wallet?.tronWeb?.defaultAddress?.base58 || '';
+            // A resolved `tron_requestAccounts` does not guarantee an address: the user may
+            // have rejected the prompt, or the provider may not have populated `tronWeb`
+            // yet. Entering `Connected` with an empty address would let later signing calls
+            // pass the state guard and then fail inside the wallet.
+            const address = assertConnectAddress(wallet?.tronWeb?.defaultAddress?.base58);
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this.emit('connect', this.address || '');
@@ -330,8 +335,29 @@ export class SafepalAdapter extends AddonAdapter {
                 const tron = window.safepalTronProvider as unknown as TronLinkWallet;
                 this._wallet = { tron, tronWeb: tron?.tronWeb };
                 const address = this._wallet.tronWeb?.defaultAddress?.base58 || null;
+                if (!address) {
+                    this._securityPassed = false;
+                    this.setAddress(null);
+                    this.setState(AdapterState.Disconnect);
+                    return;
+                }
+                // The extension keeps its authorisation across a page reload, so this path
+                // reaches `Connected` without going through `connect()` — and therefore
+                // without `_beforeConnect()`'s security check. Run it here as well, or
+                // `securityOptions` would be bypassed on every desktop refresh. The result
+                // is cached briefly, so the check that follows in `connect()` is not a
+                // second network round trip.
+                try {
+                    await this.checkSecurity();
+                    this._securityPassed = true;
+                } catch {
+                    this._securityPassed = false;
+                    this.setAddress(null);
+                    this.setState(AdapterState.Disconnect);
+                    return;
+                }
                 this.setAddress(address);
-                this.setState(address ? AdapterState.Connected : AdapterState.Disconnect);
+                this.setState(AdapterState.Connected);
             }
         } else {
             this._wallet = null;

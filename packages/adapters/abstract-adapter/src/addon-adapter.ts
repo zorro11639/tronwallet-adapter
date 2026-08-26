@@ -4,7 +4,7 @@ import { WalletNotFoundError } from './errors.js';
 import type { SecurityOptions } from './security.js';
 import { defaultSecurityOptions, fetchJsonWithCache, validateSecurityOptions } from './security.js';
 import { WalletReadyState } from './types.js';
-import { isInBrowser, validateCheckTimeout } from './utils.js';
+import { isInBrowser, omitUndefined, validateCheckTimeout } from './utils.js';
 
 /**
  * Class to provide security check for wallets.
@@ -21,12 +21,11 @@ export abstract class AddonAdapter extends Adapter {
         // Drop explicit `undefined`s before merging: spreading them would overwrite
         // the defaults with `undefined` and make `Required<BaseAdapterConfig>` a lie,
         // which matters because callers routinely spread optional config objects.
-        const overrides = Object.fromEntries(
-            Object.entries(params ?? {}).filter(([, value]) => value !== undefined)
-        ) as BaseAdapterConfig;
+        // Subclasses that re-merge their own config on top of `commonConfig` must
+        // sanitise it the same way — see `omitUndefined`.
         this.commonConfig = {
             ...this.commonConfig,
-            ...overrides,
+            ...omitUndefined(params),
         };
         validateCheckTimeout(this.commonConfig.checkTimeout);
         validateSecurityOptions(this.commonConfig.securityOptions);

@@ -37,6 +37,23 @@ export function validateCheckTimeout(value: unknown, prefix = '[WalletAdapter]')
 }
 
 /**
+ * Copy an object without the keys whose value is exactly `undefined`.
+ *
+ * Spreading a caller's config over a set of defaults is only safe when explicit
+ * `undefined`s have been dropped first: `{ ...defaults, ...{ checkTimeout: undefined } }`
+ * yields `checkTimeout: undefined`, which defeats the default and every validation
+ * that ran against it. Callers routinely produce such objects by spreading their own
+ * optional config, so adapters must sanitise before merging rather than trusting the
+ * `Required<...>` type on the resulting field.
+ *
+ * @param params the raw config object, possibly `undefined`
+ * @returns a shallow copy containing only the keys that were actually set
+ */
+export function omitUndefined<T extends object>(params?: T): Partial<T> {
+    return Object.fromEntries(Object.entries(params ?? {}).filter(([, value]) => value !== undefined)) as Partial<T>;
+}
+
+/**
  * Guard the transition into `AdapterState.Connected`.
  *
  * A resolved account request is not the same thing as a connection. Wallets

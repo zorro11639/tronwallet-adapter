@@ -1,6 +1,11 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SafepalAdapter } from '../../src/adapter.js';
-import { AdapterState, WalletNotFoundError, WalletReadyState } from '@tronweb3/tronwallet-abstract-adapter';
+import {
+    AdapterState,
+    WalletConnectionError,
+    WalletNotFoundError,
+    WalletReadyState,
+} from '@tronweb3/tronwallet-abstract-adapter';
 
 describe('SafepalAdapter', () => {
     test('should be defined', () => {
@@ -110,6 +115,68 @@ describe('SafepalAdapter platform support', () => {
 
         expect(adapter.readyState).toBe(WalletReadyState.NotFound);
         await expect(adapter.connect()).rejects.toBeInstanceOf(WalletNotFoundError);
+        expect(adapter.address).toBeNull();
+    });
+
+    /**
+     * `tron_requestAccounts` resolving is not the same thing as being connected — the user
+     * may have dismissed the prompt. Entering `Connected` with an empty address would let
+     * every later signing call pass the state guard and fail inside the wallet instead.
+     */
+    test('rejects the connect when the extension yields no address', async () => {
+        setUserAgent(DESKTOP_UA);
+        // Request resolves, but the provider never populates an address.
+        const tronWeb: any = { defaultAddress: {}, ready: true };
+        const request = vi.fn(async () => ({ code: 200 }));
+        (window as any).safepalTronProvider = { tronWeb, request };
+        (window as any).tronWeb = tronWeb;
+
+        const adapter = new SafepalAdapter({ checkTimeout: 0 });
+        adapter.on('error', () => {});
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+        expect(adapter.address).toBeNull();
+        expect(adapter.state).not.toBe(AdapterState.Connected);
+        expect(adapter.connected).toBe(false);
+    });
+
+    /**
+     * The desktop extension keeps its authorisation across a reload, so it can reach
+     * `Connected` without ever calling `connect()`. The security check has to run on that
+     * path too, or `securityOptions` is bypassed on every refresh.
+     */
+    test('runs the security check on the already-authorised extension path', async () => {
+        setUserAgent(DESKTOP_UA);
+        const tronWeb = { defaultAddress: { base58: ADDRESS }, ready: true };
+        (window as any).safepalTronProvider = { tronWeb, request: vi.fn() };
+        (window as any).tronWeb = tronWeb;
+
+        vi.stubGlobal(
+            'fetch',
+            vi.fn().mockResolvedValue({
+                ok: true,
+                json: () =>
+                    Promise.resolve({
+                        v: '1',
+                        ts: Date.now(),
+                        wallets: { SafePal: [{ title: 'risk', noticeType: 1 }] },
+                    }),
+            })
+        );
+        const onRiskDetected = vi.fn(async () => {
+            throw new Error('blocked by risk');
+        });
+
+        const adapter = new SafepalAdapter({
+            checkTimeout: 0,
+            securityOptions: { enabled: true, configUrls: ['https://example.com/risk.json'], onRiskDetected },
+        });
+        adapter.on('error', () => {});
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(onRiskDetected).toHaveBeenCalled();
+        expect(adapter.state).not.toBe(AdapterState.Connected);
         expect(adapter.address).toBeNull();
     });
 
