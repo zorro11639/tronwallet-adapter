@@ -248,8 +248,9 @@ export class OkxWalletAdapter extends AddonAdapter {
     private _accountsChangedTimer: ReturnType<typeof setTimeout> | null = null;
     /**
      * Incremented whenever the listening session ends. Deferred `accountsChanged`
-     * work captures the value at schedule time and abandons itself if it no longer
-     * matches, so an event queued before `disconnect()` cannot write state after it.
+     * work and the awaited `connect` handler capture the value before they yield and
+     * abandon themselves if it no longer matches, so an event that started before
+     * `disconnect()` cannot write state after it.
      */
     private _eventGeneration = 0;
 
@@ -301,16 +302,26 @@ export class OkxWalletAdapter extends AddonAdapter {
                 }
             }, 200);
         } else if (message.action === 'connect') {
-            const isCurConnected = this.connected;
-            const preAddress = this.address || '';
+            const generation = this._eventGeneration;
             try {
                 await this.checkSecurity();
             } catch {
+                // A stale rejection must not tear down a session that has since been
+                // re-established, so the generation is honoured on this path too.
+                if (generation !== this._eventGeneration) return;
                 this.setAddress(null);
                 this.setState(AdapterState.Disconnect);
                 return;
             }
+            // `checkSecurity()` was awaited, so the session may have ended while it
+            // was pending — re-check before writing any state.
+            if (generation !== this._eventGeneration) return;
+            // Re-read after the await: the account may have changed or been cleared
+            // while the check was pending.
             const address = (this._wallet as TronLinkWallet).tronWeb?.defaultAddress?.base58 || '';
+            if (!address) return;
+            const isCurConnected = this.connected;
+            const preAddress = this.address || '';
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             if (!isCurConnected) {

@@ -313,3 +313,118 @@ describe('#_checkWallet() re-detection', function () {
         expect(await (adapter as any)._checkWallet()).toBe(true);
     });
 });
+
+describe('#connect message stale-session regression', function () {
+    const ADDR_A = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+    const ADDR_B = 'TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS';
+
+    function makeConnected(base58: unknown = ADDR_A) {
+        const adapter = new BybitWalletAdapter();
+        (adapter as any)._wallet = { ready: true, tronWeb: { defaultAddress: { base58 } } };
+        (adapter as any)._address = ADDR_A;
+        (adapter as any)._state = AdapterState.Connected;
+        adapter.on('error', () => {});
+        (adapter as any)._listenEvent();
+        return adapter;
+    }
+
+    function fireConnect() {
+        window.dispatchEvent(
+            new MessageEvent('message', {
+                origin: window.location.origin,
+                data: { message: { action: 'connect' } },
+            })
+        );
+    }
+
+    function parkSecurity(adapter: unknown) {
+        let release: () => void = () => {};
+        let reject: (reason?: unknown) => void = () => {};
+        vi.spyOn(adapter as any, 'checkSecurity').mockImplementation(
+            () =>
+                new Promise<void>((resolve, rej) => {
+                    release = resolve;
+                    reject = rej;
+                })
+        );
+        return {
+            release: () => release(),
+            reject: () => reject(new Error('blocked')),
+        };
+    }
+
+    /**
+     * The handler awaits `checkSecurity()` before writing state. A `disconnect()`
+     * landing during that await used to be ignored, so the handler wrote the
+     * address back and flipped the adapter to Connected after the disconnect.
+     */
+    it('does not resurrect state when disconnect lands during checkSecurity', async () => {
+        const adapter = makeConnected();
+        const security = parkSecurity(adapter);
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+
+        fireConnect();
+        await adapter.disconnect();
+
+        security.release();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.address).toBeNull();
+        expect(adapter.connected).toBe(false);
+        expect(onConnect).not.toHaveBeenCalled();
+    });
+
+    /**
+     * The failure path tears state down unconditionally, so a stale rejection
+     * must not disconnect a session that has already been re-established.
+     */
+    it('does not tear down a newer session when a stale checkSecurity rejects', async () => {
+        const adapter = makeConnected();
+        const security = parkSecurity(adapter);
+
+        fireConnect();
+        await adapter.disconnect();
+        // a fresh session starts before the stale check settles
+        (adapter as any)._address = ADDR_B;
+        (adapter as any)._state = AdapterState.Connected;
+        (adapter as any)._listenEvent();
+
+        security.reject();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(adapter.address).toBe(ADDR_B);
+    });
+
+    it('ignores a connect message that yields no address', async () => {
+        const adapter = makeConnected(null);
+        (adapter as any)._address = null;
+        (adapter as any)._state = AdapterState.Disconnect;
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+
+        fireConnect();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(adapter.address).toBeNull();
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(onConnect).not.toHaveBeenCalled();
+    });
+
+    it('still connects during a live session', async () => {
+        const adapter = makeConnected();
+        (adapter as any)._address = null;
+        (adapter as any)._state = AdapterState.Disconnect;
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+
+        fireConnect();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(adapter.address).toBe(ADDR_A);
+        expect(adapter.state).toBe(AdapterState.Connected);
+        expect(onConnect).toHaveBeenCalledWith(ADDR_A);
+    });
+});
