@@ -119,6 +119,16 @@ function validateConfigUrls(configUrls: unknown): void {
 export function validateSecurityOptions(securityOptions: SecurityOptions): void {
     const { enabled, configUrls, timeout, retries, cacheTTL, onRiskDetected, onConfigFallback } = securityOptions;
 
+    // `enabled` is read as a plain truthy value in `checkSecurity()` and again just
+    // below, so a non-boolean silently resolves to the opposite of what it reads like:
+    // `'false'` is truthy and turns the check on. Check it before the `configUrls`
+    // requirement below, or `{ enabled: 'false' }` reports a missing `configUrls`
+    // "when enabled is true" — for a caller who wrote `false`.
+    if (enabled !== undefined && typeof enabled !== 'boolean') {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.enabled should be a boolean, but got ${typeof enabled}`
+        );
+    }
     if (configUrls !== undefined) {
         validateConfigUrls(configUrls);
     }

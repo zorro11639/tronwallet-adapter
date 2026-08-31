@@ -408,6 +408,26 @@ describe('AddonAdapter', () => {
         });
 
         /**
+         * `enabled` decides whether the check runs at all, and both this validator and
+         * `checkSecurity()` read it as a plain truthy value. A non-boolean therefore
+         * resolves to the opposite of what it reads like — `'false'` is truthy and turns
+         * the check on — so the switch the caller set and the one the adapter uses
+         * disagree.
+         */
+        it.each([
+            ['a string', 'false'],
+            ['a number', 1],
+            ['null', null],
+            ['an object', {}],
+        ])('should throw when securityOptions.enabled is %s', (_label, enabled) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled, configUrls: TEST_CONFIG_URLS } as any,
+                });
+            }).toThrow(/securityOptions\.enabled should be a boolean/);
+        });
+
+        /**
          * Test that the callback options are checked before they are ever invoked
          */
         it.each(['onRiskDetected', 'onConfigFallback'])('should throw when %s is not a function', (field) => {
@@ -466,6 +486,17 @@ describe('AddonAdapter', () => {
             expect(() => {
                 adapter.updateSecurityOptions({ enabled: true });
             }).toThrow(/config\.securityOptions\.configUrls is required/);
+            expect(adapter.getCommonConfig().securityOptions.enabled).toBe(false);
+        });
+
+        /**
+         * The runtime update path runs the same validation, so a non-boolean cannot
+         * sneak the switch past the constructor by arriving later.
+         */
+        it('should throw when enabled is not a boolean and keep the old config', () => {
+            expect(() => {
+                adapter.updateSecurityOptions({ enabled: 'false', configUrls: TEST_CONFIG_URLS } as any);
+            }).toThrow(/securityOptions\.enabled should be a boolean/);
             expect(adapter.getCommonConfig().securityOptions.enabled).toBe(false);
         });
 
