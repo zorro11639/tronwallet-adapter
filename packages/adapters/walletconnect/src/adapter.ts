@@ -310,8 +310,7 @@ export class WalletConnectAdapter extends Adapter {
 
         const wasConnected = this.connected;
 
-        wallet.off('disconnect', this._disconnected);
-        wallet.off('accountsChanged', this._accountsChanged);
+        this._stopListenEvent();
 
         this._address = null;
 
@@ -382,11 +381,15 @@ export class WalletConnectAdapter extends Adapter {
         }
         try {
             return await this._wallet.checkConnectStatus();
-        } catch (e) {
-            // The probe failed, so the session is gone. Route it through the same
-            // transition as every other path: silently clearing the fields left the
-            // React/Vue providers subscribed to events that never arrived, so they kept
-            // rendering a connected UI against a disconnected adapter.
+        } catch {
+            // The probe failed, so the session is gone. Drop its listeners before the
+            // transition: left attached, a late `accountsChanged` from that dead session
+            // would write the address back and report a connection that no longer exists.
+            this._stopListenEvent();
+            // Route the transition through the same path as everywhere else: silently
+            // clearing the fields left the React/Vue providers subscribed to events that
+            // never arrived, so they kept rendering a connected UI against a
+            // disconnected adapter.
             this._applyConnectionState(null);
             return { address: '' };
         }
@@ -432,14 +435,25 @@ export class WalletConnectAdapter extends Adapter {
         }
     }
 
-    private _disconnected = () => {
+    /**
+     * Detach from the current session's events.
+     *
+     * Every path that takes the adapter out of Connected has to run this. A session
+     * the adapter has already written off still holds its emitter, so any listener
+     * left behind can drive `_applyConnectionState` again and resurrect a connection
+     * that is gone.
+     */
+    private _stopListenEvent() {
         const wallet = this._wallet;
-        if (wallet) {
-            wallet.off('disconnect', this._disconnected);
-            wallet.off('accountsChanged', this._accountsChanged);
+        if (!wallet) return;
+        wallet.off('disconnect', this._disconnected);
+        wallet.off('accountsChanged', this._accountsChanged);
+    }
 
-            this._applyConnectionState(null);
-        }
+    private _disconnected = () => {
+        if (!this._wallet) return;
+        this._stopListenEvent();
+        this._applyConnectionState(null);
     };
 
     private _accountsChanged = (curAddr: string[]) => {

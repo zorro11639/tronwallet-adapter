@@ -15,7 +15,9 @@ function makeWallet(address: string = ADDR_A) {
         signTransaction: vi.fn(),
         checkConnectStatus: vi.fn(async () => ({ address: ADDR_A })),
         on: vi.fn((event: string, handler: any) => (handlers[event] = handler)),
-        off: vi.fn(),
+        off: vi.fn((event: string, handler: any) => {
+            if (handlers[event] === handler) delete handlers[event];
+        }),
         /** Fire an event the way the underlying wallet would. */
         fire: (event: string, ...args: any[]) => handlers[event]?.(...args),
     };
@@ -106,6 +108,38 @@ describe('WalletConnectAdapter', () => {
         expect(adapter.state).toBe(AdapterState.Connected);
         expect(events.accountsChanged).toHaveBeenCalledWith(ADDR_B, ADDR_A);
         expect(events.disconnect).not.toHaveBeenCalled();
+    });
+
+    /**
+     * A failed probe takes the adapter out of Connected, but the old session's
+     * listeners used to stay attached, so a late `accountsChanged` from that dead
+     * session put the address back and reported a connection that no longer existed.
+     */
+    it('cannot be revived by the old session after a failed status probe', async () => {
+        const { wallet, adapter, events } = await connected();
+        wallet.checkConnectStatus.mockRejectedValue(new Error('session expired'));
+
+        await adapter.getConnectionStatus();
+        wallet.fire('accountsChanged', [ADDR_B]);
+
+        expect(adapter.address).toBeNull();
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.connected).toBe(false);
+        expect(events.connect).not.toHaveBeenCalled();
+    });
+
+    it('detaches the old session listeners when the status probe fails', async () => {
+        const { wallet, adapter, events } = await connected();
+        wallet.checkConnectStatus.mockRejectedValue(new Error('session expired'));
+
+        await adapter.getConnectionStatus();
+
+        expect(wallet.off).toHaveBeenCalledWith('accountsChanged', expect.any(Function));
+        expect(wallet.off).toHaveBeenCalledWith('disconnect', expect.any(Function));
+
+        // The dead session emitting `disconnect` must not produce a second one.
+        wallet.fire('disconnect');
+        expect(events.disconnect).toHaveBeenCalledTimes(1);
     });
 
     it('notifies subscribers when the status probe fails', async () => {
