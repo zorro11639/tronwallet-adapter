@@ -341,7 +341,11 @@ export class GateWalletAdapter extends AddonAdapter {
             this._accountsChangedTimer = null;
             if (generation !== this._eventGeneration) return;
             const preAddr = this.address || '';
-            if (res.length !== 0) {
+            const curAddr = res?.[0] || '';
+            // A non-empty list can still carry an empty account. Gating on length alone
+            // set an empty address while the state said Connected, so `connected` stayed
+            // true with nothing to sign with.
+            if (curAddr) {
                 // The wallet just connected / switched accounts — gate it with the security check.
                 try {
                     await this.checkSecurity();
@@ -354,8 +358,7 @@ export class GateWalletAdapter extends AddonAdapter {
                 // `checkSecurity()` was awaited, so the session may have ended while it
                 // was pending — re-check before writing any state.
                 if (generation !== this._eventGeneration) return;
-                const address = res[0];
-                this.setAddress(address);
+                this.setAddress(curAddr);
                 this.setState(AdapterState.Connected);
             } else {
                 this.setAddress(null);

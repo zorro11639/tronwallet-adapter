@@ -190,6 +190,36 @@ describe('#accountsChanged stale-timer regression', function () {
         }
     });
 
+    /**
+     * An empty account is a disconnection. Reporting Connected with an empty address
+     * left `connected === true` with nothing to sign with, and the emit block then
+     * fired `disconnect` against a state that still said Connected.
+     */
+    it('disconnects instead of connecting to an empty address', async () => {
+        vi.useFakeTimers();
+        try {
+            const adapter = makeConnected();
+            const onConnect = vi.fn();
+            const onDisconnect = vi.fn();
+            const onAccountsChanged = vi.fn();
+            adapter.on('connect', onConnect);
+            adapter.on('disconnect', onDisconnect);
+            adapter.on('accountsChanged', onAccountsChanged);
+
+            fireAccountsChanged('');
+            await vi.advanceTimersByTimeAsync(1000);
+
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).toBe(AdapterState.Disconnect);
+            expect(adapter.connected).toBe(false);
+            expect(onAccountsChanged).toHaveBeenCalledWith('', ADDR_A);
+            expect(onDisconnect).toHaveBeenCalledTimes(1);
+            expect(onConnect).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
     it('still applies an account change during a live session', async () => {
         vi.useFakeTimers();
         try {

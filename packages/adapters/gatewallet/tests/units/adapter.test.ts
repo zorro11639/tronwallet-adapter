@@ -130,6 +130,31 @@ describe('#accountsChanged stale-timer regression', function () {
         expect(adapter.connected).toBe(false);
     });
 
+    /**
+     * A non-empty list can still carry an empty account. Gating on length alone set an
+     * empty address while the state said Connected, so `connected` stayed true with
+     * nothing to sign with.
+     */
+    test('disconnects instead of connecting to an empty address', async () => {
+        const adapter = makeConnected();
+        const onConnect = vi.fn();
+        const onDisconnect = vi.fn();
+        const onAccountsChanged = vi.fn();
+        adapter.on('connect', onConnect);
+        adapter.on('disconnect', onDisconnect);
+        adapter.on('accountsChanged', onAccountsChanged);
+
+        (adapter as any).onGateAccountChange(['']);
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(adapter.address).toBeNull();
+        expect(adapter.state).toBe(AdapterState.Disconnect);
+        expect(adapter.connected).toBe(false);
+        expect(onAccountsChanged).toHaveBeenCalledWith('', ADDR_A);
+        expect(onDisconnect).toHaveBeenCalledTimes(1);
+        expect(onConnect).not.toHaveBeenCalled();
+    });
+
     test('does not emit connect for an event cancelled by disconnect', async () => {
         const adapter = makeConnected();
         const onConnect = vi.fn();

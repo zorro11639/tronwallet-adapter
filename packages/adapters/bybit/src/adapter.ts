@@ -271,7 +271,12 @@ export class BybitWalletAdapter extends AddonAdapter {
                 this._accountsChangedTimer = null;
                 if (generation !== this._eventGeneration) return;
                 const preAddr = this.address || '';
-                if ((this._wallet as TronLinkWallet)?.ready) {
+                const curAddr = (message.data as AccountsChangedEventData).address || '';
+                // An empty account is a disconnection, not a connection to the empty
+                // address. Going Connected here leaves `connected === true` with no
+                // address, and the block below then emits `disconnect` against a state
+                // that still says Connected.
+                if (curAddr && (this._wallet as TronLinkWallet)?.ready) {
                     // Gate the connect transition with the security check.
                     try {
                         await this.checkSecurity();
@@ -284,8 +289,7 @@ export class BybitWalletAdapter extends AddonAdapter {
                     // `checkSecurity()` was awaited, so the session may have ended while it
                     // was pending — re-check before writing any state.
                     if (generation !== this._eventGeneration) return;
-                    const address = (message.data as AccountsChangedEventData).address;
-                    this.setAddress(address);
+                    this.setAddress(curAddr);
                     this.setState(AdapterState.Connected);
                 } else {
                     this.setAddress(null);
