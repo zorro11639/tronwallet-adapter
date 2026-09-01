@@ -115,11 +115,9 @@ For the full `SecurityOptions` API reference, see [walletadapter.org/docs](https
 
 ### Caveats
 
--   Bybit Wallet App and Extension doesn't support `multiSign()` and `switchChain()` and will throw error when call them.
--   Bybit Wallet Extension only support these events: `accountsChanged`,`connect`,`disconnect`.
--   Bybit Wallet App does not support any events.
--   Currently deeplink can only open the app but not dapp browser.
+-   The Bybit Wallet extension doesn't support `multiSign()` and `switchChain()` and will throw an error when they are called.
+-   The extension only supports these events: `accountsChanged`, `connect`, `disconnect`.
 -   Keyless Wallet doesn't support Dapp connection.
--   Currently deeplink can not open App Store when app is not installed.
+-   The deeplink only opens the Bybit app — it does not navigate to a dApp browser or load the current page. It also cannot open the App Store when the app is not installed.
 
 For more information about tronwallet adapters, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters)
