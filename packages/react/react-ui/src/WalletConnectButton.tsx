@@ -11,7 +11,15 @@ export const WalletConnectButton: FC<ButtonProps> = ({ children, disabled, onCli
             if (onClick) onClick(event);
 
             if (!event.defaultPrevented) {
-                await connect();
+                try {
+                    await connect();
+                } catch {
+                    // `connect()` rethrows so that callers who await it can react to the
+                    // failure, but React neither awaits this handler nor attaches a
+                    // rejection handler to it — every rejected connect (a declined
+                    // authorisation included) would escape as an unhandled rejection.
+                    // The provider has already reported it through its `onError`.
+                }
             }
         },
         [onClick, connect]

@@ -22,10 +22,23 @@ afterEach(function () {
     vi.unstubAllGlobals();
 });
 
+/**
+ * Build an adapter whose wallet detection cannot outlive the test.
+ *
+ * The constructor starts `_checkWallet()`, which polls `window` every 100ms until
+ * `checkTimeout` (2s by default) elapses. Most tests here finish in milliseconds, so the
+ * interval keeps firing after vitest has torn the environment down — surfacing as
+ * `ReferenceError: window is not defined` unhandled errors that fail the whole file at
+ * random. `checkTimeout: 0` makes the first synchronous probe the last one.
+ */
+function makeAdapter(config: Record<string, unknown> = {}) {
+    return new BinanceWalletAdapter({ checkTimeout: 0, ...config } as any);
+}
+
 describe('BinanceWalletAdapter', () => {
     describe('#adapter()', function () {
         it('constructor', () => {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect(adapter.name).toEqual('Binance Wallet');
             expect(adapter).toHaveProperty('icon');
             expect(adapter).toHaveProperty('url');
@@ -65,7 +78,7 @@ describe('BinanceWalletAdapter', () => {
 
     describe('#signAndSendTransaction()', function () {
         it('throws a clear WalletSignTransactionError when connected via WalletConnect fallback', async () => {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
 
             // Simulate a successful WalletConnect fallback connection: the main
             // adapter is Connected with a WalletConnect adapter but no provider.
@@ -87,7 +100,7 @@ describe('BinanceWalletAdapter', () => {
 
         /** Put the adapter in the state where connect() reaches the injected-provider path. */
         function makeConnectable(getAccount: () => Promise<{ address?: string | null }>) {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             (adapter as any)._readyState = WalletReadyState.Found;
             (adapter as any)._state = AdapterState.Disconnect;
             (adapter as any)._provider = {
@@ -138,7 +151,7 @@ describe('BinanceWalletAdapter', () => {
 
         /** Build an adapter already connected as `address`, with all events spied. */
         function makeConnected(address: string | null) {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             (adapter as any)._address = address;
             (adapter as any)._state = address ? AdapterState.Connected : AdapterState.Disconnect;
 
@@ -251,28 +264,27 @@ describe('BinanceWalletAdapter', () => {
         it('does not fire the deeplink when openAppWithDeeplink is disabled', () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter({ openAppWithDeeplink: false });
+            const adapter = makeAdapter({ openAppWithDeeplink: false });
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(false);
         });
 
         it('does not fire the deeplink on a non-mobile browser', () => {
             setUserAgent(DESKTOP_UA);
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(false);
         });
 
         it('fires the deeplink on a mobile browser when the Binance provider is missing', () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(true);
         });
 
         it('opens the app via deeplink on mobile even when WalletConnect fallback is enabled', async () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter({
-                checkTimeout: 0, // resolve "wallet not found" immediately
+            const adapter = makeAdapter({
                 useWalletConnectWhenWalletNotFound: true,
                 walletConnectConfig: { network: 'Nile', options: { projectId: 'x' } } as any,
             });

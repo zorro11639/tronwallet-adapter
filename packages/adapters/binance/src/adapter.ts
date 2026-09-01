@@ -473,12 +473,16 @@ export class BinanceWalletAdapter extends AddonAdapter {
             this.emit('disconnect');
         }
     };
+    // Binance can be connected through the WalletConnect fallback, and `_updateProvider()`
+    // nulls the provider whenever the injected one is absent — so both of these run with
+    // no provider in reachable states. The constructor calls `_listenEvent()` as soon as
+    // detection settles while `connected` is true, which is exactly that case.
     private _listenEvent() {
         this._stopListenEvent();
-        this._provider.on('accountsChanged', this._onAccountsChanged);
+        this._provider?.on('accountsChanged', this._onAccountsChanged);
     }
     private _stopListenEvent() {
-        this._provider.removeListener('accountsChanged', this._onAccountsChanged);
+        this._provider?.removeListener('accountsChanged', this._onAccountsChanged);
     }
 
     private _checkPromise: Promise<boolean> | null = null;
