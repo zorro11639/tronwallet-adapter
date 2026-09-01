@@ -100,8 +100,8 @@ We welcome contributions! To get started with the codebase:
 
 ### Prerequisites
 
--   **Node.js**: 20.18.0
--   **pnpm**: 9.6.0
+-   **Node.js**: 24.19.0 — pinned in [`.nvmrc`](.nvmrc); `nvm use` in the repo root picks it up
+-   **pnpm**: 11.21.0 — pinned by `packageManager` in the root `package.json`
 
 ### Local Setup
 
