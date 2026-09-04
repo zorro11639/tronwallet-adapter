@@ -46,7 +46,14 @@ export const WalletActionButton: FC<ButtonProps> = ({ children, ...props }) => {
     }, []);
     const handleDisconnect = useCallback(
         async function () {
-            await disconnect();
+            try {
+                await disconnect();
+            } catch {
+                // Same as WalletConnectButton: `disconnect()` rethrows, React does not
+                // await this handler, and the provider has already surfaced the error
+                // through `onError`. Without this the rejection escapes unhandled.
+                return;
+            }
             hideDropdown();
         },
         [disconnect, hideDropdown]

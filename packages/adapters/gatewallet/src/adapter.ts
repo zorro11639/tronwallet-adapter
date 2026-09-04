@@ -136,7 +136,7 @@ export class GateWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             if (!this._wallet) return;
@@ -203,9 +203,11 @@ export class GateWalletAdapter extends AddonAdapter {
                 address = wallet.tronWeb.defaultAddress?.base58 || '';
             }
 
-            if (isInGateApp() && !address) {
-                // On mobile (GateWallet App), only treat the wallet as connected when an
-                // address was actually returned; an empty address means it didn't succeed.
+            if (!address) {
+                // Only treat the wallet as connected when an address was actually
+                // returned; an empty address means the request did not succeed. The
+                // extension path needs this as much as the app path does, and it has to
+                // undo the Connected state that `_updateWallet()` above may have set.
                 this.setAddress(null);
                 this.setState(AdapterState.Disconnect);
                 throw new WalletConnectionError('Request connect error.');
@@ -311,24 +313,52 @@ export class GateWalletAdapter extends AddonAdapter {
     }
 
     private _stopListenEvent() {
+        // Cancel deferred work before the early return below, which would otherwise
+        // skip it entirely inside the Gate app.
+        this._eventGeneration++;
+        if (this._accountsChangedTimer) {
+            clearTimeout(this._accountsChangedTimer);
+            this._accountsChangedTimer = null;
+        }
         if (isInGateApp()) return;
         (this._wallet as TronWallet)?.off?.('accountsChanged', this.onGateAccountChange);
     }
 
+    private _accountsChangedTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Incremented whenever the listening session ends. Deferred `accountsChanged`
+     * work captures the value at schedule time and abandons itself if it no longer
+     * matches, so an event queued before `disconnect()` cannot write state after it.
+     */
+    private _eventGeneration = 0;
+
     private onGateAccountChange = (res: GateAccountChangeEventRes) => {
-        setTimeout(async () => {
+        if (this._accountsChangedTimer) {
+            clearTimeout(this._accountsChangedTimer);
+        }
+        const generation = this._eventGeneration;
+        this._accountsChangedTimer = setTimeout(async () => {
+            this._accountsChangedTimer = null;
+            if (generation !== this._eventGeneration) return;
             const preAddr = this.address || '';
-            if (res.length !== 0) {
+            const curAddr = res?.[0] || '';
+            // A non-empty list can still carry an empty account. Gating on length alone
+            // set an empty address while the state said Connected, so `connected` stayed
+            // true with nothing to sign with.
+            if (curAddr) {
                 // The wallet just connected / switched accounts — gate it with the security check.
                 try {
                     await this.checkSecurity();
                 } catch {
+                    if (generation !== this._eventGeneration) return;
                     this.setAddress(null);
                     this.setState(AdapterState.Disconnect);
                     return;
                 }
-                const address = res[0];
-                this.setAddress(address);
+                // `checkSecurity()` was awaited, so the session may have ended while it
+                // was pending — re-check before writing any state.
+                if (generation !== this._eventGeneration) return;
+                this.setAddress(curAddr);
                 this.setState(AdapterState.Connected);
             } else {
                 this.setAddress(null);
@@ -363,6 +393,11 @@ export class GateWalletAdapter extends AddonAdapter {
 
     private _checkPromise: Promise<boolean> | null = null;
     /**
+     * Detection polls for the full `checkTimeout` only once. Later attempts re-check a
+     * single time, so retrying is free when the wallet is genuinely absent.
+     */
+    private _hasRunInitialDetection = false;
+    /**
      * check if wallet exists by interval, the promise only resolve when wallet detected or timeout
      * @returns if GateWallet exists
      */
@@ -374,10 +409,11 @@ export class GateWalletAdapter extends AddonAdapter {
             return this._checkPromise;
         }
         const interval = 100;
-        const maxTimes = Math.floor(this.config.checkTimeout / interval);
+        const maxTimes = this._hasRunInitialDetection ? 0 : Math.floor(this.config.checkTimeout / interval);
+        this._hasRunInitialDetection = true;
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = supportGateWallet();
@@ -392,12 +428,21 @@ export class GateWalletAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection. The extension may inject late, be switched on at
+        // runtime, or a mobile WebView may still be initialising — in all of those cases the
+        // next call has to look again instead of replaying the old negative answer.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportGateWallet()) {
             this._wallet = isInGateApp() ? window.gatewallet!.tronLink : window.gatewallet!.tron;
             this._listenEvent();

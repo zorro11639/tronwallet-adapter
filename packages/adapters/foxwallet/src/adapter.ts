@@ -10,6 +10,7 @@ import {
     WalletConnectionError,
     AddonAdapter,
     WalletError,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
 import type { TronLinkWallet } from '@tronweb3/tronwallet-adapter-tronlink';
@@ -112,7 +113,7 @@ export class FoxWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             if (!this._wallet) return;
@@ -132,7 +133,7 @@ export class FoxWalletAdapter extends AddonAdapter {
                 throw new WalletConnectionError('The user rejected connection.');
             }
 
-            const address = wallet.tronWeb.defaultAddress?.base58 || '';
+            const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this.emit('connect', this.address || '');
@@ -242,6 +243,11 @@ export class FoxWalletAdapter extends AddonAdapter {
 
     private _checkPromise: Promise<boolean> | null = null;
     /**
+     * Detection polls for the full `checkTimeout` only once. Later attempts re-check a
+     * single time, so retrying is free when the wallet is genuinely absent.
+     */
+    private _hasRunInitialDetection = false;
+    /**
      * check if wallet exists by interval, the promise only resolve when wallet detected or timeout
      * @returns if wallet exists
      */
@@ -253,10 +259,11 @@ export class FoxWalletAdapter extends AddonAdapter {
             return this._checkPromise;
         }
         const interval = 100;
-        const maxTimes = Math.floor(this.config.checkTimeout / interval);
+        const maxTimes = this._hasRunInitialDetection ? 0 : Math.floor(this.config.checkTimeout / interval);
+        this._hasRunInitialDetection = true;
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = supportFoxWallet();
@@ -271,7 +278,16 @@ export class FoxWalletAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection. The extension may inject late, be switched on at
+        // runtime, or a mobile WebView may still be initialising — in all of those cases the
+        // next call has to look again instead of replaying the old negative answer.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private checkIfOpenApp() {
@@ -290,8 +306,8 @@ export class FoxWalletAdapter extends AddonAdapter {
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportFoxWallet()) {
             this._wallet = window.foxwallet!.tronLink;
             address = this._wallet.tronWeb?.defaultAddress?.base58 || null;

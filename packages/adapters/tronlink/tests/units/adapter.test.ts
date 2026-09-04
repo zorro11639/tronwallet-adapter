@@ -501,3 +501,124 @@ describe('Events should work fine', function () {
         expect(_onDisconnect).not.toHaveBeenCalled();
     });
 });
+
+describe('#connect() empty-account regression', function () {
+    const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+
+    afterEach(() => {
+        window.tronLink = undefined;
+        window.tronWeb = undefined;
+    });
+
+    function prime(adapter: any) {
+        adapter._readyState = 'Found';
+        adapter.on('error', noop);
+        return adapter;
+    }
+
+    /**
+     * TIP-1193 branch: `eth_requestAccounts` can resolve with an empty list, and
+     * `res[0]` was stored as the address without any check.
+     */
+    describe('TIP-1193 provider', function () {
+        function makeAdapter(accounts: unknown) {
+            const adapter = prime(new TronLinkAdapter());
+            (adapter as any)._supportNewTronProtocol = true;
+            (adapter as any)._wallet = {
+                request: vi.fn().mockResolvedValue(accounts),
+                tronWeb: { defaultAddress: { base58: ADDRESS } },
+                on: vi.fn(),
+                removeListener: vi.fn(),
+            };
+            return adapter;
+        }
+
+        test.each([
+            ['an empty array', []],
+            ['an array holding an empty string', ['']],
+            ['an array holding null', [null]],
+        ])('rejects when eth_requestAccounts returns %s', async (_label, accounts) => {
+            const adapter = makeAdapter(accounts);
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+
+            await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).not.toBe(AdapterState.Connected);
+            expect(adapter.connected).toBe(false);
+            expect(onConnect).not.toHaveBeenCalled();
+        });
+
+        test('connects when a real account is returned', async () => {
+            const adapter = makeAdapter([ADDRESS]);
+            await adapter.connect();
+            expect(adapter.address).toBe(ADDRESS);
+            expect(adapter.state).toBe(AdapterState.Connected);
+        });
+    });
+
+    /** Legacy `window.tronLink` branch: address comes from the injected tronWeb. */
+    describe('legacy window.tronLink', function () {
+        function makeAdapter(defaultAddress: unknown) {
+            const adapter = prime(new TronLinkAdapter());
+            (adapter as any)._supportNewTronProtocol = false;
+            const wallet = {
+                request: vi.fn().mockResolvedValue({ code: 200 }),
+                tronWeb: { defaultAddress },
+            };
+            (adapter as any)._wallet = wallet;
+            window.tronLink = wallet as any;
+            return adapter;
+        }
+
+        test.each([
+            ['base58 is missing', {}],
+            ['base58 is an empty string', { base58: '' }],
+            ['base58 is false', { base58: false }],
+        ])('rejects when %s', async (_label, defaultAddress) => {
+            const adapter = makeAdapter(defaultAddress);
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+
+            await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).not.toBe(AdapterState.Connected);
+            expect(onConnect).not.toHaveBeenCalled();
+        });
+
+        test('connects when a real address is available', async () => {
+            const adapter = makeAdapter({ base58: ADDRESS });
+            await adapter.connect();
+            expect(adapter.address).toBe(ADDRESS);
+            expect(adapter.state).toBe(AdapterState.Connected);
+        });
+    });
+
+    /** Oldest branch: only `window.tronWeb` is injected, with no request to gate on. */
+    describe('legacy window.tronWeb only', function () {
+        function makeAdapter(defaultAddress: unknown) {
+            const adapter = prime(new TronLinkAdapter());
+            (adapter as any)._supportNewTronProtocol = false;
+            (adapter as any)._wallet = { tronWeb: { defaultAddress } };
+            window.tronWeb = { defaultAddress } as any;
+            return adapter;
+        }
+
+        test.each([
+            ['base58 is missing', {}],
+            ['base58 is an empty string', { base58: '' }],
+        ])('rejects when %s', async (_label, defaultAddress) => {
+            const adapter = makeAdapter(defaultAddress);
+            await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).not.toBe(AdapterState.Connected);
+        });
+
+        test('connects when a real address is available', async () => {
+            const adapter = makeAdapter({ base58: ADDRESS });
+            await adapter.connect();
+            expect(adapter.address).toBe(ADDRESS);
+            expect(adapter.state).toBe(AdapterState.Connected);
+        });
+    });
+});

@@ -42,6 +42,8 @@ interface BinanceWalletAdapterConfig {
     /**
      * Timeout in millisecond for checking if Binance wallet is supported.
      * Default is 2 * 1000ms
+     * Must be a finite number between 0 and 600000 (10 minutes);
+     * anything else throws at construction.
      */
     checkTimeout?: number;
     /**
@@ -144,6 +146,24 @@ const adapter = new BinanceWalletAdapter({
         eventServer: string;
     };
     ```
+
+### Deeplink and URL privacy
+
+`openAppWithDeeplink` is **enabled by default**.
+
+When it is on and the dApp runs in a mobile browser where Binance Wallet is not detected, the adapter opens the wallet through Binance's deeplink service. The **entire current page URL — including its query string and hash — is embedded in the `_dp` parameter of `https://app.binance.com/en/download`**. If the app is not installed, or the universal link does not resolve to it, the browser requests that HTTPS address, so the URL reaches Binance's servers.
+
+Because of that:
+
+-   **Do not put sensitive values in the page URL** — access tokens, OAuth codes, session IDs, one-time credentials, and anything else that grants access. This is good practice regardless of this adapter (URLs end up in browser history, `Referer` headers and server logs), but the deeplink sends the URL somewhere it would otherwise never go.
+-   **Base64 is not encryption.** This adapter base64-encodes the deeplink payload before putting it in `_dp`, and percent-encoding is applied elsewhere. Neither hides anything: both are reversible with one function call.
+-   **If the URL can contain sensitive data, act before connecting.** Either strip it — move the value out of the URL, or clear it with `history.replaceState()` once it has been consumed — or turn the deeplink off:
+
+    ```typescript
+    const adapter = new BinanceWalletAdapter({ openAppWithDeeplink: false });
+    ```
+
+    With `openAppWithDeeplink: false` the adapter never hands the URL to the deeplink service. The trade-off is that a mobile user without the wallet's in-app browser is no longer prompted to open the app, so guide them there yourself.
 
 ### Security Check
 

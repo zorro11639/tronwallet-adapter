@@ -40,8 +40,8 @@ Unit tests for the `LedgerEvmAdapter` class covering:
 
 ### Prerequisites
 
--   Node.js v20.18.0 or higher
--   pnpm 9.6.0 or higher
+-   Node.js 24.19.0 — pinned in the repo root `.nvmrc`
+-   pnpm 11.21.0 — pinned by `packageManager` in the root `package.json`
 
 ### Commands
 
@@ -144,15 +144,14 @@ Add to your CI pipeline:
 
 ### Node.js Version Error
 
-```
-ERROR: This version of pnpm requires at least Node.js v18.12
-```
+If pnpm refuses to start and complains about the Node.js version, the active Node is
+not the one this repo pins.
 
-Solution: Use Node.js v20.18.0
+Solution: switch to the version in the repo root `.nvmrc`.
 
 ```bash
-node --version  # Check version
-nvm use 20      # If using nvm
+node --version  # Check the active version
+nvm use         # From the repo root — reads .nvmrc, so it stays correct when the pin moves
 ```
 
 ### Module Not Found

@@ -268,12 +268,24 @@ export class WalletConnectAdapter extends Adapter {
                 throw new WalletConnectionError(error?.message, error);
             }
 
+            // A resolved connect() carrying no address is not a connection. Tear the
+            // session down before bailing out, otherwise a half-open/persisted session
+            // is left behind and the next connect() silently reuses it instead of
+            // starting a fresh handshake.
+            if (!address) {
+                try {
+                    await this._wallet.disconnect();
+                } catch {
+                    // best-effort cleanup
+                }
+                throw new WalletConnectionError('Request connect error.');
+            }
+
             this._wallet.on('disconnect', this._disconnected);
             this._wallet.on('accountsChanged', this._accountsChanged);
 
-            this._address = address || '';
-            this._state = AdapterState.Connected;
-            this.emit('stateChanged', this._state);
+            this.setAddress(address);
+            this.setState(AdapterState.Connected);
             this.emit('connect', address);
         } catch (error: any) {
             this.emit('error', error);
@@ -298,8 +310,7 @@ export class WalletConnectAdapter extends Adapter {
 
         const wasConnected = this.connected;
 
-        wallet.off('disconnect', this._disconnected);
-        wallet.off('accountsChanged', this._accountsChanged);
+        this._stopListenEvent();
 
         this._address = null;
 
@@ -370,30 +381,82 @@ export class WalletConnectAdapter extends Adapter {
         }
         try {
             return await this._wallet.checkConnectStatus();
-        } catch (e) {
-            this._address = null;
-            this._state = AdapterState.Disconnect;
+        } catch {
+            // The probe failed, so the session is gone. Drop its listeners before the
+            // transition: left attached, a late `accountsChanged` from that dead session
+            // would write the address back and report a connection that no longer exists.
+            this._stopListenEvent();
+            // Route the transition through the same path as everywhere else: silently
+            // clearing the fields left the React/Vue providers subscribed to events that
+            // never arrived, so they kept rendering a connected UI against a
+            // disconnected adapter.
+            this._applyConnectionState(null);
             return { address: '' };
         }
     }
 
-    private _disconnected = () => {
-        const wallet = this._wallet;
-        if (wallet) {
-            wallet.off('disconnect', this._disconnected);
-            wallet.off('accountsChanged', this._accountsChanged);
+    private setAddress(address: string | null) {
+        this._address = address;
+    }
 
-            this._address = null;
-
-            this._state = AdapterState.Disconnect;
-            this.emit('disconnect');
-            this.emit('stateChanged', this._state);
+    private setState(state: AdapterState) {
+        if (state !== this._state) {
+            this._state = state;
+            this.emit('stateChanged', state);
         }
+    }
+
+    /**
+     * Single place where a connection fact becomes adapter state.
+     *
+     * Address, `AdapterState` and the emitted events are three separate records of
+     * the same thing, and updating them independently is what let them drift: an
+     * empty account list used to overwrite the address while leaving the state
+     * Connected, so `connected` stayed true and the sign methods kept passing their
+     * state guard only to fail inside the wallet. Routing every transition through
+     * here keeps the three in step by construction.
+     *
+     * @param nextAddress the address now in effect, or a falsy value for "none"
+     */
+    private _applyConnectionState(nextAddress: string | null | undefined) {
+        const preAddr = this.address || '';
+        const curAddr = nextAddress || '';
+
+        this.setAddress(curAddr || null);
+        this.setState(curAddr ? AdapterState.Connected : AdapterState.Disconnect);
+
+        if (curAddr !== preAddr) {
+            this.emit('accountsChanged', curAddr, preAddr);
+        }
+        if (!preAddr && curAddr) {
+            this.emit('connect', curAddr);
+        } else if (preAddr && !curAddr) {
+            this.emit('disconnect');
+        }
+    }
+
+    /**
+     * Detach from the current session's events.
+     *
+     * Every path that takes the adapter out of Connected has to run this. A session
+     * the adapter has already written off still holds its emitter, so any listener
+     * left behind can drive `_applyConnectionState` again and resurrect a connection
+     * that is gone.
+     */
+    private _stopListenEvent() {
+        const wallet = this._wallet;
+        if (!wallet) return;
+        wallet.off('disconnect', this._disconnected);
+        wallet.off('accountsChanged', this._accountsChanged);
+    }
+
+    private _disconnected = () => {
+        if (!this._wallet) return;
+        this._stopListenEvent();
+        this._applyConnectionState(null);
     };
 
     private _accountsChanged = (curAddr: string[]) => {
-        const preAddress = this.address;
-        this._address = curAddr?.[0] || '';
-        this.emit('accountsChanged', this.address || '', preAddress || '');
+        this._applyConnectionState(curAddr?.[0]);
     };
 }

@@ -125,7 +125,7 @@ export class TokenPocketAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             this._securityPassed = true;
@@ -330,7 +330,7 @@ export class TokenPocketAdapter extends AddonAdapter {
         }
 
         if (isInBrowser() && !isInMobileBrowser()) {
-            this._checkPromise = new Promise((resolve) => {
+            const detection = new Promise<boolean>((resolve) => {
                 const timer = setTimeout(() => {
                     window.removeEventListener(TIP6963AnnounceProviderEventName, handler);
                     this._updateWallet();
@@ -382,7 +382,17 @@ export class TokenPocketAdapter extends AddonAdapter {
                 window.addEventListener(TIP6963AnnounceProviderEventName, handler);
                 window.dispatchEvent(new Event(TIP6963RequestProviderEventName));
             });
-            return this._checkPromise;
+            this._checkPromise = detection;
+            // Never cache a failed detection: the wallet may inject late or be enabled at
+            // runtime. Unlike the polling adapters this keeps the full detection window on a
+            // retry, because the TIP-6963 announce is asynchronous and a shortened window
+            // would race it.
+            void detection.then((found) => {
+                if (!found && this._checkPromise === detection) {
+                    this._checkPromise = null;
+                }
+            });
+            return detection;
         }
         // Support TIP-6963 with wallet extension
 
@@ -390,7 +400,7 @@ export class TokenPocketAdapter extends AddonAdapter {
         const maxTimes = Math.floor(this.config.checkTimeout / interval);
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = supportTokenPocket();
@@ -405,12 +415,22 @@ export class TokenPocketAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection: the wallet may inject late or be enabled at
+        // runtime. Unlike the polling adapters this keeps the full detection window on a
+        // retry, because the TIP-6963 announce is asynchronous and a shortened window
+        // would race it.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (supportTokenPocket()) {
             try {
                 await this.checkSecurity();

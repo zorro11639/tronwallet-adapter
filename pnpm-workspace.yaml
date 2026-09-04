@@ -5,3 +5,30 @@ packages:
     - 'demos/*/*'
     - 'demos/dev-demo'
     - 'demos/cdn-demo'
+strictPeerDependencies: false
+saveWorkspaceProtocol: false
+linkWorkspacePackages: true
+allowBuilds:
+    '@reown/appkit': true
+    bufferutil: true
+    core-js: true
+    esbuild: true
+    keccak: true
+    msw: true
+    sharp: true
+    utf-8-validate: true
+overrides:
+    '@ledgerhq/devices': '6.27.1'
+    '@ledgerhq/hw-transport': '6.27.1'
+    '@ledgerhq/hw-transport-webhid': '6.27.1'
+    minimatch: '10.2.6'
+    postcss: '8.5.18'
+    'ws@>=8.0.0 <8.21.0': '8.21.0'
+    'serialize-javascript@<7.0.5': '7.0.5'
+    '@vitest/browser@>=3.0.0 <3.2.7': '3.2.7'
+    'vitest@>=3.0.0 <3.2.6': '3.2.6'
+    'vite@>=6.0.0 <6.4.3': '6.4.3'
+    'axios@<=1.18.0': '1.18.0'
+    'sharp@<0.35.0': '0.35.0'
+    'browserslist': '4.28.7'
+    'fast-uri@>=3.1.2 <3.1.6': '3.1.6'

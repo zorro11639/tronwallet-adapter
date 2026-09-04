@@ -45,12 +45,16 @@ export interface BaseAdapterConfig {
      */
     openUrlWhenWalletNotFound?: boolean;
     /**
-     * Timeout in millisecond for checking if BybitWallet wallet exists.
-     * Default is 2 * 1000ms
+     * Timeout in millisecond for checking if the wallet exists.
+     * Default is 2 * 1000ms.
+     *
+     * Must be a finite number between 0 and {@link MAX_CHECK_TIMEOUT}; `NaN`,
+     * `Infinity` and negative values throw at construction because they cannot
+     * produce a detection loop that terminates.
      */
     checkTimeout?: number;
     /**
-     * Set if open BybitWallet app using DeepLink.
+     * Set if open the wallet's app using DeepLink.
      * Default is true.
      */
     openAppWithDeeplink?: boolean;

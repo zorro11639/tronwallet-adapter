@@ -42,7 +42,9 @@ await tronWeb.trx.sendRawTransaction(signedTransaction);
         openUrlWhenWalletNotFound?: boolean;
         /**
          * Timeout in millisecond for checking if TronLink wallet exists.
-         * Default is 30 * 1000ms
+         * Default is 5 * 1000ms
+         * Must be a finite number between 0 and 600000 (10 minutes);
+         * anything else throws at construction.
          */
         checkTimeout?: number;
         /**

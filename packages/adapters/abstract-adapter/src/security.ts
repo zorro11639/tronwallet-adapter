@@ -57,6 +57,112 @@ export const defaultSecurityOptions = {
     cacheTTL: 10 * 60 * 1000,
 };
 
+/** A config fetch that takes longer than this is never worth waiting for. */
+const MAX_SECURITY_TIMEOUT = 60 * 1000;
+/** `retries` multiplies the time `connect()` can block, so it is capped. */
+const MAX_SECURITY_RETRIES = 10;
+
+function assertFiniteNumber(value: unknown, field: string, min: number, max: number): void {
+    if (typeof value !== 'number' || !Number.isFinite(value) || value < min || value > max) {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.${field} should be a finite number between ${min} and ${max}, but got ${String(
+                value
+            )}`
+        );
+    }
+}
+
+function parseAbsoluteUrl(url: string): URL | null {
+    try {
+        return new URL(url);
+    } catch {
+        // Not absolute — a relative path, which `fetch` resolves against the page.
+        return null;
+    }
+}
+
+function validateConfigUrls(configUrls: unknown): void {
+    if (!Array.isArray(configUrls)) {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.configUrls should be an array of URLs, but got ${typeof configUrls}`
+        );
+    }
+    for (const url of configUrls) {
+        if (typeof url !== 'string' || url.trim() === '') {
+            throw new Error(
+                `[WalletAdapter] config.securityOptions.configUrls should only contain non-empty URL strings, but got ${String(
+                    url
+                )}`
+            );
+        }
+        // Relative paths are legitimate — they resolve against the page and `new URL`
+        // rejects them — so only values that parse as an absolute URL are checked,
+        // and then only for the scheme `fetch` can actually retrieve.
+        const parsed = parseAbsoluteUrl(url);
+        if (parsed && parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+            throw new Error(
+                `[WalletAdapter] config.securityOptions.configUrls only supports http(s) URLs, but got ${url}`
+            );
+        }
+    }
+}
+
+/**
+ * Validate `config.securityOptions` at construction time.
+ *
+ * Every field here is consumed much later, inside `connect()` — a `configUrls`
+ * string instead of an array only fails when `fetchJsonWithCache` calls `.map`
+ * on it, and a `NaN` timeout or a negative `retries` silently changes the fetch
+ * behaviour rather than reporting anything. Failing fast in the constructor puts
+ * the error where the caller can act on it.
+ */
+export function validateSecurityOptions(securityOptions: SecurityOptions): void {
+    const { enabled, configUrls, timeout, retries, cacheTTL, onRiskDetected, onConfigFallback } = securityOptions;
+
+    // `enabled` is read as a plain truthy value in `checkSecurity()` and again just
+    // below, so a non-boolean silently resolves to the opposite of what it reads like:
+    // `'false'` is truthy and turns the check on. Check it before the `configUrls`
+    // requirement below, or `{ enabled: 'false' }` reports a missing `configUrls`
+    // "when enabled is true" — for a caller who wrote `false`.
+    if (enabled !== undefined && typeof enabled !== 'boolean') {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.enabled should be a boolean, but got ${typeof enabled}`
+        );
+    }
+    if (configUrls !== undefined) {
+        validateConfigUrls(configUrls);
+    }
+    if (enabled && (!configUrls || configUrls.length === 0)) {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.configUrls is required when securityOptions.enabled is true`
+        );
+    }
+    if (timeout !== undefined) {
+        assertFiniteNumber(timeout, 'timeout', 1, MAX_SECURITY_TIMEOUT);
+    }
+    if (cacheTTL !== undefined) {
+        // No upper bound: caching the risk config for a long time is a valid choice.
+        assertFiniteNumber(cacheTTL, 'cacheTTL', 0, Number.MAX_SAFE_INTEGER);
+    }
+    if (retries !== undefined && (!Number.isInteger(retries) || retries < 0 || retries > MAX_SECURITY_RETRIES)) {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.retries should be an integer between 0 and ${MAX_SECURITY_RETRIES}, but got ${String(
+                retries
+            )}`
+        );
+    }
+    if (onRiskDetected !== undefined && typeof onRiskDetected !== 'function') {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.onRiskDetected should be a function, but got ${typeof onRiskDetected}`
+        );
+    }
+    if (onConfigFallback !== undefined && typeof onConfigFallback !== 'function') {
+        throw new Error(
+            `[WalletAdapter] config.securityOptions.onConfigFallback should be a function, but got ${typeof onConfigFallback}`
+        );
+    }
+}
+
 function isValidRisk(risk: any): boolean {
     return (
         !!risk &&
