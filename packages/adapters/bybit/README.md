@@ -1,6 +1,6 @@
 # `@tronweb3/tronwallet-adapter-bybit`
 
-This package provides an adapter to enable TRON DApps to connect to the [Bybit Wallet extension](https://chromewebstore.google.com/detail/bybit-wallet/pdliaogehgdbhbnmkklieghmmjkpigpa) and [Bybit Wallet App](https://www.bybit.com/en/web3/home).
+This package provides an adapter to enable TRON DApps to connect to the [Bybit Wallet extension](https://chromewebstore.google.com/detail/bybit-wallet/pdliaogehgdbhbnmkklieghmmjkpigpa).
 
 ## Demo
 
@@ -42,10 +42,12 @@ interface BybitWalletAdapterConfig {
     /**
      * Timeout in millisecond for checking if TokenPocket wallet is supported.
      * Default is 2 * 1000ms
+     * Must be a finite number between 0 and 600000 (10 minutes);
+     * anything else throws at construction.
      */
     checkTimeout?: number;
     /**
-     * Set if open TokenPocket app using DeepLink on mobile device.
+     * Set if open Bybit Wallet app using DeepLink on mobile device.
      * Default is true.
      */
     openAppWithDeeplink?: boolean;
@@ -74,6 +76,24 @@ interface BybitWalletAdapterConfig {
     };
     ```
 
+### Deeplink and URL privacy
+
+`openAppWithDeeplink` is **enabled by default**.
+
+When it is on and the dApp runs in a mobile browser outside the Bybit app, the adapter opens the wallet through Bybit's deeplink service. The **entire current page URL — including its query string and hash — is passed to that service** as the `by_web_link` parameter of `https://app.bybit.com/inapp`. If the app is not installed, or the universal link does not resolve to it, the browser requests that HTTPS address, so the URL reaches Bybit's servers.
+
+Because of that:
+
+-   **Do not put sensitive values in the page URL** — access tokens, OAuth codes, session IDs, one-time credentials, and anything else that grants access. This is good practice regardless of this adapter (URLs end up in browser history, `Referer` headers and server logs), but the deeplink sends the URL somewhere it would otherwise never go.
+-   **URL-encoding is not encryption.** `encodeURIComponent` only makes the value safe to carry inside a URL; the original text is trivially recoverable.
+-   **If the URL can contain sensitive data, act before connecting.** Either strip it — move the value out of the URL, or clear it with `history.replaceState()` once it has been consumed — or turn the deeplink off:
+
+    ```typescript
+    const adapter = new BybitWalletAdapter({ openAppWithDeeplink: false });
+    ```
+
+    With `openAppWithDeeplink: false` the adapter never hands the URL to the deeplink service. The trade-off is that a mobile user without the wallet's in-app browser is no longer prompted to open the app, so guide them there yourself.
+
 ### Security Check
 
 `BybitWalletAdapter` supports an optional `securityOptions` field for detecting wallet risks before `connect()`. When enabled, the adapter fetches a remote risk configuration and calls `onRiskDetected` if the wallet is flagged.
@@ -95,11 +115,9 @@ For the full `SecurityOptions` API reference, see [walletadapter.org/docs](https
 
 ### Caveats
 
--   Bybit Wallet App and Extension doesn't support `multiSign()` and `switchChain()` and will throw error when call them.
--   Bybit Wallet Extension only support these events: `accountsChanged`,`connect`,`disconnect`.
--   Bybit Wallet App does not support any events.
--   Currently deeplink can only open the app but not dapp browser.
+-   The Bybit Wallet extension doesn't support `multiSign()` and `switchChain()` and will throw an error when they are called.
+-   The extension only supports these events: `accountsChanged`, `connect`, `disconnect`.
 -   Keyless Wallet doesn't support Dapp connection.
--   Currently deeplink can not open App Store when app is not installed.
+-   The deeplink only opens the Bybit app — it does not navigate to a dApp browser or load the current page. It also cannot open the App Store when the app is not installed.
 
 For more information about tronwallet adapters, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters)

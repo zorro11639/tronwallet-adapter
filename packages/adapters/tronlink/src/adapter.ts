@@ -16,6 +16,7 @@ import {
     WalletError,
     TIP6963AnnounceProviderEventName,
     TIP6963RequestProviderEventName,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -197,7 +198,7 @@ export class TronLinkAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             // lower version only support window.tronWeb, no window.tronLink
@@ -207,7 +208,7 @@ export class TronLinkAdapter extends AddonAdapter {
                 const wallet = this._wallet as Tron;
                 try {
                     const res = await wallet.request({ method: 'eth_requestAccounts' });
-                    const address = res[0];
+                    const address = assertConnectAddress(res?.[0]);
                     this.setAddress(address);
                     this.setState(AdapterState.Connected);
                     this._listenTronEvent();
@@ -242,12 +243,12 @@ export class TronLinkAdapter extends AddonAdapter {
                     throw new WalletConnectionError('The user rejected connection.');
                 }
 
-                const address = wallet.tronWeb.defaultAddress?.base58 || '';
+                const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
             } else if (window.tronWeb) {
                 const wallet = this._wallet as TronLinkWallet;
-                const address = wallet.tronWeb.defaultAddress?.base58 || '';
+                const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
             } else {
@@ -434,7 +435,7 @@ export class TronLinkAdapter extends AddonAdapter {
 
         if (isInBrowser() && !isInMobileBrowser()) {
             // Desktop: use TIP-6963 event-based discovery with fallback
-            this._checkPromise = new Promise((resolve) => {
+            const detection = new Promise<boolean>((resolve) => {
                 let handled = false;
                 let timer: ReturnType<typeof setTimeout> | null = null;
                 let interval: ReturnType<typeof setInterval> | null = null;
@@ -510,7 +511,17 @@ export class TronLinkAdapter extends AddonAdapter {
                 window.addEventListener(TIP6963AnnounceProviderEventName, handler);
                 window.dispatchEvent(new Event(TIP6963RequestProviderEventName));
             });
-            return this._checkPromise;
+            this._checkPromise = detection;
+            // Never cache a failed detection: the wallet may inject late or be enabled at
+            // runtime. Unlike the polling adapters this keeps the full detection window on a
+            // retry, because the TIP-6963 announce is asynchronous and a shortened window
+            // would race it.
+            void detection.then((found) => {
+                if (!found && this._checkPromise === detection) {
+                    this._checkPromise = null;
+                }
+            });
+            return detection;
         }
 
         // Mobile: use legacy polling detection
@@ -518,7 +529,7 @@ export class TronLinkAdapter extends AddonAdapter {
         const maxTimes = Math.floor(this.config.checkTimeout / interval);
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 this._updateWallet();
@@ -533,13 +544,23 @@ export class TronLinkAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection: the wallet may inject late or be enabled at
+        // runtime. Unlike the polling adapters this keeps the full detection window on a
+        // retry, because the TIP-6963 announce is asynchronous and a shortened window
+        // would race it.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {
         this._supportNewTronProtocol = false;
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
+        let address: string | null;
         if (isInMobileBrowser()) {
             if (window.tronLink) {
                 this._wallet = window.tronLink;
@@ -573,8 +594,6 @@ export class TronLinkAdapter extends AddonAdapter {
                 state = address ? AdapterState.Connected : AdapterState.Disconnect;
             } catch (e) {
                 console.error('Unknown error: ' + e, ' Please install TronLink extension wallet.');
-                address = null;
-                state = AdapterState.Disconnect;
                 this._readyState = WalletReadyState.NotFound;
                 this.emit('readyStateChanged', this.readyState);
                 return;

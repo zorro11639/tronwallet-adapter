@@ -13,6 +13,7 @@ export interface ReqestAccountsResponse {
 }
 
 export interface TronLinkMessageEvent {
+    origin: string;
     data: {
         isTronLink: boolean;
         message: {

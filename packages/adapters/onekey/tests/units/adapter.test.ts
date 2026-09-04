@@ -40,5 +40,25 @@ describe('OneKeyAdapter', function () {
             expect(adapter).toHaveProperty('on');
             expect(adapter).toHaveProperty('off');
         });
+
+        /**
+         * Callers routinely build their config by spreading their own optional values, so
+         * `{ checkTimeout: undefined }` is a normal thing to receive. It has to fall back to
+         * the default: the raw value would reach `_checkWallet()`, make its polling bound
+         * `NaN`, and leave the detection interval running forever so `connect()` never
+         * settles.
+         */
+        test('falls back to the default checkTimeout when it is explicitly undefined', async () => {
+            const adapter = new OneKeyAdapter({ checkTimeout: undefined });
+            adapter.on('error', () => {});
+
+            expect(typeof (adapter as any).config.checkTimeout).toBe('number');
+            expect(Number.isNaN((adapter as any).config.checkTimeout)).toBe(false);
+
+            // Detection must terminate rather than poll forever.
+            const detection = (adapter as any)._checkWallet();
+            await vi.advanceTimersByTimeAsync((adapter as any).config.checkTimeout + 500);
+            await expect(detection).resolves.toBe(false);
+        });
     });
 });

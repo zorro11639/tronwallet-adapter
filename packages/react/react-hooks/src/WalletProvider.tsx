@@ -60,6 +60,20 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
     const [disconnecting, setDisconnecting] = useState(false);
     const isConnecting = useRef(false);
     const isDisconnecting = useRef(false);
+    /**
+     * `connect()`/`disconnect()` are awaited, so every state write in their `finally`
+     * happens on a later tick — by which time the provider may already be gone. React
+     * warns about the update, and under a test runner the DOM is torn down first and the
+     * update throws outright. The refs above are safe to write after unmount; the state
+     * setters are not.
+     */
+    const isMounted = useRef(true);
+    useEffect(function () {
+        isMounted.current = true;
+        return function () {
+            isMounted.current = false;
+        };
+    }, []);
 
     // set default supported adapters
     const adapters = useMemo(() => {
@@ -253,8 +267,8 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
                 } catch {
                     // setName(null);
                 } finally {
-                    setConnecting(false);
                     isConnecting.current = false;
+                    if (isMounted.current) setConnecting(false);
                 }
             })();
         },
@@ -282,8 +296,8 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
                 setName(null);
                 throw error;
             } finally {
-                setConnecting(false);
                 isConnecting.current = false;
+                if (isMounted.current) setConnecting(false);
             }
         },
         [isConnecting, isDisconnecting, adapter, connected, handleError, setName]
@@ -303,8 +317,8 @@ export const WalletProvider: FC<WalletProviderProps> = function ({
                 setName(null);
                 throw error;
             } finally {
-                setDisconnecting(false);
                 isDisconnecting.current = false;
+                if (isMounted.current) setDisconnecting(false);
             }
         },
         [adapter, isDisconnecting, setName]

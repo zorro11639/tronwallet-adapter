@@ -10,6 +10,7 @@ import {
     WalletGetNetworkError,
     AddonAdapter,
     WalletError,
+    assertConnectAddress,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -120,7 +121,7 @@ export class TrustAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (!(await this._beforeConnect())) return;
             if (!this._wallet) return;
@@ -139,7 +140,7 @@ export class TrustAdapter extends AddonAdapter {
                 throw new WalletConnectionError('The user rejected connection.');
             }
 
-            const address = wallet.tronWeb.defaultAddress?.base58 || '';
+            const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             this._listenEvent();
@@ -240,28 +241,59 @@ export class TrustAdapter extends AddonAdapter {
     }
 
     private _stopListenEvent() {
+        this._eventGeneration++;
+        if (this._accountsChangedTimer) {
+            clearTimeout(this._accountsChangedTimer);
+            this._accountsChangedTimer = null;
+        }
         window.removeEventListener('message', this.messageHandler);
     }
 
+    private _accountsChangedTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Incremented whenever the listening session ends. Deferred `accountsChanged`
+     * work and the awaited `connect` handler capture the value before they yield and
+     * abandon themselves if it no longer matches, so an event that started before
+     * `disconnect()` cannot write state after it.
+     */
+    private _eventGeneration = 0;
+
     private messageHandler = async (e: TronLinkMessageEvent) => {
+        if (e.origin !== window.location.origin) {
+            return;
+        }
+
         const message = e.data?.message;
         if (!message) {
             return;
         }
         if (message.action === 'accountsChanged') {
-            setTimeout(async () => {
+            if (this._accountsChangedTimer) {
+                clearTimeout(this._accountsChangedTimer);
+            }
+            const generation = this._eventGeneration;
+            this._accountsChangedTimer = setTimeout(async () => {
+                this._accountsChangedTimer = null;
+                if (generation !== this._eventGeneration) return;
                 const preAddr = this.address || '';
-                if ((this._wallet as TronLinkWallet)?.ready) {
-                    // Gate the connect transition with the security check.
+                const curAddr = (message.data as AccountsChangedEventData).address || '';
+                // An empty account is a disconnection, not a connection to the empty
+                // address. Going Connected here leaves `connected === true` with no
+                // address, and the block below then emits `disconnect` against a state
+                // that still says Connected.
+                if (curAddr && (this._wallet as TronLinkWallet)?.ready) {
                     try {
                         await this.checkSecurity();
                     } catch {
+                        if (generation !== this._eventGeneration) return;
                         this.setAddress(null);
                         this.setState(AdapterState.Disconnect);
                         return;
                     }
-                    const address = (message.data as AccountsChangedEventData).address;
-                    this.setAddress(address);
+                    // `checkSecurity()` was awaited, so the session may have ended while it
+                    // was pending — re-check before writing any state.
+                    if (generation !== this._eventGeneration) return;
+                    this.setAddress(curAddr);
                     this.setState(AdapterState.Connected);
                 } else {
                     this.setAddress(null);
@@ -278,21 +310,31 @@ export class TrustAdapter extends AddonAdapter {
                 }
             }, 200);
         } else if (message.action === 'connect') {
-            const isCurConnected = this.connected;
-            const preAddress = this.address || '';
-            const address = (this._wallet as TronLinkWallet).tronWeb?.defaultAddress?.base58 || '';
+            const generation = this._eventGeneration;
             // Trust may post a `connect` message before the address is available;
             // ignore it so we don't report a connection (and emit connect) with no address.
-            if (!address) {
+            if (!(this._wallet as TronLinkWallet).tronWeb?.defaultAddress?.base58) {
                 return;
             }
             try {
                 await this.checkSecurity();
             } catch {
+                // A stale rejection must not tear down a session that has since been
+                // re-established, so the generation is honoured on this path too.
+                if (generation !== this._eventGeneration) return;
                 this.setAddress(null);
                 this.setState(AdapterState.Disconnect);
                 return;
             }
+            // `checkSecurity()` was awaited, so the session may have ended while it
+            // was pending — re-check before writing any state.
+            if (generation !== this._eventGeneration) return;
+            // Re-read after the await: the account may have changed or been cleared
+            // while the check was pending.
+            const address = (this._wallet as TronLinkWallet).tronWeb?.defaultAddress?.base58 || '';
+            if (!address) return;
+            const isCurConnected = this.connected;
+            const preAddress = this.address || '';
             this.setAddress(address);
             this.setState(AdapterState.Connected);
             if (!isCurConnected) {
@@ -325,6 +367,11 @@ export class TrustAdapter extends AddonAdapter {
 
     private _checkPromise: Promise<boolean> | null = null;
     /**
+     * Detection polls for the full `checkTimeout` only once. Later attempts re-check a
+     * single time, so retrying is free when the wallet is genuinely absent.
+     */
+    private _hasRunInitialDetection = false;
+    /**
      * check if wallet exists by interval, the promise only resolve when wallet detected or timeout
      * @returns if trustwallet exists
      */
@@ -336,10 +383,11 @@ export class TrustAdapter extends AddonAdapter {
             return this._checkPromise;
         }
         const interval = 100;
-        const maxTimes = Math.floor(this.config.checkTimeout / interval);
+        const maxTimes = this._hasRunInitialDetection ? 0 : Math.floor(this.config.checkTimeout / interval);
+        this._hasRunInitialDetection = true;
         let times = 0,
             timer: ReturnType<typeof setInterval>;
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = supportTrust();
@@ -354,12 +402,21 @@ export class TrustAdapter extends AddonAdapter {
             timer = setInterval(check, interval);
             check();
         });
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection. The extension may inject late, be switched on at
+        // runtime, or a mobile WebView may still be initialising — in all of those cases the
+        // next call has to look again instead of replaying the old negative answer.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateWallet = async () => {
-        let state = this.state;
-        let address = this.address;
+        let state;
+        let address;
         if (supportTrust()) {
             this._wallet = window.trustwallet!.tronLink;
             this._listenEvent();

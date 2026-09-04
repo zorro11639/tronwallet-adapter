@@ -1,6 +1,12 @@
 // @ts-ignore
 import { BinanceWalletAdapter } from '../../src/index.js';
-import { AdapterState, WalletSignTransactionError, WalletNotFoundError } from '@tronweb3/tronwallet-abstract-adapter';
+import {
+    AdapterState,
+    WalletSignTransactionError,
+    WalletNotFoundError,
+    WalletConnectionError,
+    WalletReadyState,
+} from '@tronweb3/tronwallet-abstract-adapter';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 beforeEach(function () {
@@ -16,10 +22,23 @@ afterEach(function () {
     vi.unstubAllGlobals();
 });
 
+/**
+ * Build an adapter whose wallet detection cannot outlive the test.
+ *
+ * The constructor starts `_checkWallet()`, which polls `window` every 100ms until
+ * `checkTimeout` (2s by default) elapses. Most tests here finish in milliseconds, so the
+ * interval keeps firing after vitest has torn the environment down — surfacing as
+ * `ReferenceError: window is not defined` unhandled errors that fail the whole file at
+ * random. `checkTimeout: 0` makes the first synchronous probe the last one.
+ */
+function makeAdapter(config: Record<string, unknown> = {}) {
+    return new BinanceWalletAdapter({ checkTimeout: 0, ...config } as any);
+}
+
 describe('BinanceWalletAdapter', () => {
     describe('#adapter()', function () {
         it('constructor', () => {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect(adapter.name).toEqual('Binance Wallet');
             expect(adapter).toHaveProperty('icon');
             expect(adapter).toHaveProperty('url');
@@ -36,11 +55,30 @@ describe('BinanceWalletAdapter', () => {
             expect(adapter).toHaveProperty('on');
             expect(adapter).toHaveProperty('off');
         });
+
+        /**
+         * Callers routinely build their config by spreading their own optional values, so
+         * `{ checkTimeout: undefined }` is a normal thing to receive. It has to fall back to
+         * the default: the raw value would reach `_checkWallet()`, make its polling bound
+         * `NaN`, and leave the detection interval running forever so `connect()` never
+         * settles.
+         */
+        it('falls back to the default checkTimeout when it is explicitly undefined', async () => {
+            const adapter = new BinanceWalletAdapter({ checkTimeout: undefined });
+            adapter.on('error', () => {});
+
+            expect(typeof (adapter as any).config.checkTimeout).toBe('number');
+            expect(Number.isNaN((adapter as any).config.checkTimeout)).toBe(false);
+
+            // Detection must terminate rather than poll forever.
+            (window as any).binancew3w = undefined;
+            await expect((adapter as any)._checkWallet()).resolves.toBe(false);
+        }, 10000);
     });
 
     describe('#signAndSendTransaction()', function () {
         it('throws a clear WalletSignTransactionError when connected via WalletConnect fallback', async () => {
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
 
             // Simulate a successful WalletConnect fallback connection: the main
             // adapter is Connected with a WalletConnect adapter but no provider.
@@ -54,6 +92,159 @@ describe('BinanceWalletAdapter', () => {
             await expect(adapter.signAndSendTransaction({} as any)).rejects.toBeInstanceOf(WalletSignTransactionError);
             await expect(adapter.signAndSendTransaction({} as any)).rejects.toThrow(/WalletConnect fallback/);
             expect(onError).toHaveBeenCalled();
+        });
+    });
+
+    describe('#connect() address validation', function () {
+        const ADDRESS = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+
+        /** Put the adapter in the state where connect() reaches the injected-provider path. */
+        function makeConnectable(getAccount: () => Promise<{ address?: string | null }>) {
+            const adapter = makeAdapter();
+            (adapter as any)._readyState = WalletReadyState.Found;
+            (adapter as any)._state = AdapterState.Disconnect;
+            (adapter as any)._provider = {
+                getAccount: vi.fn(getAccount),
+                on: vi.fn(),
+                removeListener: vi.fn(),
+            };
+            return adapter;
+        }
+
+        it.each([
+            ['an empty string', ''],
+            ['null', null],
+            ['undefined', undefined],
+        ])('rejects when the wallet returns %s as the address', async (_label, address) => {
+            const adapter = makeConnectable(async () => ({ address }));
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+            adapter.on('error', () => {});
+
+            await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+            await expect(adapter.connect()).rejects.toThrow(/empty address/);
+
+            // The adapter must not claim to be connected with no address.
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).not.toBe(AdapterState.Connected);
+            expect(adapter.connected).toBe(false);
+            expect(onConnect).not.toHaveBeenCalled();
+        });
+
+        it('connects normally when the wallet returns a real address', async () => {
+            const adapter = makeConnectable(async () => ({ address: ADDRESS }));
+            const onConnect = vi.fn();
+            adapter.on('connect', onConnect);
+
+            await adapter.connect();
+
+            expect(adapter.address).toBe(ADDRESS);
+            expect(adapter.state).toBe(AdapterState.Connected);
+            expect(adapter.connected).toBe(true);
+            expect(onConnect).toHaveBeenCalledWith(ADDRESS);
+        });
+    });
+
+    describe('#_onAccountsChanged()', function () {
+        const ADDR_A = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
+        const ADDR_B = 'TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS';
+
+        /** Build an adapter already connected as `address`, with all events spied. */
+        function makeConnected(address: string | null) {
+            const adapter = makeAdapter();
+            (adapter as any)._address = address;
+            (adapter as any)._state = address ? AdapterState.Connected : AdapterState.Disconnect;
+
+            const events = {
+                accountsChanged: vi.fn(),
+                connect: vi.fn(),
+                disconnect: vi.fn(),
+                stateChanged: vi.fn(),
+            };
+            adapter.on('accountsChanged', events.accountsChanged);
+            adapter.on('connect', events.connect);
+            adapter.on('disconnect', events.disconnect);
+            adapter.on('stateChanged', events.stateChanged);
+
+            const fire = (payload: string[] | string) => (adapter as any)._onAccountsChanged(payload);
+            return { adapter, events, fire };
+        }
+
+        /**
+         * The core defect: only `_address` was updated, so `state` stayed Connected
+         * and `connected` — which derives from it — stayed true forever.
+         */
+        it.each([
+            ['an empty array', [] as string[]],
+            ['an empty string', ''],
+        ])('disconnects when the wallet reports %s', (_label, payload) => {
+            const { adapter, events, fire } = makeConnected(ADDR_A);
+
+            fire(payload);
+
+            expect(adapter.address).toBeNull();
+            expect(adapter.state).toBe(AdapterState.Disconnect);
+            expect(adapter.connected).toBe(false);
+            expect(events.accountsChanged).toHaveBeenCalledWith('', ADDR_A);
+            expect(events.disconnect).toHaveBeenCalledTimes(1);
+            expect(events.stateChanged).toHaveBeenCalledWith(AdapterState.Disconnect);
+            expect(events.connect).not.toHaveBeenCalled();
+        });
+
+        it('writes null rather than undefined for an empty array', () => {
+            const { adapter, fire } = makeConnected(ADDR_A);
+            fire([]);
+            // `address[0]` used to leak `undefined` into the address field.
+            expect(adapter.address).toBeNull();
+            expect(adapter.address).not.toBeUndefined();
+        });
+
+        it('connects when an account appears while disconnected', () => {
+            const { adapter, events, fire } = makeConnected(null);
+
+            fire([ADDR_A]);
+
+            expect(adapter.address).toBe(ADDR_A);
+            expect(adapter.state).toBe(AdapterState.Connected);
+            expect(adapter.connected).toBe(true);
+            expect(events.accountsChanged).toHaveBeenCalledWith(ADDR_A, '');
+            expect(events.connect).toHaveBeenCalledWith(ADDR_A);
+            expect(events.disconnect).not.toHaveBeenCalled();
+        });
+
+        it('emits only accountsChanged when switching between accounts', () => {
+            const { adapter, events, fire } = makeConnected(ADDR_A);
+
+            fire([ADDR_B]);
+
+            expect(adapter.address).toBe(ADDR_B);
+            expect(adapter.state).toBe(AdapterState.Connected);
+            expect(events.accountsChanged).toHaveBeenCalledWith(ADDR_B, ADDR_A);
+            expect(events.connect).not.toHaveBeenCalled();
+            expect(events.disconnect).not.toHaveBeenCalled();
+            expect(events.stateChanged).not.toHaveBeenCalled();
+        });
+
+        it('stays quiet when the same account is reported again', () => {
+            const { adapter, events, fire } = makeConnected(ADDR_A);
+
+            fire([ADDR_A]);
+
+            expect(adapter.address).toBe(ADDR_A);
+            expect(adapter.state).toBe(AdapterState.Connected);
+            expect(events.accountsChanged).not.toHaveBeenCalled();
+            expect(events.connect).not.toHaveBeenCalled();
+            expect(events.disconnect).not.toHaveBeenCalled();
+        });
+
+        it('accepts a bare string payload as well as an array', () => {
+            const { adapter, events, fire } = makeConnected(null);
+
+            fire(ADDR_A);
+
+            expect(adapter.address).toBe(ADDR_A);
+            expect(adapter.connected).toBe(true);
+            expect(events.connect).toHaveBeenCalledWith(ADDR_A);
         });
     });
 
@@ -73,28 +264,27 @@ describe('BinanceWalletAdapter', () => {
         it('does not fire the deeplink when openAppWithDeeplink is disabled', () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter({ openAppWithDeeplink: false });
+            const adapter = makeAdapter({ openAppWithDeeplink: false });
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(false);
         });
 
         it('does not fire the deeplink on a non-mobile browser', () => {
             setUserAgent(DESKTOP_UA);
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(false);
         });
 
         it('fires the deeplink on a mobile browser when the Binance provider is missing', () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter();
+            const adapter = makeAdapter();
             expect((adapter as any)._openAppByDeepLinkIfNeed()).toBe(true);
         });
 
         it('opens the app via deeplink on mobile even when WalletConnect fallback is enabled', async () => {
             setUserAgent(MOBILE_UA);
             (window as any).isBinance = undefined;
-            const adapter = new BinanceWalletAdapter({
-                checkTimeout: 0, // resolve "wallet not found" immediately
+            const adapter = makeAdapter({
                 useWalletConnectWhenWalletNotFound: true,
                 walletConnectConfig: { network: 'Nile', options: { projectId: 'x' } } as any,
             });

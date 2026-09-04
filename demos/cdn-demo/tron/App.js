@@ -11,6 +11,7 @@ const { FoxWalletAdapter } = window['@tronweb3/tronwallet-adapter-foxwallet'];
 const { TrustAdapter } = window['@tronweb3/tronwallet-adapter-trust'];
 const { BinanceWalletAdapter } = window['@tronweb3/tronwallet-adapter-binance'];
 const { LedgerAdapter } = window['@tronweb3/tronwallet-adapter-ledger'];
+const { SafepalAdapter } = window['@tronweb3/tronwallet-adapter-safepal'];
 
 const tronWeb = new window.TronWeb.TronWeb({
     fullHost: 'https://nile.trongrid.io',
@@ -31,6 +32,7 @@ export default {
             new BinanceWalletAdapter(),
             new GuardaAdapter(),
             new LedgerAdapter(),
+            new SafepalAdapter(),
         ];
         const queryString = window.location.search || '';
         const params = new URLSearchParams(queryString);

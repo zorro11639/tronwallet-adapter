@@ -1,6 +1,6 @@
 import { Box, Checkbox, FormControlLabel, Input, Link, Snackbar, Stack, styled, Typography } from '@mui/material';
 import { Button } from './common';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SuccessIcon from './SuccessIcon';
 import ErrorIcon from './ErrorIcon';
 import { useWallet } from './WalletProvider';
@@ -150,13 +150,17 @@ export default function SignUsage() {
   const [typedDataInput, setTypedDataInput] = useState('');
   const [typedDataError, setTypedDataError] = useState('');
   const [chainIdAsString, setChainIdAsString] = useState(false);
+  // Once the user touches the TypedData input, stop overwriting it with the generated defaults.
+  const typedDataTouched = useRef(false);
   const onClearTypedData = () => {
+    typedDataTouched.current = true;
     setTypedDataInput('');
     setTypedDataError('');
   };
   const onPasteTypedData = async () => {
     try {
       const text = await navigator.clipboard.readText();
+      typedDataTouched.current = true;
       setTypedDataInput(text);
       setTypedDataError('');
     } catch {
@@ -290,8 +294,10 @@ export default function SignUsage() {
   }, [receiver, setIsReceiverError]);
 
   useEffect(() => {
-    if (!adapter || !connectionState.connected) return;
-    const address = adapter.address || '';
+    if (!adapter || !connectionState.connected || typedDataTouched.current) return;
+    // `chainId` arrives asynchronously (adapter.network()) after `connected` flips to true,
+    // so keep refreshing the generated defaults until the user edits them.
+    const address = connectionState.address || adapter.address || '';
     const chainId = connectionState.chainId ? parseInt(connectionState.chainId, 16) : 0;
     const defaults = {
       domain: {
@@ -317,8 +323,8 @@ export default function SignUsage() {
         deadline: 9999999999,
       },
     };
-    setTypedDataInput((prev) => prev || JSON.stringify(defaults, null, 2));
-  }, [adapter, connectionState.connected, connectionState.chainId]);
+    setTypedDataInput(JSON.stringify(defaults, null, 2));
+  }, [adapter, connectionState.connected, connectionState.chainId, connectionState.address]);
   return (
     <UsageBox background="linear-gradient(210deg, #CEA5BA -1.29%, #4643DF 21.87%, #4643DF 74.72%, #41B7E9 98.71%)">
       <UsageTitle>Sign Usage</UsageTitle>
@@ -339,6 +345,7 @@ export default function SignUsage() {
         disableUnderline={!typedDataError}
         value={typedDataInput}
         onChange={(e) => {
+          typedDataTouched.current = true;
           setTypedDataInput(e.target.value);
           if (typedDataError) setTypedDataError('');
         }}

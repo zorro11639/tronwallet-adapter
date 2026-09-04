@@ -84,6 +84,37 @@ export default function WalletProvider({ children }: PropsWithChildren) {
     chainId: '',
   });
 
+  /**
+   * Generation stamp for `chainId`.
+   *
+   * `network()` resolves asynchronously, so a response belonging to a previous adapter
+   * — or to a session that has since disconnected — can land after the UI has moved on
+   * and overwrite the chainId on screen. Every write to `chainId` bumps this, and an
+   * async response that is no longer the newest is dropped. Any new code that writes
+   * `chainId` directly has to bump it too.
+   */
+  const chainIdRequestRef = useRef(0);
+
+  // Not every adapter exposes `network()`; those that do resolve it asynchronously, so the chainId
+  // always lands a bit after `connected` flips to true.
+  const refreshChainId = useCallback((target: Adapter | undefined) => {
+    const requestId = ++chainIdRequestRef.current;
+    (target as unknown as Adapters.TronLinkAdapter | undefined)
+      ?.network?.()
+      .then((network) => {
+        // An adapter switch, a disconnect or a newer request happened while this was in
+        // flight, so this chainId no longer describes what is on screen.
+        if (requestId !== chainIdRequestRef.current) return;
+        setConnectionState((preState) => ({
+          ...preState,
+          chainId: network.chainId,
+        }));
+      })
+      .catch((e: unknown) => {
+        console.error('[DevDemo] Failed to get network info', e);
+      });
+  }, []);
+
   function onReadyStateChanged(readyState: WalletReadyState) {
     setConnectionState((preState) => ({
       ...preState,
@@ -99,12 +130,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       connected: true,
       address: adapter?.address || '',
     }));
-    (adapter as unknown as Adapters.TronLinkAdapter)?.network?.().then((network) => {
-      setConnectionState((preState) => ({
-        ...preState,
-        chainId: network.chainId,
-      }));
-    });
+    refreshChainId(adapter);
   }
 
   function onAccountsChanged(account: string) {
@@ -112,29 +138,35 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       ...preState,
       address: account,
     }));
+    if (account) refreshChainId(adapter);
   }
 
   function onDisconnect() {
     console.log('[DevDemo] disconnect event');
+    chainIdRequestRef.current += 1;
     setConnectionState((preState) => ({
       ...preState,
       connected: false,
       address: '',
+      chainId: '',
     }));
   }
   function onChainChanged(chainData: unknown) {
+    chainIdRequestRef.current += 1;
     setConnectionState((preState) => ({
       ...preState,
       chainId: (chainData as { chainId: string }).chainId,
     }));
   }
   useEffect(() => {
+    chainIdRequestRef.current += 1;
     setConnectionState((preState) => ({
       ...preState,
       connected: adapter?.connected || false,
       connecting: adapter?.connecting || false,
       address: adapter?.address || '',
       readyState: adapter?.readyState || WalletReadyState.NotFound,
+      chainId: '',
     }));
 
     if (adapter) {
@@ -144,12 +176,7 @@ export default function WalletProvider({ children }: PropsWithChildren) {
       adapter.on('disconnect', onDisconnect);
       adapter.on('chainChanged', onChainChanged);
       if (adapter?.connected) {
-        (adapter as unknown as Adapters.TronLinkAdapter)?.network?.().then((network) => {
-          setConnectionState((preState) => ({
-            ...preState,
-            chainId: network.chainId,
-          }));
-        });
+        refreshChainId(adapter);
       }
     }
 
@@ -177,6 +204,9 @@ export default function WalletProvider({ children }: PropsWithChildren) {
         connecting: false,
         address: adapter?.address || '',
       }));
+      if (adapter?.connected) {
+        refreshChainId(adapter);
+      }
     } catch (e: unknown) {
       console.error('Connect Error', e);
       // Close QR modal on error (only for Binance)

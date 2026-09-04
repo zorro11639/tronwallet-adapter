@@ -6,6 +6,7 @@ import { WalletNotFoundError } from '../../src/errors.js';
 import { defaultSecurityOptions, clearCache } from '../../src/security.js';
 import type { Risk, RiskConfig } from '../../src/security.js';
 import type { BaseAdapterConfig } from '../../src/adapter.js';
+import { MAX_CHECK_TIMEOUT } from '../../src/utils.js';
 
 /**
  * Concrete implementation of AddonAdapter for testing purposes.
@@ -44,8 +45,13 @@ class TestAddonAdapter extends AddonAdapter {
         return this.mockAddress;
     }
 
-    async connect(): Promise<void> {
-        await this._beforeConnect();
+    /** Mirrors a real adapter: the provider is only touched after `_beforeConnect()`. */
+    connectCalls = 0;
+    protected async _connect(): Promise<void> {
+        if (!(await this._beforeConnect())) return;
+        this.connectCalls++;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        this.mockConnecting = false;
     }
     async signMessage(): Promise<string> {
         return '';
@@ -223,6 +229,49 @@ describe('AddonAdapter', () => {
         });
 
         /**
+         * `typeof NaN === 'number'`, so a plain typeof guard lets it through. Adapters
+         * compute `maxTimes = Math.floor(checkTimeout / interval)`; a NaN bound makes
+         * `times > maxTimes` never true, leaking the detection interval and leaving the
+         * promise pending forever. Same for Infinity. Both must be rejected up front.
+         */
+        it.each([
+            ['NaN', NaN],
+            ['Infinity', Infinity],
+            ['-Infinity', -Infinity],
+            ['a negative timeout', -1000],
+            ['a timeout past the upper bound', MAX_CHECK_TIMEOUT + 1],
+        ])('should throw for %s', (_label, checkTimeout) => {
+            expect(() => {
+                new TestAddonAdapter({ checkTimeout });
+            }).toThrow(/config\.checkTimeout should be a finite number/);
+        });
+
+        /**
+         * Test that the upper bound itself is still accepted
+         */
+        it('should accept the maximum checkTimeout', () => {
+            const newAdapter = new TestAddonAdapter({ checkTimeout: MAX_CHECK_TIMEOUT });
+            expect(newAdapter.getCommonConfig().checkTimeout).toBe(MAX_CHECK_TIMEOUT);
+        });
+
+        /**
+         * Callers routinely spread optional config objects, which produces explicit
+         * `undefined` values. Those must not overwrite the defaults.
+         */
+        it('should ignore explicit undefined values and keep the defaults', () => {
+            const newAdapter = new TestAddonAdapter({
+                checkTimeout: undefined,
+                openAppWithDeeplink: undefined,
+                securityOptions: undefined,
+            });
+            const config = newAdapter.getCommonConfig();
+
+            expect(config.checkTimeout).toBe(2 * 1000);
+            expect(config.openAppWithDeeplink).toBe(true);
+            expect(config.securityOptions).toEqual(defaultSecurityOptions);
+        });
+
+        /**
          * Test that the constructor throws when security check is enabled but configUrls is missing
          */
         it('should throw when enabled is true but configUrls is not provided', () => {
@@ -265,6 +314,152 @@ describe('AddonAdapter', () => {
                 });
             }).not.toThrow();
         });
+
+        /**
+         * A non-array `configUrls` used to pass the emptiness check and only blow up
+         * much later, inside `connect()`, when `fetchJsonWithCache` called `.map` on it.
+         */
+        it.each([
+            ['a bare string', 'https://example.com/config.json'],
+            ['an object', { url: 'https://example.com/config.json' }],
+        ])('should throw when configUrls is %s', (_label, configUrls) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled: true, configUrls: configUrls as any },
+                });
+            }).toThrow(/config\.securityOptions\.configUrls should be an array/);
+        });
+
+        /**
+         * Test that entries inside configUrls are validated individually
+         */
+        it.each([
+            ['an empty string', ''],
+            ['whitespace only', '   '],
+            ['a number', 42],
+            ['null', null],
+        ])('should throw when configUrls contains %s', (_label, entry) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled: true, configUrls: [entry] as any },
+                });
+            }).toThrow(/configUrls should only contain non-empty URL strings/);
+        });
+
+        /**
+         * Test that only schemes fetch can actually retrieve are accepted
+         */
+        it('should throw for a non-http(s) configUrl', () => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled: true, configUrls: ['javascript:alert(1)'] },
+                });
+            }).toThrow(/configUrls only supports http\(s\) URLs/);
+        });
+
+        /**
+         * Relative paths resolve against the page, so fetch handles them fine
+         */
+        it('should accept a relative configUrl', () => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled: true, configUrls: ['/security-config.json'] },
+                });
+            }).not.toThrow();
+        });
+
+        /**
+         * Test that the numeric security options reject out-of-range and non-finite values
+         */
+        it.each([
+            ['timeout', 'timeout', NaN],
+            ['timeout', 'timeout', 0],
+            ['timeout', 'timeout', -1],
+            ['timeout', 'timeout', Infinity],
+            ['cacheTTL', 'cacheTTL', NaN],
+            ['cacheTTL', 'cacheTTL', -1],
+            ['cacheTTL', 'cacheTTL', 'forever'],
+        ])('should throw for an invalid securityOptions.%s', (_label, field, value) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: {
+                        enabled: true,
+                        configUrls: TEST_CONFIG_URLS,
+                        [field as string]: value,
+                    } as any,
+                });
+            }).toThrow(new RegExp(`securityOptions\\.${field} should be a finite number`));
+        });
+
+        /**
+         * `retries` bounds how long connect() can block, so it must be a small integer
+         */
+        it.each([
+            ['NaN', NaN],
+            ['a negative count', -1],
+            ['a fractional count', 1.5],
+            ['a count past the upper bound', 11],
+        ])('should throw when securityOptions.retries is %s', (_label, retries) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled: true, configUrls: TEST_CONFIG_URLS, retries },
+                });
+            }).toThrow(/securityOptions\.retries should be an integer/);
+        });
+
+        /**
+         * `enabled` decides whether the check runs at all, and both this validator and
+         * `checkSecurity()` read it as a plain truthy value. A non-boolean therefore
+         * resolves to the opposite of what it reads like — `'false'` is truthy and turns
+         * the check on — so the switch the caller set and the one the adapter uses
+         * disagree.
+         */
+        it.each([
+            ['a string', 'false'],
+            ['a number', 1],
+            ['null', null],
+            ['an object', {}],
+        ])('should throw when securityOptions.enabled is %s', (_label, enabled) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: { enabled, configUrls: TEST_CONFIG_URLS } as any,
+                });
+            }).toThrow(/securityOptions\.enabled should be a boolean/);
+        });
+
+        /**
+         * Test that the callback options are checked before they are ever invoked
+         */
+        it.each(['onRiskDetected', 'onConfigFallback'])('should throw when %s is not a function', (field) => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: {
+                        enabled: true,
+                        configUrls: TEST_CONFIG_URLS,
+                        [field]: 'not a function',
+                    } as any,
+                });
+            }).toThrow(new RegExp(`securityOptions\\.${field} should be a function`));
+        });
+
+        /**
+         * Test that a fully specified, valid securityOptions is accepted
+         */
+        it('should accept a complete valid securityOptions', () => {
+            expect(() => {
+                new TestAddonAdapter({
+                    securityOptions: {
+                        enabled: true,
+                        configUrls: TEST_CONFIG_URLS,
+                        timeout: 3000,
+                        retries: 2,
+                        cacheTTL: 60_000,
+                        onRiskDetected: async () => undefined,
+                        onConfigFallback: () => ({ v: '', ts: 0, wallets: {} }),
+                    },
+                });
+            }).not.toThrow();
+        });
     });
 
     describe('updateSecurityOptions method', () => {
@@ -291,6 +486,17 @@ describe('AddonAdapter', () => {
             expect(() => {
                 adapter.updateSecurityOptions({ enabled: true });
             }).toThrow(/config\.securityOptions\.configUrls is required/);
+            expect(adapter.getCommonConfig().securityOptions.enabled).toBe(false);
+        });
+
+        /**
+         * The runtime update path runs the same validation, so a non-boolean cannot
+         * sneak the switch past the constructor by arriving later.
+         */
+        it('should throw when enabled is not a boolean and keep the old config', () => {
+            expect(() => {
+                adapter.updateSecurityOptions({ enabled: 'false', configUrls: TEST_CONFIG_URLS } as any);
+            }).toThrow(/securityOptions\.enabled should be a boolean/);
             expect(adapter.getCommonConfig().securityOptions.enabled).toBe(false);
         });
 
@@ -825,5 +1031,65 @@ describe('AddonAdapter', () => {
             expect(adapter1.getCommonConfig().checkTimeout).toBe(1000);
             expect(adapter2.getCommonConfig().checkTimeout).toBe(5000);
         });
+    });
+});
+
+describe('connect concurrency', () => {
+    let adapter: TestAddonAdapter;
+
+    beforeEach(() => {
+        clearCache();
+        adapter = new TestAddonAdapter();
+        adapter.setWalletExistence(true);
+        adapter.on('error', () => undefined);
+    });
+
+    /**
+     * `connecting` alone cannot serialise this. Subclasses raise it only after
+     * `await this._beforeConnect()` resolves, and `_beforeConnect()` itself awaits
+     * wallet discovery and the security check — so two calls issued in the same tick
+     * both pass the guard while it is still false and both reach the wallet, which
+     * shows the user a second authorisation popup.
+     */
+    it('should run the wallet request once for simultaneous calls', async () => {
+        await Promise.all([adapter.connect(), adapter.connect()]);
+
+        expect(adapter.connectCalls).toBe(1);
+    });
+
+    it('should give every concurrent caller the same promise', () => {
+        const first = adapter.connect();
+        const second = adapter.connect();
+
+        expect(second).toBe(first);
+        return first;
+    });
+
+    it('should propagate a failure to every concurrent caller', async () => {
+        adapter.setWalletExistence(false);
+
+        const results = await Promise.allSettled([adapter.connect(), adapter.connect()]);
+
+        expect(results.map((r) => r.status)).toEqual(['rejected', 'rejected']);
+        expect(adapter.connectCalls).toBe(0);
+    });
+
+    /** The guard must be released in `finally`, or the adapter could never reconnect. */
+    it('should release the guard once the attempt settles', async () => {
+        await adapter.connect();
+        expect(adapter.connectCalls).toBe(1);
+
+        await adapter.connect();
+        expect(adapter.connectCalls).toBe(2);
+    });
+
+    it('should release the guard after a failed attempt', async () => {
+        adapter.setWalletExistence(false);
+        await expect(adapter.connect()).rejects.toBeTruthy();
+
+        adapter.setWalletExistence(true);
+        await adapter.connect();
+
+        expect(adapter.connectCalls).toBe(1);
     });
 });

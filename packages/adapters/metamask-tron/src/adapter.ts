@@ -19,6 +19,7 @@ import {
     WalletSignMessageError,
     WalletSignTransactionError,
     WalletSwitchChainError,
+    omitUndefined,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type { AdapterName, Network, SignedTransaction, Transaction } from '@tronweb3/tronwallet-abstract-adapter';
 import { Scope } from './types.js';
@@ -81,7 +82,9 @@ export class MetaMaskAdapter extends AddonAdapter {
         super(config);
         this._config = {
             ...this.commonConfig,
-            ...config,
+            // Sanitised: spreading the raw config would let an explicit `undefined` overwrite
+            // a validated default. `commonConfig` has already been merged by the base class.
+            ...omitUndefined(config),
         };
         this._transport = getDefaultTransport();
         this._client = getMultichainClient({ transport: this._transport });
@@ -136,7 +139,7 @@ export class MetaMaskAdapter extends AddonAdapter {
      * Connects to the MetaMask wallet.
      * @returns A promise that resolves when connected.
      */
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         // Captured before every await, `_beforeConnect()` included, so a disconnect() raised at
         // any point of the attempt is noticed once the wallet finally answers.
         const generation = this._connectionGeneration;

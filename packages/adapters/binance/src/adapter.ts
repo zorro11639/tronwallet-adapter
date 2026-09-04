@@ -12,6 +12,7 @@ import {
     AddonAdapter,
     WalletError,
     WalletNotFoundError,
+    omitUndefined,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import type {
     Transaction,
@@ -107,7 +108,10 @@ export class BinanceWalletAdapter extends AddonAdapter {
             ...this.commonConfig,
             useWalletConnectWhenWalletNotFound: false,
             openAppWithDeeplink: true,
-            ...config,
+            // Sanitised: an explicit `checkTimeout: undefined` here would survive into
+            // `_checkWallet()` and make its polling bound `NaN`, so detection would never
+            // terminate. `commonConfig` has already been validated by the base class.
+            ...omitUndefined(config),
         };
         this._connecting = false;
         this._provider = null;
@@ -206,7 +210,7 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
     }
 
-    async connect(): Promise<void> {
+    protected async _connect(): Promise<void> {
         try {
             if (this.connected || this.connecting) return;
             await this._checkWallet();
@@ -304,12 +308,19 @@ export class BinanceWalletAdapter extends AddonAdapter {
             await this.checkSecurity();
             try {
                 const { address } = await this._provider.getAccount();
+                // A resolved getAccount() with no address is not a connection. Flipping the
+                // state to Connected here would leave `connected === true` with a null
+                // address, and every later signMessage/signTransaction would pass the
+                // guard only to fail inside the provider.
+                if (!address) {
+                    throw new WalletConnectionError('[BinanceWalletAdapter] Wallet returned an empty address.');
+                }
                 this.setAddress(address);
                 this.setState(AdapterState.Connected);
                 this.emit('connect', address);
                 this._listenEvent();
             } catch (error: any) {
-                throw new WalletConnectionError(error?.message, error);
+                throw error instanceof WalletError ? error : new WalletConnectionError(error?.message, error);
             }
         } catch (error: any) {
             const err = error instanceof WalletError ? error : new WalletConnectionError(error?.message, error);
@@ -436,20 +447,50 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
     }
 
+    /**
+     * Keep address and state in step.
+     *
+     * `connected` is derived from `state === AdapterState.Connected`, so updating only
+     * `_address` lets the two drift apart permanently: after the wallet reports an
+     * empty account list the adapter would hold no address while still claiming to be
+     * connected. An empty list also has to normalize to `null` rather than the
+     * `undefined` that `address[0]` yields.
+     */
     private _onAccountsChanged = (address: string[] | string) => {
         const preAddr = this.address || '';
-        this.setAddress(Array.isArray(address) ? address[0] : address);
-        this.emit('accountsChanged', this.address || '', preAddr);
+        const nextAddr = (Array.isArray(address) ? address[0] : address) || null;
+
+        this.setAddress(nextAddr);
+        this.setState(nextAddr ? AdapterState.Connected : AdapterState.Disconnect);
+
+        const curAddr = this.address || '';
+        if (curAddr !== preAddr) {
+            this.emit('accountsChanged', curAddr, preAddr);
+        }
+        if (!preAddr && curAddr) {
+            this.emit('connect', curAddr);
+        } else if (preAddr && !curAddr) {
+            this.emit('disconnect');
+        }
     };
+    // Binance can be connected through the WalletConnect fallback, and `_updateProvider()`
+    // nulls the provider whenever the injected one is absent — so both of these run with
+    // no provider in reachable states. The constructor calls `_listenEvent()` as soon as
+    // detection settles while `connected` is true, which is exactly that case.
     private _listenEvent() {
         this._stopListenEvent();
-        this._provider.on('accountsChanged', this._onAccountsChanged);
+        this._provider?.on('accountsChanged', this._onAccountsChanged);
     }
     private _stopListenEvent() {
-        this._provider.removeListener('accountsChanged', this._onAccountsChanged);
+        this._provider?.removeListener('accountsChanged', this._onAccountsChanged);
     }
 
     private _checkPromise: Promise<boolean> | null = null;
+    /**
+     * Detection polls for the full `checkTimeout` only once. Later attempts re-check a
+     * single time, so retrying is free when the wallet is genuinely absent.
+     */
+    private _hasRunInitialDetection = false;
     protected async _checkWallet(): Promise<boolean> {
         if (this.readyState === WalletReadyState.Found) {
             return true;
@@ -459,11 +500,12 @@ export class BinanceWalletAdapter extends AddonAdapter {
         }
 
         const interval = 100;
-        const maxTimes = Math.floor(this.config.checkTimeout / interval);
+        const maxTimes = this._hasRunInitialDetection ? 0 : Math.floor(this.config.checkTimeout / interval);
+        this._hasRunInitialDetection = true;
         let times = 0;
         let timer: ReturnType<typeof setInterval>;
 
-        this._checkPromise = new Promise((resolve) => {
+        const detection = new Promise<boolean>((resolve) => {
             const check = () => {
                 times++;
                 const isSupport = !!window.binancew3w?.tron;
@@ -479,24 +521,31 @@ export class BinanceWalletAdapter extends AddonAdapter {
             check();
         });
 
-        return this._checkPromise;
+        this._checkPromise = detection;
+        // Never cache a failed detection. The extension may inject late, be switched on at
+        // runtime, or a mobile WebView may still be initialising — in all of those cases the
+        // next call has to look again instead of replaying the old negative answer.
+        void detection.then((found) => {
+            if (!found && this._checkPromise === detection) {
+                this._checkPromise = null;
+            }
+        });
+        return detection;
     }
 
     private _updateProvider = () => {
-        let state = this.state;
-        let address = this.address;
+        let state: AdapterState;
 
         if (window.binancew3w?.tron) {
             this._provider = window.binancew3w.tron;
-            address = null; // Will be set when connected
             state = AdapterState.Disconnect;
         } else {
             this._provider = null;
-            address = null;
             state = AdapterState.NotFound;
         }
 
-        this.setAddress(address);
+        // The address is only known once connected.
+        this.setAddress(null);
         this.setState(state);
     };
 

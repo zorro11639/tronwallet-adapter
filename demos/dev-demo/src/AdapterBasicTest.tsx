@@ -5,7 +5,7 @@ import { WalletReadyState } from '@tronweb3/abstract-adapter-evm';
 import { useLocalStorage } from '@tronweb3/tronwallet-adapter-react-hooks';
 import Adapters from '@tronweb3/tronwallet-adapters';
 import type { ReactNode } from 'react';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { utils } from 'tronweb';
 import { ethers, keccak256, toUtf8Bytes } from 'ethers';
 import type { Transaction } from '@tronweb3/abstract-adapter-evm';
@@ -22,7 +22,20 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
   const [selectedName, setSelectedName] = useLocalStorage('SelectedAdapter', 'BinanceEvm');
   const [account, setAccount] = useState('');
   const [readyState, setReadyState] = useState(WalletReadyState.Loading);
-  const [chainId, setChainId] = useState<string>('');
+  const [chainId, _setChainId] = useState<string>('');
+  /**
+   * Generation stamp for `chainId`.
+   *
+   * `network()` resolves asynchronously, so a response belonging to a previous adapter —
+   * or to a session that has since disconnected — can land after the UI has moved on and
+   * overwrite the chainId on screen. Every write bumps this, and an async response that
+   * is no longer the newest is dropped.
+   */
+  const chainIdRequestRef = useRef(0);
+  const setChainId = useCallback((value: string) => {
+    chainIdRequestRef.current += 1;
+    _setChainId(value);
+  }, []);
 
   function handleChange(event: SelectChangeEvent<string>) {
     setSelectedName(event.target.value);
@@ -34,21 +47,30 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     },
     [selectedName]
   );
+  const refreshChainId = useCallback(
+    (target: Adapter) => {
+      const requestId = ++chainIdRequestRef.current;
+      (target as unknown as { network(): Promise<string> })
+        .network()
+        .then((res) => {
+          // An adapter switch, a disconnect or a newer request happened while this was
+          // in flight, so this chainId no longer describes what is on screen.
+          if (requestId !== chainIdRequestRef.current) return;
+          log('network()', res);
+          _setChainId(res);
+        })
+        .catch((e: Error) => {
+          console.error('network() error:', e);
+        });
+    },
+    [log]
+  );
   useEffect(() => {
     setChainId('');
     setAccount(adapter.address || '');
     setReadyState(adapter.readyState);
     if (adapter.connected) {
-      adapter
-        // @ts-ignore
-        .network()
-        .then((res: any) => {
-          log('network()', res);
-          setChainId(res);
-        })
-        .catch((e: Error) => {
-          console.error('network() error:', e);
-        });
+      refreshChainId(adapter);
     }
 
     adapter.on('readyStateChanged', () => {
@@ -62,15 +84,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
       log('accountsChanged: current', accounts);
       setAccount(adapter.address || '');
       if (adapter.address) {
-        adapter
-          .network()
-          .then((res: any) => {
-            log('network()', res);
-            setChainId(res);
-          })
-          .catch((e: Error) => {
-            console.error('network() error:', e);
-          });
+        refreshChainId(adapter);
       } else {
         setChainId('');
       }
@@ -90,7 +104,7 @@ export const AdapterBasicTest = memo(function AdapterBasicTest() {
     return () => {
       adapter.removeAllListeners();
     };
-  }, [adapter, log]);
+  }, [adapter, log, refreshChainId, setChainId]);
 
   const Items = useMemo(
     () =>

@@ -2,9 +2,9 @@ import type { BaseAdapterConfig } from './adapter.js';
 import { Adapter } from './adapter.js';
 import { WalletNotFoundError } from './errors.js';
 import type { SecurityOptions } from './security.js';
-import { defaultSecurityOptions, fetchJsonWithCache } from './security.js';
+import { defaultSecurityOptions, fetchJsonWithCache, validateSecurityOptions } from './security.js';
 import { WalletReadyState } from './types.js';
-import { isInBrowser } from './utils.js';
+import { isInBrowser, omitUndefined, validateCheckTimeout } from './utils.js';
 
 /**
  * Class to provide security check for wallets.
@@ -18,23 +18,17 @@ export abstract class AddonAdapter extends Adapter {
     };
     constructor(params?: BaseAdapterConfig) {
         super();
+        // Drop explicit `undefined`s before merging: spreading them would overwrite
+        // the defaults with `undefined` and make `Required<BaseAdapterConfig>` a lie,
+        // which matters because callers routinely spread optional config objects.
+        // Subclasses that re-merge their own config on top of `commonConfig` must
+        // sanitise it the same way — see `omitUndefined`.
         this.commonConfig = {
             ...this.commonConfig,
-            ...params,
+            ...omitUndefined(params),
         };
-        if (typeof this.commonConfig.checkTimeout !== 'number') {
-            throw new Error(`[WalletAdapter] config.checkTimeout should be a number`);
-        }
-        AddonAdapter._validateSecurityOptions(this.commonConfig.securityOptions);
-    }
-
-    private static _validateSecurityOptions(securityOptions: SecurityOptions): void {
-        const { enabled, configUrls } = securityOptions;
-        if (enabled && (!configUrls || configUrls.length === 0)) {
-            throw new Error(
-                `[WalletAdapter] config.securityOptions.configUrls is required when securityOptions.enabled is true`
-            );
-        }
+        validateCheckTimeout(this.commonConfig.checkTimeout);
+        validateSecurityOptions(this.commonConfig.securityOptions);
     }
 
     /**
@@ -47,10 +41,50 @@ export abstract class AddonAdapter extends Adapter {
             ...this.commonConfig.securityOptions,
             ...securityOptions,
         };
-        AddonAdapter._validateSecurityOptions(merged);
+        validateSecurityOptions(merged);
         this.commonConfig.securityOptions = merged;
         this._securityCheckCache = null;
     }
+
+    private _connectPromise: Promise<void> | null = null;
+
+    /**
+     * Serialise `connect()` so that concurrent callers cannot each reach the wallet.
+     *
+     * The `connecting` flag alone cannot do this. Subclasses only raise it *after*
+     * `await this._beforeConnect()` resolves, and `_beforeConnect()` itself awaits
+     * wallet discovery and the security check — so two calls made in the same tick
+     * both pass the guard while it is still `false`, and both go on to call
+     * `tron_requestAccounts`. That produces a second authorisation popup, a `4000`
+     * "pending request" error from the provider, and duplicated connect events.
+     *
+     * Claiming the in-flight promise here is synchronous — there is no `await`
+     * between the check and the assignment — so a second caller always observes it
+     * and simply shares the first call's result. Because the whole subclass
+     * `_connect()` runs inside it, discovery, the security check and the provider
+     * request are all in the same critical section.
+     */
+    connect(options?: Record<string, unknown>): Promise<void> {
+        if (this._connectPromise) {
+            return this._connectPromise;
+        }
+        // Deliberately not `async`: that would wrap the shared promise in a fresh one
+        // per caller. The IIFE still turns a synchronous throw from `_connect()` into
+        // a rejection, so callers never see one thrown at them directly.
+        const promise = (async () => this._connect(options))().finally(() => {
+            if (this._connectPromise === promise) {
+                this._connectPromise = null;
+            }
+        });
+        this._connectPromise = promise;
+        return promise;
+    }
+
+    /**
+     * The adapter's actual connect flow. Implement this instead of `connect()`,
+     * which wraps it to guarantee only one attempt runs at a time.
+     */
+    protected abstract _connect(options?: Record<string, unknown>): Promise<void>;
 
     /**
      * Run the pre-connect pipeline (wallet discovery, deeplink/url fallback,
