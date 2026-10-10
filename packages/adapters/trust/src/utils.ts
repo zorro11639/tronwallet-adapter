@@ -10,8 +10,17 @@ export const isTrustApp = function () {
     }
     return false;
 };
+/**
+ * Detect if running inside the Trust Wallet mobile app (iOS or Android).
+ * The Trust Wallet app injects `window.trustwallet.tronLink` into its in-app
+ * browser/WebView, so the same `supportTrust()` check covers both the browser
+ * extension and the mobile app.
+ */
+export function isInTrustApp() {
+    return isInMobileBrowser() && (isTrustApp() || supportTrust());
+}
 export function openTrustWallet() {
-    if (!isTrustApp() && isInMobileBrowser()) {
+    if (!isInTrustApp() && isInMobileBrowser()) {
         window.location.href = 'https://link.trustwallet.com/open_url?url=' + encodeURIComponent(window.location.href);
         return true;
     }

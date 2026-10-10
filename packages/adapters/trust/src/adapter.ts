@@ -1,6 +1,7 @@
 import {
     AdapterState,
     isInBrowser,
+    isInMobileBrowser,
     WalletReadyState,
     WalletSignMessageError,
     WalletNotFoundError,
@@ -68,7 +69,16 @@ export class TrustAdapter extends AddonAdapter {
             this.setState(AdapterState.NotFound);
             return;
         }
-        if (supportTrust()) {
+        if (!isInMobileBrowser()) {
+            // Desktop: poll for the extension to inject.
+            this._checkWallet().then(() => {
+                if (this.connected) {
+                    this.emit('connect', this.address || '');
+                }
+            });
+        } else if (supportTrust()) {
+            // Mobile + wallet already injected (e.g. inside the Trust iOS/Android
+            // app's in-app browser, or after the extension loaded): skip polling.
             this._readyState = WalletReadyState.Found;
             this._updateWallet().then(() => {
                 if (this.connected) {
@@ -76,6 +86,8 @@ export class TrustAdapter extends AddonAdapter {
                 }
             });
         } else {
+            // Mobile + wallet not yet injected: poll so the adapter picks it up
+            // once the user opens the dapp inside the Trust app via the deeplink.
             this._checkWallet().then(() => {
                 if (this.connected) {
                     this.emit('connect', this.address || '');
