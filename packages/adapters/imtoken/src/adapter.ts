@@ -6,6 +6,7 @@ import {
     WalletNotFoundError,
     WalletDisconnectedError,
     WalletSignTransactionError,
+    WalletSignTypedDataError,
     WalletGetNetworkError,
     AddonAdapter,
     WalletError,
@@ -20,6 +21,7 @@ import type {
     AdapterName,
     BaseAdapterConfig,
     Network,
+    TypedData,
 } from '@tronweb3/tronwallet-abstract-adapter';
 import { openImTokenApp, supportImToken } from './utils.js';
 
@@ -134,7 +136,10 @@ export class ImTokenAdapter extends AddonAdapter {
 
     private async _checkAndSign<T>(
         action: (wallet: TronLinkWallet) => Promise<T>,
-        ErrorConstructor: typeof WalletSignTransactionError | typeof WalletSignMessageError
+        ErrorConstructor:
+            | typeof WalletSignTransactionError
+            | typeof WalletSignMessageError
+            | typeof WalletSignTypedDataError
     ): Promise<T> {
         try {
             const wallet = await this.checkAndGetWallet();
@@ -168,6 +173,13 @@ export class ImTokenAdapter extends AddonAdapter {
 
     async signMessage(message: string): Promise<string> {
         return this._checkAndSign(async (wallet) => wallet.tronWeb.trx.signMessageV2(message), WalletSignMessageError);
+    }
+
+    protected async _signTypedData(typedData: TypedData): Promise<string> {
+        return this._checkAndSign(
+            async (wallet) => wallet.tronWeb.trx._signTypedData(typedData.domain, typedData.types, typedData.message),
+            WalletSignTypedDataError
+        );
     }
 
     private async checkAndGetWallet() {
