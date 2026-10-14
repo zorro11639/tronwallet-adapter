@@ -127,7 +127,9 @@ describe('#_connect() branches', () => {
     it('throws WalletConnectionError("Request connect error.") when request resolves to null', async () => {
         const adapter = makeReadyAdapter(vi.fn().mockResolvedValue(null));
 
-        await expect(adapter.connect()).rejects.toMatchObject({ message: expect.stringMatching(/Request connect error/) });
+        await expect(adapter.connect()).rejects.toMatchObject({
+            message: expect.stringMatching(/Request connect error/),
+        });
     });
 
     it('throws WalletConnectionError("Request connect error.") when request resolves to undefined', async () => {
@@ -158,7 +160,9 @@ describe('#_connect() branches', () => {
         const adapter = makeReadyAdapter();
         (adapter as any)._wallet.tronWeb.defaultAddress.base58 = '';
 
-        await expect(adapter.connect()).rejects.toMatchObject({ message: expect.stringMatching(/Request connect error/) });
+        await expect(adapter.connect()).rejects.toMatchObject({
+            message: expect.stringMatching(/Request connect error/),
+        });
     });
 
     it('wraps an unknown thrown error as WalletConnectionError', async () => {
@@ -548,14 +552,18 @@ describe('OkxWalletAdapter - network, signing, disconnect, deeplink', () => {
             const adapter = makeConnectedAdapter();
             (adapter as any)._wallet.tronWeb.trx.sign.mockRejectedValueOnce({ message: 'object-fail' });
 
-            await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({ message: expect.stringMatching(/object-fail/) });
+            await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({
+                message: expect.stringMatching(/object-fail/),
+            });
         });
 
         it('wraps a string rejection in WalletSignTransactionError', async () => {
             const adapter = makeConnectedAdapter();
             (adapter as any)._wallet.tronWeb.trx.sign.mockRejectedValueOnce('string-error');
 
-            await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({ message: expect.stringMatching(/string-error/) });
+            await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({
+                message: expect.stringMatching(/string-error/),
+            });
         });
 
         // NOTE: source reads `error.message` and throws TypeError on `null`, so the
@@ -612,7 +620,9 @@ describe('OkxWalletAdapter - network, signing, disconnect, deeplink', () => {
             const adapter = makeConnectedAdapter();
             (adapter as any)._wallet.tronWeb.trx.multiSign.mockRejectedValueOnce(undefined);
 
-            await expect(adapter.multiSign({} as any)).rejects.toMatchObject({ message: expect.stringMatching(/Unknown error/) });
+            await expect(adapter.multiSign({} as any)).rejects.toMatchObject({
+                message: expect.stringMatching(/Unknown error/),
+            });
         });
     });
 
@@ -644,7 +654,9 @@ describe('OkxWalletAdapter - network, signing, disconnect, deeplink', () => {
             const adapter = makeConnectedAdapter();
             (adapter as any)._wallet.tronWeb.trx.signMessageV2.mockRejectedValueOnce(42);
 
-            await expect(adapter.signMessage('hi')).rejects.toMatchObject({ message: expect.stringMatching(/Unknown error/) });
+            await expect(adapter.signMessage('hi')).rejects.toMatchObject({
+                message: expect.stringMatching(/Unknown error/),
+            });
         });
 
         it('throws WalletDisconnectedError when not connected', async () => {

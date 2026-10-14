@@ -411,9 +411,9 @@ describe('#AbstractAdapter', () => {
         test('throws WalletDisconnectedError when not connected', async () => {
             const a = new TestAdapter();
             a.address = null;
-            await expect(
-                a.sendTransaction({ from: '0xabc', to: '0xdef', value: '0x0' } as any)
-            ).rejects.toBeInstanceOf(WalletDisconnectedError);
+            await expect(a.sendTransaction({ from: '0xabc', to: '0xdef', value: '0x0' } as any)).rejects.toBeInstanceOf(
+                WalletDisconnectedError
+            );
         });
     });
 
@@ -548,8 +548,7 @@ describe('#AbstractAdapter', () => {
 
     describe('#isEIP6963Provider() — truth table', () => {
         const stubProvider = { request: vi.fn() } as unknown as EIP1193Provider;
-        const stubInfo = (rdns: string, name: string) =>
-            ({ uuid: 'u', name, icon: '', rdns }) as any;
+        const stubInfo = (rdns: string, name: string) => ({ uuid: 'u', name, icon: '', rdns } as any);
 
         test('returns false when support=false', () => {
             const a = new TestAdapter();

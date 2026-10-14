@@ -135,7 +135,9 @@ describe('trust evm utils', () => {
         it('navigates to the trustwallet deeplink with the URL encoded', () => {
             openTrustWalletWithDeeplink();
             expect(hrefCalls).toHaveLength(1);
-            expect(hrefCalls[0]).toBe('https://link.trustwallet.com/open_url?url=http%3A%2F%2Flocalhost%3A3000%2Fdapp%3Fa%3D1');
+            expect(hrefCalls[0]).toBe(
+                'https://link.trustwallet.com/open_url?url=http%3A%2F%2Flocalhost%3A3000%2Fdapp%3Fa%3D1'
+            );
         });
     });
 

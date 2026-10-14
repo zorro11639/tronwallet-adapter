@@ -668,7 +668,7 @@ describe('#checkIfopenTrustWallet', function () {
         (adapter as any)._state = AdapterState.Connected;
         adapter.on('error', () => {});
         await adapter.signMessage('hi');
-        expect(((adapter as any)._wallet.tronWeb.trx.signMessageV2 as any)).toHaveBeenCalledWith('hi');
+        expect((adapter as any)._wallet.tronWeb.trx.signMessageV2 as any).toHaveBeenCalledWith('hi');
     });
 });
 

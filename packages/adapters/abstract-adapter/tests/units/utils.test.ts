@@ -1,10 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-    assertConnectAddress,
-    checkAdapterState,
-    isInMobileBrowser,
-    isInBrowser,
-} from '../../src/utils.js';
+import { assertConnectAddress, checkAdapterState, isInMobileBrowser, isInBrowser } from '../../src/utils.js';
 import { WalletConnectionError } from '../../src/errors.js';
 
 describe('utils', () => {

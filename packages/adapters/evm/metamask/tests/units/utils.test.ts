@@ -17,7 +17,8 @@ function makeProvider(flags: { isMetaMask?: boolean; overrideIsMetaMask?: boolea
     } as any;
 }
 
-const MOBILE_ANDROID_UA = 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36';
+const MOBILE_ANDROID_UA =
+    'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36';
 const DESKTOP_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15';
 
 describe('metamask evm utils', () => {

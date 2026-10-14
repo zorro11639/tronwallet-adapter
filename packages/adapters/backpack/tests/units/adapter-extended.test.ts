@@ -219,9 +219,7 @@ describe('BackpackAdapter - extended', () => {
             expect(adapter.state).toBe(AdapterState.Connected);
 
             const provider = (window as any).backpack.tron;
-            const accountsChangedCb = provider.on.mock.calls.find(
-                (c: any[]) => c[0] === 'accountsChanged'
-            )?.[1];
+            const accountsChangedCb = provider.on.mock.calls.find((c: any[]) => c[0] === 'accountsChanged')?.[1];
             const onDisconnect = vi.fn();
             const onAccountsChanged = vi.fn();
             adapter.on('disconnect', onDisconnect);

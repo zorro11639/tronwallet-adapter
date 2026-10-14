@@ -484,7 +484,7 @@ describe('#disconnect()', function () {
         const order: string[] = [];
         vi.spyOn(adapter as any, '_stopListenEvent').mockImplementation(() => {
             order.push('stop');
- });
+        });
         vi.spyOn(adapter as any, 'setState').mockImplementation(function (this: any, state: AdapterState) {
             order.push('setState:' + state);
             (adapter as any)._state = state;
@@ -534,7 +534,7 @@ describe('#checkIfOpenGateWallet', function () {
         (adapter as any)._state = AdapterState.Connected;
         adapter.on('error', () => {});
         await adapter.signMessage('hi');
-        expect(((adapter as any)._wallet.tronWeb.trx.signMessageV2 as any)).toHaveBeenCalledWith('hi');
+        expect((adapter as any)._wallet.tronWeb.trx.signMessageV2 as any).toHaveBeenCalledWith('hi');
     });
 });
 

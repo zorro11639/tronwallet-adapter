@@ -1,10 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-    supportBinanceEvm,
-    getBinanceEvmProvider,
-    openBinanceWithDeeplink,
-    BINANCE_RDNS,
-} from '../../src/utils.js';
+import { supportBinanceEvm, getBinanceEvmProvider, openBinanceWithDeeplink, BINANCE_RDNS } from '../../src/utils.js';
 import { BinanceProvider } from './binance-provider.js';
 
 const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile';

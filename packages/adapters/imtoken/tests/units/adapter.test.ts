@@ -382,11 +382,7 @@ describe('#multiSign()', () => {
 
         await adapter.multiSign({} as any, { permissionId: 7 });
 
-        expect((adapter as any)._wallet.tronWeb.trx.multiSign).toHaveBeenCalledWith(
-            {},
-            undefined,
-            7
-        );
+        expect((adapter as any)._wallet.tronWeb.trx.multiSign).toHaveBeenCalledWith({}, undefined, 7);
     });
 
     test('passes undefined permissionId when no options are provided', async () => {
@@ -395,11 +391,7 @@ describe('#multiSign()', () => {
 
         await adapter.multiSign({} as any);
 
-        expect((adapter as any)._wallet.tronWeb.trx.multiSign).toHaveBeenCalledWith(
-            {},
-            undefined,
-            undefined
-        );
+        expect((adapter as any)._wallet.tronWeb.trx.multiSign).toHaveBeenCalledWith({}, undefined, undefined);
     });
 
     test('wraps errors with WalletSignTransactionError', async () => {

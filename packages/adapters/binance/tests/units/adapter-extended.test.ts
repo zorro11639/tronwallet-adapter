@@ -115,9 +115,7 @@ describe('BinanceWalletAdapter - extended', () => {
         test('signAndSendTransaction refuses the WalletConnect fallback', async () => {
             const adapter = makeConnected(makeProvider());
             (adapter as any)._walletConnectAdapter = { signAndSendTransaction: vi.fn() };
-            await expect(adapter.signAndSendTransaction({} as any)).rejects.toBeInstanceOf(
-                WalletSignTransactionError
-            );
+            await expect(adapter.signAndSendTransaction({} as any)).rejects.toBeInstanceOf(WalletSignTransactionError);
         });
     });
 
@@ -196,9 +194,7 @@ describe('BinanceWalletAdapter - extended', () => {
             adapter.on('connect', onConnect);
 
             // The provider callback registered via provider.on(...)
-            const accountsChangedCb = provider.on.mock.calls.find(
-                (c: any[]) => c[0] === 'accountsChanged'
-            )?.[1];
+            const accountsChangedCb = provider.on.mock.calls.find((c: any[]) => c[0] === 'accountsChanged')?.[1];
             expect(accountsChangedCb).toBeTypeOf('function');
             accountsChangedCb(ADDRESS);
             expect(adapter.address).toBe(ADDRESS);
@@ -216,9 +212,7 @@ describe('BinanceWalletAdapter - extended', () => {
             adapter.on('disconnect', onDisconnect);
             adapter.on('accountsChanged', onAccountsChanged);
 
-            const accountsChangedCb = provider.on.mock.calls.find(
-                (c: any[]) => c[0] === 'accountsChanged'
-            )?.[1];
+            const accountsChangedCb = provider.on.mock.calls.find((c: any[]) => c[0] === 'accountsChanged')?.[1];
             accountsChangedCb(null);
             expect(adapter.address).toBeNull();
             expect(adapter.state).toBe(AdapterState.Disconnect);

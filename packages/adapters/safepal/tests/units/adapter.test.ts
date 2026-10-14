@@ -273,7 +273,7 @@ describe('#disconnect()', () => {
 
         await adapter.disconnect();
         expect(onDisconnect).not.toHaveBeenCalled();
- });
+    });
 
     test('resets address, sets state to Disconnect, emits disconnect', async () => {
         const adapter = makeConnectedAdapter();

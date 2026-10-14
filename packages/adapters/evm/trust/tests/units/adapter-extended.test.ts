@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TrustEvmAdapter } from '../../src/adapter.js';
-import {
-    WalletConnectionError,
-    WalletDisconnectedError,
-    WalletNotFoundError,
-} from '@tronweb3/abstract-adapter-evm';
+import { WalletConnectionError, WalletDisconnectedError, WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { TrustWalletProvider, installTrustWalletProvider } from './trustwallet-provider.js';
 
 const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile';

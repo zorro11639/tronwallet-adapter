@@ -13,8 +13,7 @@ import type { WalletConnectAdapterConfig } from '../../src/adapter.js';
 const ADDR_A = 'TKcEU8ekq2ZoFzLSGFYCUY6aocJBX9X3Fa';
 const ADDR_B = 'TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS';
 
-const baseConfig = (): WalletConnectAdapterConfig =>
-    ({ network: 'Nile', options: { projectId: 'test' } } as any);
+const baseConfig = (): WalletConnectAdapterConfig => ({ network: 'Nile', options: { projectId: 'test' } } as any);
 
 /** Stand-in for walletconnect-tron's wallet, so the lazy import inside connect() never runs. */
 function makeWallet(address: string = ADDR_A) {

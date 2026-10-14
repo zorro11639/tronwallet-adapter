@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { OkxWalletEvmAdapter } from '../../src/adapter.js';
-import {
-    WalletConnectionError,
-    WalletDisconnectedError,
-    WalletNotFoundError,
-} from '@tronweb3/abstract-adapter-evm';
+import { WalletConnectionError, WalletDisconnectedError, WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { OkxWalletProvider, installOkxWalletEIP6963Provider } from './okxwallet-provider.js';
 
 const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile';
@@ -242,9 +238,7 @@ describe('OkxWalletEvmAdapter - extended', () => {
 
             await expect(adapter.signMessage({ message: 'hi' })).resolves.toBe('msg-sig');
             await expect(adapter.switchChain('0x1')).resolves.toBeNull();
-            await expect(adapter.watchAsset({ type: 'ERC20', options: { address: '0x1' } } as any)).resolves.toBe(
-                true
-            );
+            await expect(adapter.watchAsset({ type: 'ERC20', options: { address: '0x1' } } as any)).resolves.toBe(true);
             expect(adapter.address).toBe(ADDRESS_A);
             cleanup();
         });

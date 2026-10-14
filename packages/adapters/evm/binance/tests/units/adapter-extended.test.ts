@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { BinanceEvmAdapter } from '../../src/adapter.js';
-import {
-    WalletConnectionError,
-    WalletError,
-    WalletNotFoundError,
-} from '@tronweb3/abstract-adapter-evm';
+import { WalletConnectionError, WalletError, WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { BinanceProvider, installBinanceEIP6963Provider } from './binance-provider.js';
 
 const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile';
@@ -261,9 +257,7 @@ describe('BinanceEvmAdapter - extended', () => {
             expect(requestSpy).toHaveBeenCalledWith({ method: 'personal_sign', params: ['hello', ADDRESS_A] });
 
             await expect(adapter.switchChain('0x2b6653dc')).resolves.toBeNull();
-            await expect(adapter.watchAsset({ type: 'ERC20', options: { address: '0x1' } } as any)).resolves.toBe(
-                true
-            );
+            await expect(adapter.watchAsset({ type: 'ERC20', options: { address: '0x1' } } as any)).resolves.toBe(true);
             cleanup();
         });
     });

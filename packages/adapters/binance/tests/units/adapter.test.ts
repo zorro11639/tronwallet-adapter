@@ -240,7 +240,9 @@ describe('BinanceWalletAdapter', () => {
             (adapter as any)._provider = null;
             adapter.on('error', () => {});
 
-            await expect(adapter.connect()).rejects.toMatchObject({ message: expect.stringMatching(/walletConnectConfig is required/) });
+            await expect(adapter.connect()).rejects.toMatchObject({
+                message: expect.stringMatching(/walletConnectConfig is required/),
+            });
         });
 
         // NOTE: The two tests below exercise the WalletConnect fallback path, which requires
@@ -632,7 +634,9 @@ describe('BinanceWalletAdapter', () => {
             const onError = vi.fn();
             adapter.on('error', onError);
 
-            await expect(adapter.signAndSendTransaction({} as any)).rejects.toMatchObject({ message: expect.stringMatching(/WalletConnect fallback/) });
+            await expect(adapter.signAndSendTransaction({} as any)).rejects.toMatchObject({
+                message: expect.stringMatching(/WalletConnect fallback/),
+            });
             expect(onError).toHaveBeenCalled();
         });
     });

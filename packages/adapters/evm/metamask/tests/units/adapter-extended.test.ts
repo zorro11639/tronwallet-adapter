@@ -1,10 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { MetaMaskEvmAdapter } from '../../src/adapter.js';
-import {
-    WalletConnectionError,
-    WalletDisconnectedError,
-    WalletNotFoundError,
-} from '@tronweb3/abstract-adapter-evm';
+import { WalletConnectionError, WalletDisconnectedError, WalletNotFoundError } from '@tronweb3/abstract-adapter-evm';
 import { MetaMaskProvider, installMetaMaskEIP6963Provider } from './metamask-provider.js';
 
 const MOBILE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 Mobile';
@@ -179,7 +175,10 @@ describe('MetaMaskEvmAdapter - extended', () => {
             });
 
             await expect(adapter.signTypedData({ typedData: 'raw' as any })).resolves.toBe('typed-sig');
-            expect(provider.request).toHaveBeenLastCalledWith({ method: 'eth_signTypedData_v4', params: [ADDRESS_A, 'raw'] });
+            expect(provider.request).toHaveBeenLastCalledWith({
+                method: 'eth_signTypedData_v4',
+                params: [ADDRESS_A, 'raw'],
+            });
 
             adapter.address = null;
             await expect(adapter.signTypedData({ typedData })).rejects.toBeInstanceOf(WalletDisconnectedError);

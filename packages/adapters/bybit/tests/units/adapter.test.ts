@@ -1,11 +1,6 @@
 import { vi, describe, it, test, expect, beforeEach, afterEach } from 'vitest';
 import { BybitWalletAdapter } from '../../src/index.js';
-import {
-    supportBybitWallet,
-    isBybitApp,
-    isInBybitApp,
-    openBybitWallet,
-} from '../../src/utils.js';
+import { supportBybitWallet, isBybitApp, isInBybitApp, openBybitWallet } from '../../src/utils.js';
 import {
     AdapterState,
     WalletReadyState,
@@ -94,7 +89,9 @@ function makeConnectedAdapter(address: string = ADDRESS) {
                 sign: vi.fn().mockResolvedValue({ signature: 'tx-sig' }),
                 signMessageV2: vi.fn().mockResolvedValue('msg-sig'),
                 multiSign: vi.fn().mockResolvedValue({ signature: 'multi-sig' }),
-                getBlockByNumber: vi.fn().mockResolvedValue({ blockID: '000000000000000000000000000000000000000000000000002b6653dc' }),
+                getBlockByNumber: vi
+                    .fn()
+                    .mockResolvedValue({ blockID: '000000000000000000000000000000000000000000000000002b6653dc' }),
             },
             fullNode: { host: 'https://api.trongrid.io' },
             solidityNode: { host: 'https://api.trongrid.io' },
@@ -188,7 +185,9 @@ describe('#connect() error-code branches', () => {
 
     test('request resolves null → "Request connect error."', async () => {
         const adapter = adapterForRequest(vi.fn().mockResolvedValue(null));
-        await expect(adapter.connect()).rejects.toMatchObject({ message: expect.stringMatching(/Request connect error/) });
+        await expect(adapter.connect()).rejects.toMatchObject({
+            message: expect.stringMatching(/Request connect error/),
+        });
     });
 
     test('request resolves undefined → "Request connect error."', async () => {
@@ -320,7 +319,9 @@ describe('#network()', () => {
         const adapter = new BybitWalletAdapter();
         (adapter as any)._readyState = WalletReadyState.Found;
         (adapter as any)._state = AdapterState.Connected;
-        (adapter as any)._wallet = { /* no tronWeb */ };
+        (adapter as any)._wallet = {
+            /* no tronWeb */
+        };
         await expect(adapter.network()).rejects.toBeInstanceOf(WalletDisconnectedError);
     });
 
@@ -361,7 +362,9 @@ describe('#signTransaction()', () => {
         const adapter = makeConnectedAdapter();
         // Plain object without `.message` falls into the "Unknown error" branch.
         (adapter as any)._wallet.tronWeb.trx.sign.mockRejectedValueOnce({ code: 99 });
-        await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({ message: expect.stringMatching(/Unknown error/) });
+        await expect(adapter.signTransaction({} as any)).rejects.toMatchObject({
+            message: expect.stringMatching(/Unknown error/),
+        });
     });
 
     test('throws WalletDisconnectedError when not connected', async () => {
@@ -1007,7 +1010,12 @@ describe('utils.ts', () => {
         const hrefSpy = vi.fn();
         Object.defineProperty(window, 'location', {
             configurable: true,
-            value: { ...window.location, set href(v: string) { hrefSpy(v); } },
+            value: {
+                ...window.location,
+                set href(v: string) {
+                    hrefSpy(v);
+                },
+            },
         });
         try {
             expect(openBybitWallet()).toBe(false);
