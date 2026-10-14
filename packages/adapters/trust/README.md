@@ -1,6 +1,6 @@
 # `@tronweb3/tronwallet-adapter-trust`
 
-This package provides an adapter to enable TRON DApps to connect to the [Trust extension](https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph).
+This package provides an adapter to enable TRON DApps to connect to the [Trust extension](https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph) and the in-app browser of the [Trust Wallet iOS App](https://trustwallet.com/).
 
 ## Demo
 
