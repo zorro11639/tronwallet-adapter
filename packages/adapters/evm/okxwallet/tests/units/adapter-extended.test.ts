@@ -80,6 +80,7 @@ describe('OkxWalletEvmAdapter - extended', () => {
             const adapter = new OkxWalletEvmAdapter({ useDeeplink: false, openUrlWhenWalletNotFound: false });
 
             const res = adapter.connect();
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first
             await vi.advanceTimersByTimeAsync(3100);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(hrefCalls).toHaveLength(0);
@@ -92,6 +93,7 @@ describe('OkxWalletEvmAdapter - extended', () => {
             await flushPromises();
 
             const res = adapter.connect();
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first
             await vi.advanceTimersByTimeAsync(10);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(openSpy).toHaveBeenCalledTimes(1);

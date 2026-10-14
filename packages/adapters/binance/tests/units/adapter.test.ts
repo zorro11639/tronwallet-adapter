@@ -386,7 +386,7 @@ describe('BinanceWalletAdapter', () => {
             const adapter = makeAdapter();
             (adapter as any)._readyState = WalletReadyState.Found;
             (adapter as any)._state = AdapterState.Connected;
-            (adapter as any)._provider = { getChainId: () => '0x94a9059e' }; // Shasta
+            (adapter as any)._provider = { getChainId: () => '0x94a9059e', on: vi.fn(), removeListener: vi.fn() }; // Shasta
 
             const net = await adapter.network();
             expect(net.networkType).toBe(NetworkType.Shasta);
@@ -397,7 +397,7 @@ describe('BinanceWalletAdapter', () => {
             const adapter = makeAdapter();
             (adapter as any)._readyState = WalletReadyState.Found;
             (adapter as any)._state = AdapterState.Connected;
-            (adapter as any)._provider = { getChainId: () => '0xdeadbeef' };
+            (adapter as any)._provider = { getChainId: () => '0xdeadbeef', on: vi.fn(), removeListener: vi.fn() };
 
             const net = await adapter.network();
             expect(net.networkType).toBe(NetworkType.Unknown);
@@ -412,6 +412,8 @@ describe('BinanceWalletAdapter', () => {
                 getChainId: () => {
                     throw new Error('chain-fail');
                 },
+                on: vi.fn(),
+                removeListener: vi.fn(),
             };
             const onError = vi.fn();
             adapter.on('error', onError);

@@ -66,7 +66,7 @@ describe('BinanceEvmAdapter - extended', () => {
 
             const adapter = new BinanceEvmAdapter({ useDeeplink: false, openUrlWhenWalletNotFound: false });
             const res = adapter.connect();
-            // Drive the 3s detection window under fake timers.
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first            // Drive the 3s detection window under fake timers.
             await vi.advanceTimersByTimeAsync(3100);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(openSpy).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('BinanceEvmAdapter - extended', () => {
             await flushPromises();
 
             const res = adapter.connect();
-            // The retry detection has a 0ms grace window.
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first            // The retry detection has a 0ms grace window.
             await vi.advanceTimersByTimeAsync(10);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(openSpy).toHaveBeenCalledWith('https://www.binance.com/en/binancewallet', '_blank');
@@ -93,6 +93,7 @@ describe('BinanceEvmAdapter - extended', () => {
             await flushPromises();
 
             const res = adapter.connect();
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first
             await vi.advanceTimersByTimeAsync(10);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(openSpy).not.toHaveBeenCalled();

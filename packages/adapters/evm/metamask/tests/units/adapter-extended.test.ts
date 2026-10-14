@@ -90,7 +90,7 @@ describe('MetaMaskEvmAdapter - extended', () => {
             const adapter = new MetaMaskEvmAdapter({ useDeeplink: false, openUrlWhenWalletNotFound: false });
 
             const res = adapter.connect();
-            // getProvider returns null immediately on mobile outside the webview.
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first            // getProvider returns null immediately on mobile outside the webview.
             await flushPromises();
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(hrefCalls).toHaveLength(0);
@@ -103,6 +103,7 @@ describe('MetaMaskEvmAdapter - extended', () => {
             await flushPromises();
 
             const res = adapter.connect();
+            res.catch(() => {}); // attach no-op handler so the rejection is observed even when async timer advance fires first
             await vi.advanceTimersByTimeAsync(10);
             await expect(res).rejects.toBeInstanceOf(WalletNotFoundError);
             expect(openSpy).toHaveBeenCalledTimes(1);
