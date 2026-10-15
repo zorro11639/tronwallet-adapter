@@ -1,6 +1,6 @@
 import { vi, describe, it, test, expect, beforeEach, afterEach } from 'vitest';
 import { TrustAdapter } from '../../src/index.js';
-import { supportTrust, isInTrustApp, openTrustWallet } from '../../src/utils.js';
+import { supportTrust, getTrustProvider, isTrustApp, isInTrustApp, openTrustWallet } from '../../src/utils.js';
 import {
     AdapterState,
     WalletReadyState,
@@ -64,6 +64,52 @@ describe('TrustAdapter', function () {
             expect(adapter).toHaveProperty('on');
             expect(adapter).toHaveProperty('off');
         });
+    });
+});
+
+describe('#init connect event with late injection and security check regression', () => {
+    // `_checkWallet` used to resolve before `_updateWallet` finished awaiting `checkSecurity()`,
+    // so the constructor saw `connected === false` and never emitted `connect`.
+    function stubSlowSecurityFetch() {
+        vi.stubGlobal(
+            'fetch',
+            vi
+                .fn()
+                .mockImplementation(
+                    () =>
+                        new Promise((resolve) =>
+                            setTimeout(() => resolve({ ok: true, json: () => Promise.resolve({ wallets: {} }) }), 300)
+                        )
+                )
+        );
+    }
+    function createAdapter(configUrl: string) {
+        const adapter = new TrustAdapter({ securityOptions: { enabled: true, configUrls: [configUrl] } });
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+        adapter.on('error', () => {});
+        return { adapter, onConnect };
+    }
+
+    test('emits connect on mobile when window.trustwallet.tron is injected after construction', async () => {
+        stubSlowSecurityFetch();
+        Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
+        const { adapter, onConnect } = createAdapter('https://example.com/trust-late-mobile.json');
+        window.trustwallet = { tron: { tronWeb: { defaultAddress: { base58: ADDRESS } } } } as any;
+        await vi.advanceTimersByTimeAsync(5000);
+        expect(adapter.connected).toBe(true);
+        expect(onConnect).toHaveBeenCalledTimes(1);
+        expect(onConnect).toHaveBeenCalledWith(ADDRESS);
+    });
+
+    test('emits connect on desktop when window.trustwallet.tronLink is injected after construction', async () => {
+        stubSlowSecurityFetch();
+        const { adapter, onConnect } = createAdapter('https://example.com/trust-late-desktop.json');
+        window.trustwallet = { tronLink: { tronWeb: { defaultAddress: { base58: ADDRESS } } } } as any;
+        await vi.advanceTimersByTimeAsync(5000);
+        expect(adapter.connected).toBe(true);
+        expect(onConnect).toHaveBeenCalledTimes(1);
+        expect(onConnect).toHaveBeenCalledWith(ADDRESS);
     });
 });
 
@@ -685,6 +731,25 @@ describe('#_connect()', function () {
         return { adapter, wallet };
     }
 
+    test('connects without calling request when the wallet has no request method (Trust app)', async () => {
+        const { adapter, wallet } = makeReadyForConnect();
+        delete wallet.request;
+        const onConnect = vi.fn();
+        adapter.on('connect', onConnect);
+        await adapter.connect();
+        expect(adapter.connected).toBe(true);
+        expect(adapter.address).toBe(ADDRESS);
+        expect(onConnect).toHaveBeenCalledWith(ADDRESS);
+    });
+
+    test('throws WalletConnectionError when the wallet has no request method and no address', async () => {
+        const { adapter, wallet } = makeReadyForConnect();
+        delete wallet.request;
+        wallet.tronWeb.defaultAddress = { base58: false };
+        await expect(adapter.connect()).rejects.toBeInstanceOf(WalletConnectionError);
+        expect(adapter.connected).toBe(false);
+    });
+
     test('empty res throws WalletConnectionError', async () => {
         const { adapter, wallet } = makeReadyForConnect();
         wallet.request.mockResolvedValue(null);
@@ -769,18 +834,66 @@ describe('#utils', function () {
             window.trustwallet = undefined;
             expect(supportTrust()).toBe(false);
         });
+        test('returns true on mobile when window.trustwallet.tron is present', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
+            window.trustwallet = { tron: {} } as any;
+            expect(supportTrust()).toBe(true);
+        });
+        test('returns false on mobile when only window.trustwallet.tronLink is present', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
+            window.trustwallet = { tronLink: {} } as any;
+            expect(supportTrust()).toBe(false);
+        });
+    });
+
+    describe('getTrustProvider()', () => {
+        test('returns window.trustwallet.tronLink on desktop', () => {
+            const tronLink = {};
+            window.trustwallet = { tronLink, tron: {} } as any;
+            expect(getTrustProvider()).toBe(tronLink);
+        });
+        test('returns window.trustwallet.tron on mobile', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
+            const tron = {};
+            window.trustwallet = { tronLink: {}, tron } as any;
+            expect(getTrustProvider()).toBe(tron);
+        });
+    });
+
+    describe('isTrustApp()', () => {
+        test('returns true when window.trustwallet.tron is present', () => {
+            window.trustwallet = { tron: {} } as any;
+            expect(isTrustApp()).toBe(true);
+        });
+        test('returns false when only window.trustwallet.tronLink is present', () => {
+            window.trustwallet = { tronLink: {} } as any;
+            expect(isTrustApp()).toBe(false);
+        });
+        test('returns false when window.trustwallet is undefined', () => {
+            window.trustwallet = undefined;
+            expect(isTrustApp()).toBe(false);
+        });
+        test('ignores a Trust user agent without the injected provider', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Trust/1.0 mobile', configurable: true });
+            window.trustwallet = undefined;
+            expect(isTrustApp()).toBe(false);
+        });
     });
 
     describe('isInTrustApp()', () => {
         // NOTE: happy-dom does not consistently let tests override `navigator.userAgent`,
         // so the mobile-UA path of isInTrustApp() is asserted indirectly via
         // openTrustWallet() (which uses the same check). The two paths inside the
-        // expression are covered by `returns true on mobile when window.trustwallet.tronLink is present`
+        // expression are covered by `returns true on mobile when window.trustwallet.tron is present`
         // and the in-source guard in openTrustWallet.
-        test('returns true on mobile when window.trustwallet.tronLink is present', () => {
+        test('returns true on mobile when window.trustwallet.tron is present', () => {
             Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
-            window.trustwallet = { tronLink: {} };
+            window.trustwallet = { tron: {} } as any;
             expect(isInTrustApp()).toBe(true);
+        });
+        test('returns false on desktop even when window.trustwallet.tron is present', () => {
+            window.trustwallet = { tron: {} } as any;
+            expect(isInTrustApp()).toBeFalsy();
         });
     });
 
@@ -801,7 +914,8 @@ describe('#utils', function () {
         });
 
         test('returns false on mobile UA when already inside Trust app', () => {
-            Object.defineProperty(navigator, 'userAgent', { value: 'Trust/1.0 mobile', configurable: true });
+            Object.defineProperty(navigator, 'userAgent', { value: MOBILE_UA, configurable: true });
+            window.trustwallet = { tron: {} } as any;
             window.location.href = 'http://localhost/';
             expect(openTrustWallet()).toBe(false);
             expect(window.location.href).toBe('http://localhost/');

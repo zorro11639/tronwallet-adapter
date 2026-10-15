@@ -26,12 +26,13 @@ import type {
     TronLinkWallet,
 } from '@tronweb3/tronwallet-adapter-tronlink';
 import { getNetworkInfoByTronWeb } from '@tronweb3/tronwallet-adapter-tronlink';
-import { openTrustWallet, supportTrust } from './utils.js';
+import { getTrustProvider, openTrustWallet, supportTrust } from './utils.js';
 
 declare global {
     interface Window {
         trustwallet?: {
-            tronLink: TronLinkWallet;
+            tronLink?: TronLinkWallet;
+            tron?: TronLinkWallet;
         };
     }
 }
@@ -139,17 +140,21 @@ export class TrustAdapter extends AddonAdapter {
             if (!this._wallet) return;
             this._connecting = true;
             const wallet = this._wallet as TronLinkWallet;
-            const res = await wallet.request({ method: 'tron_requestAccounts' });
-            if (!res) {
-                throw new WalletConnectionError('Request connect error.');
-            }
-            if (res.code === 4000) {
-                throw new WalletConnectionError(
-                    'The same DApp has already initiated a request to connect to trustwallet, and the pop-up window has not been closed.'
-                );
-            }
-            if (res.code === 4001) {
-                throw new WalletConnectionError('The user rejected connection.');
+            // The Trust mobile app's `window.trustwallet.tron` has no `request` method:
+            // it is already authorized when injected, so read the address directly.
+            if (typeof wallet.request === 'function') {
+                const res = await wallet.request({ method: 'tron_requestAccounts' });
+                if (!res) {
+                    throw new WalletConnectionError('Request connect error.');
+                }
+                if (res.code === 4000) {
+                    throw new WalletConnectionError(
+                        'The same DApp has already initiated a request to connect to trustwallet, and the pop-up window has not been closed.'
+                    );
+                }
+                if (res.code === 4001) {
+                    throw new WalletConnectionError('The user rejected connection.');
+                }
             }
 
             const address = assertConnectAddress(wallet.tronWeb.defaultAddress?.base58);
@@ -382,9 +387,14 @@ export class TrustAdapter extends AddonAdapter {
                 if (isSupport || times > maxTimes) {
                     timer && clearInterval(timer);
                     this._readyState = isSupport ? WalletReadyState.Found : WalletReadyState.NotFound;
-                    this._updateWallet();
+                    const update = this._updateWallet();
                     this.emit('readyStateChanged', this.readyState);
-                    resolve(isSupport);
+                    // Resolve only after `_updateWallet` settles: it awaits `checkSecurity()`, and
+                    // callers read `this.connected` as soon as detection resolves.
+                    update.then(
+                        () => resolve(isSupport),
+                        () => resolve(isSupport)
+                    );
                 }
             };
             timer = setInterval(check, interval);
@@ -406,7 +416,7 @@ export class TrustAdapter extends AddonAdapter {
         let state;
         let address;
         if (supportTrust()) {
-            this._wallet = window.trustwallet!.tronLink;
+            this._wallet = getTrustProvider()!;
             this._listenEvent();
             address = this._wallet.tronWeb?.defaultAddress?.base58 || null;
             if (address) {
