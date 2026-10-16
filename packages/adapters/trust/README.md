@@ -1,11 +1,16 @@
 # `@tronweb3/tronwallet-adapter-trust`
 
-This package provides an adapter to enable TRON DApps to connect to the [Trust extension](https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph) and the in-app browser of the [Trust Wallet iOS App](https://trustwallet.com/).
+This package provides an adapter to enable TRON DApps to connect to the [Trust extension](https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph) and the in-app browser of the [Trust Wallet App](https://trustwallet.com/) on iOS and Android.
 
 ## Demo
 
 ```typescript
 import { TrustAdapter } from '@tronweb3/tronwallet-adapter-trust';
+import TronWeb from 'tronweb';
+const tronWeb = new TronWeb({
+    fullHost: 'https://api.trongrid.io',
+    headers: { 'TRON-PRO-API-KEY': 'your api key' },
+});
 
 const adapter = new TrustAdapter();
 
@@ -16,17 +21,13 @@ await adapter.connect();
 console.log(adapter.address);
 
 // create a send TRX transaction
-const unSignedTransaction = await window.trustwallet.tronLink.tronWeb.transactionBuilder.sendTrx(
-    targetAddress,
-    100,
-    adapter.address
-);
+const unSignedTransaction = await tronWeb.transactionBuilder.sendTrx(targetAddress, 100, adapter.address);
 
 // using adapter to sign the transaction
 const signedTransaction = await adapter.signTransaction(unSignedTransaction);
 
 // broadcast the transaction
-await window.trustwallet.tronLink.tronWeb.trx.sendRawTransaction(signedTransaction);
+await tronWeb.trx.sendRawTransaction(signedTransaction);
 ```
 
 ## Documentation
