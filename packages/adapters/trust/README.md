@@ -124,5 +124,6 @@ For the full `SecurityOptions` API reference, see [walletadapter.org/docs](https
 -   Only wallet that imported by mnemonic can be used on TRON network.
 -   Trust Extension doesn't implement `multiSign()` and `switchChain()` and will throw error when call them.
 -   Trust Extension only support: `accountsChanged`,`connect`,`disconnect` events.
+-   On mobile, when a DApp opened in an external browser jumps to the Trust Wallet App (for example through the deeplink above), the Trust Wallet App currently does not inject the TRON provider (`window.trustwallet.tron`) into the opened page, so connecting and the other wallet features do not work there. Open the DApp directly in the Trust Wallet App's in-app browser instead.
 
 For more information about tronwallet adapters, please refer to [`@tronweb3/tronwallet-adapters`](https://github.com/tronweb3/tronwallet-adapter/tree/main/packages/adapters/adapters)
