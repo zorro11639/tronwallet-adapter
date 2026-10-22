@@ -70,6 +70,7 @@ beforeEach(() => {
 afterEach(() => {
     setUserAgent(realUserAgent);
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
 });
 
 describe('ImTokenAdapter', () => {

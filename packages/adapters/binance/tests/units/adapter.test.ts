@@ -28,6 +28,7 @@ beforeEach(function () {
 });
 afterEach(function () {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
 });
 
 /**
