@@ -58,7 +58,7 @@
         "@tronweb3/tronwallet-abstract-adapter": "workspace:^",
         "@tronweb3/tronwallet-adapter-vue-hooks": "workspace:^",
         "@babel/cli": "7.27.2",
-        "@babel/core": "7.27.1",
+        "@babel/core": "7.29.6",
         "@babel/preset-typescript": "7.27.1",
         "@babel/traverse": "7.27.1",
         "@tronweb3/tronwallet-adapter-tronlink": "workspace:^",
